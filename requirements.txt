@@ -1,0 +1,28 @@
+# 基础依赖
+requests==2.31.0
+beautifulsoup4==4.12.3
+pandas==2.0.3
+numpy==1.24.3
+
+# 知识图谱相关
+neo4j==5.20.0
+py2neo==2021.2.4
+rdflib==7.0.0
+
+# 大模型相关
+transformers==4.41.2
+peft==0.11.1
+accelerate==0.32.1
+bitsandbytes==0.42.0
+
+# 本地化部署
+flask==2.0.1
+uvicorn==0.23.2
+
+# 数据处理
+scikit-learn==1.5.0
+spacy==3.7.4
+
+# 工具
+tqdm==4.66.4
+python-dotenv==1.0.0
