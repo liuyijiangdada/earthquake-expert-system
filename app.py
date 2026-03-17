@@ -43,7 +43,7 @@ def generate_response(instruction, input_text):
     try:
         # 1. 智能实体识别和多维度知识图谱查询
         kg_context = ""
-        
+
         # 提取输入中的关键信息
         input_lower = input_text.lower()
         
@@ -108,7 +108,7 @@ def generate_response(instruction, input_text):
                 "temperature": 0.7,
                 "max_tokens": 512,
             },
-            timeout=60,
+            timeout=120,
         )
         if resp.status_code != 200:
             print(f"微调模型服务返回错误状态码: {resp.status_code}")

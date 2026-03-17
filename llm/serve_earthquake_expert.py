@@ -2,10 +2,14 @@
 # 使用微调后的 DeepSeek R1 蒸馏模型提供本地推理服务
 
 import os
-from flask import Flask, request, jsonify
+import sys
+
 import torch
+from flask import Flask, request, jsonify
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
+# 添加项目根目录到Python路径
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config.config import Config
 
 
@@ -15,12 +19,13 @@ MODEL_DIR = cfg.FINETUNED_MODEL_PATH
 app = Flask(__name__)
 
 print(f"加载微调模型: {MODEL_DIR}")
-tokenizer = AutoTokenizer.from_pretrained(MODEL_DIR, trust_remote_code=True)
+tokenizer = AutoTokenizer.from_pretrained(MODEL_DIR, trust_remote_code=True, local_files_only=True)
 model = AutoModelForCausalLM.from_pretrained(
     MODEL_DIR,
     torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
     device_map="auto",
     trust_remote_code=True,
+    local_files_only=True,
 )
 
 
@@ -39,9 +44,13 @@ def generate():
     if not prompt:
         return jsonify({"error": "empty prompt"}), 400
 
-    inputs = tokenizer(prompt, return_tensors="pt")
+    inputs = tokenizer(prompt, return_tensors="pt", padding=True, truncation=True, max_length=1024)
     input_ids = inputs.input_ids.to(model.device)
     attention_mask = inputs.attention_mask.to(model.device)
+
+    # 检查 pad_token_id
+    if tokenizer.pad_token_id is None:
+        tokenizer.pad_token_id = tokenizer.eos_token_id
 
     with torch.no_grad():
         outputs = model.generate(

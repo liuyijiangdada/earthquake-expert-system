@@ -115,17 +115,17 @@ def main():
 
     args = TrainingArguments(
         output_dir=OUTPUT_DIR,
-        per_device_train_batch_size=1,      # 降低单卡显存压力
+        per_device_train_batch_size=1,  # 降低单卡显存压力
         per_device_eval_batch_size=1,
-        gradient_accumulation_steps=8,      # 通过梯度累积等效放大 batch
+        gradient_accumulation_steps=8,  # 通过梯度累积等效放大 batch
         num_train_epochs=3,
         learning_rate=1e-4,
         logging_steps=20,
-        evaluation_strategy="steps",
+        eval_strategy="steps",  # 这里将 evaluation_strategy 改为 eval_strategy
         eval_steps=200,
         save_steps=200,
         save_total_limit=2,
-        fp16=torch.cuda.is_available(),     # 只有有 CUDA 时才启用 fp16
+        fp16=torch.cuda.is_available(),  # 只有有 CUDA 时才启用 fp16
         bf16=False,
         report_to=[],
     )
