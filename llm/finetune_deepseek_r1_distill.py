@@ -68,6 +68,20 @@ class SFTDataset(Dataset):
         )
         input_ids = enc.input_ids[0]
         labels = input_ids.clone()
+        
+        # 只计算助手回答部分的损失，其他部分设置为-100
+        # 找到第一个 assistant 标记的位置
+        assistant_start = None
+        tokens = self.tokenizer.tokenize(text)
+        for i, token in enumerate(tokens):
+            if token == "<|assistant|>":
+                assistant_start = i
+                break
+        
+        if assistant_start is not None:
+            # 前assistant_start+1个token（包括assistant标记）设置为-100
+            labels[:assistant_start+1] = -100
+        
         return {"input_ids": input_ids, "labels": labels}
 
 
@@ -99,10 +113,10 @@ def main():
     )
 
     lora_config = LoraConfig(
-        r=16,
-        lora_alpha=32,
+        r=8,  # 减小r值，减少可训练参数
+        lora_alpha=16,  # 相应减小alpha值
         target_modules=["q_proj", "v_proj"],
-        lora_dropout=0.05,
+        lora_dropout=0.1,  # 增加dropout，防止过拟合
         bias="none",
         task_type="CAUSAL_LM",
     )
@@ -119,7 +133,7 @@ def main():
         per_device_eval_batch_size=1,
         gradient_accumulation_steps=8,  # 通过梯度累积等效放大 batch
         num_train_epochs=3,
-        learning_rate=1e-4,
+        learning_rate=1e-5,  # 进一步降低学习率，避免梯度爆炸
         logging_steps=20,
         eval_strategy="steps",  # 这里将 evaluation_strategy 改为 eval_strategy
         eval_steps=200,
@@ -128,6 +142,8 @@ def main():
         fp16=torch.cuda.is_available(),  # 只有有 CUDA 时才启用 fp16
         bf16=False,
         report_to=[],
+        max_grad_norm=1.0,  # 添加梯度裁剪，防止梯度爆炸
+        warmup_ratio=0.03,  # 添加学习率预热
     )
 
     trainer = Trainer(

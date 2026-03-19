@@ -14,7 +14,9 @@ class Config:
     # 大模型配置（用于真微调的基础模型）
     # 建议使用 DeepSeek R1 的开源蒸馏版本，请在 Hugging Face 上确认最终模型名称
     # 示例： "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B"
-    MODEL_NAME = "Qwen/Qwen1.5-4B"
+    # MODEL_NAME = "Qwen/Qwen1.5-4B"
+    MODEL_NAME = "Qwen/Qwen1.5-1.8B"
+
     FINETUNED_MODEL_PATH = "llm/earthquake_expert_deepseek_r1"
     
     # 微调配置
