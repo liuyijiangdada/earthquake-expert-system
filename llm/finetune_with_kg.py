@@ -12,13 +12,13 @@ import torch
 # 添加项目根目录到Python路径
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config.config import Config
-from kg.in_memory_kg import InMemoryKG
+from kg.neo4j_kg import Neo4jKG
 
 class KGFinetuner:
     def __init__(self):
         self.config = Config()
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.kg = InMemoryKG()
+        self.kg = Neo4jKG()
         self.kg.run()
     
     def generate_training_data(self, num_examples=100):

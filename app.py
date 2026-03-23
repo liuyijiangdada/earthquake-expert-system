@@ -16,13 +16,13 @@ os.environ['TRANSFORMERS_OFFLINE'] = '1'
 # 添加项目根目录到Python路径
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from config.config import Config
-from kg.in_memory_kg import InMemoryKG
+from kg.neo4j_kg import Neo4jKG
 
 app = Flask(__name__)
 config = Config()
 
-# 初始化知识图谱
-kg = InMemoryKG()
+# 初始化知识图谱（Neo4j）
+kg = Neo4jKG()
 kg.run()
 
 # 微调模型：基础权重 + LoRA
@@ -241,7 +241,7 @@ def index():
 def update_data():
     """更新地震数据"""
     try:
-        # 更新内存知识图谱
+        # 更新 Neo4j 知识图谱
         updated_count = kg.update_from_realtime_data()
         
         return jsonify({

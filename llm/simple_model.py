@@ -7,14 +7,14 @@ import sys
 # 添加项目根目录到Python路径
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config.config import Config
-from kg.in_memory_kg import InMemoryKG
+from kg.neo4j_kg import Neo4jKG
 
 class SimpleEarthquakeModel:
     """简化的地震知识模型"""
     
     def __init__(self):
         self.config = Config()
-        self.kg = InMemoryKG()
+        self.kg = Neo4jKG()
         self.kg.run()
     
     def generate_response(self, input_text):
@@ -38,7 +38,7 @@ class SimpleEarthquakeModel:
             return "中国地震多发区主要包括：四川、云南、西藏、青海、新疆、甘肃、河北、台湾等地区，这些地区位于板块交界处或地质构造活跃区域。"
         
         elif "地震" in input_text and "多少" in input_text:
-            count = len(self.kg.earthquakes)
+            count = self.kg.count_earthquakes()
             return f"知识图谱中目前记录了{count}条地震数据。"
         
         elif "四川宜宾" in input_text or "宜宾" in input_text:
