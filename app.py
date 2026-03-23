@@ -3,14 +3,20 @@
 
 from flask import Flask, request, jsonify
 import os
+import re
 import sys
-import requests
+import torch
+from transformers import AutoTokenizer, AutoModelForCausalLM
+from peft import PeftModel
+
+# 设置环境变量，强制使用离线模式
+os.environ['HF_HUB_OFFLINE'] = '1'
+os.environ['TRANSFORMERS_OFFLINE'] = '1'
 
 # 添加项目根目录到Python路径
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from config.config import Config
 from kg.in_memory_kg import InMemoryKG
-from llm.simple_model import SimpleEarthquakeModel
 
 app = Flask(__name__)
 config = Config()
@@ -19,34 +25,56 @@ config = Config()
 kg = InMemoryKG()
 kg.run()
 
-# 初始化简化的大模型
-simple_model = SimpleEarthquakeModel()
+# 微调模型：基础权重 + LoRA
+MODEL_NAME = config.MODEL_NAME
+MODEL_DIR = config.FINETUNED_MODEL_PATH
 
-# 微调后专家模型服务配置（见 llm/serve_earthquake_expert.py）
-FINETUNED_MODEL_ENDPOINT = "http://127.0.0.1:9000/generate"
+print(f"加载基础模型: {MODEL_NAME}")
+# 选择推理设备（优先 MPS，其次 CUDA，最后 CPU）
+if torch.backends.mps.is_available():
+    device = torch.device("mps")
+elif torch.cuda.is_available():
+    device = torch.device("cuda")
+else:
+    device = torch.device("cpu")
 
-# 测试微调模型服务连接
-def test_finetuned_model_connection():
-    try:
-        resp = requests.get("http://127.0.0.1:9000/health", timeout=5)
-        if resp.status_code == 200:
-            print("微调模型服务连接成功!")
-            return True
-        print(f"微调模型服务健康检查失败，状态码: {resp.status_code}")
-        return False
-    except Exception as e:
-        print(f"微调模型服务连接失败: {e}")
-        return False
+dtype = torch.float16 if device.type in {"cuda", "mps"} else torch.float32
 
-# 模型推理函数（使用Ollama模型）
+# 加载基础模型
+try:
+    # 直接从本地缓存加载模型，避免网络请求
+    base_model = AutoModelForCausalLM.from_pretrained(
+        MODEL_NAME,
+        dtype=dtype,
+        device_map=None,
+        trust_remote_code=False,  # 禁用远程代码，避免网络请求
+        low_cpu_mem_usage=True,
+        local_files_only=True,
+    )
+    
+    # 直接从本地缓存加载tokenizer
+    tokenizer = AutoTokenizer.from_pretrained(
+        MODEL_NAME, 
+        trust_remote_code=False,  # 禁用远程代码，避免网络请求
+        local_files_only=True,
+    )
+    
+    print(f"加载微调模型: {MODEL_DIR}")
+    # 加载 LoRA 权重
+    model = PeftModel.from_pretrained(base_model, MODEL_DIR)
+    model.to(device)
+    model.eval()
+    print("微调模型加载成功!")
+except Exception as e:
+    print(f"模型加载失败: {e}")
+    sys.exit(1)
+
+# 模型推理函数
 def generate_response(instruction, input_text):
     try:
         # 1. 智能实体识别和多维度知识图谱查询
         kg_context = ""
 
-        # 提取输入中的关键信息
-        input_lower = input_text.lower()
-        
         # 地区识别和查询
         regions = ["四川", "云南", "青海", "西藏", "新疆", "甘肃", "河北", "台湾", "广东", "辽宁", 
                    "北京", "上海", "江苏", "浙江", "安徽", "福建", "江西", "山东", "河南", "湖北", 
@@ -76,7 +104,6 @@ def generate_response(instruction, input_text):
         # 震级范围查询
         if "震级" in input_text:
             if "大于" in input_text or "高于" in input_text:
-                import re
                 match = re.search(r'(大于|高于)(\d+\.?\d*)', input_text)
                 if match:
                     min_mag = float(match.group(2))
@@ -87,7 +114,7 @@ def generate_response(instruction, input_text):
                             kg_context += f"{i+1}. {eq['location']}：{eq['magnitude']}级 ({eq['time']})\n"
                         kg_context += "\n"
         
-        # 3. 构建结构化提示词
+        # 构建结构化提示词
         prompt = f"你是一个地震知识专家，请根据以下知识图谱信息回答问题：\n\n"
         if kg_context:
             prompt += f"{kg_context}\n"
@@ -100,26 +127,59 @@ def generate_response(instruction, input_text):
         prompt += "4. 不要使用任何强调符号如***\n"
         prompt += "5. 如果知识图谱中没有相关信息，请基于你的知识提供合理的回答"
         
-        # 3. 调用微调后的本地专家模型服务
-        resp = requests.post(
-            FINETUNED_MODEL_ENDPOINT,
-            json={
-                "prompt": prompt,
-                "temperature": 0.7,
-                "max_tokens": 512,
-            },
-            timeout=120,
-        )
-        if resp.status_code != 200:
-            print(f"微调模型服务返回错误状态码: {resp.status_code}")
-            return simple_model.generate_response(input_text)
+        # 直接使用本地微调模型进行推理
+        # 使用与微调时相同的聊天格式
+        messages = [
+            {"role": "system", "content": "你是一个地震专家，专注于回答地震相关问题。"},
+            {"role": "user", "content": prompt}
+        ]
+        
+        text = ""
+        for m in messages:
+            role = m["role"]
+            content = m["content"]
+            if role == "system":
+                text += f"<|system|>{content}</s>"
+            elif role == "user":
+                text += f"<|user|>{content}</s>"
+            elif role == "assistant":
+                text += f"<|assistant|>{content}</s>"
+        
+        # 添加 assistant 标记，表示模型开始生成回答
+        text += "<|assistant|>"
 
-        data = resp.json()
-        return data.get("response", "").strip()
+        inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True, max_length=1024)
+        input_ids = inputs.input_ids.to(device)
+        attention_mask = inputs.attention_mask.to(device)
+
+        # 检查 pad_token_id
+        if tokenizer.pad_token_id is None:
+            tokenizer.pad_token_id = tokenizer.eos_token_id
+
+        with torch.no_grad():
+            outputs = model.generate(
+                input_ids=input_ids,
+                attention_mask=attention_mask,
+                max_new_tokens=512,
+                temperature=0.7,
+                do_sample=True,
+                top_p=0.95,
+            )
+
+        # 只取新生成的部分
+        generated = outputs[0][input_ids.shape[-1]:]
+        text = tokenizer.decode(generated, skip_special_tokens=True).strip()
+        
+        # 过滤掉可能的特殊标记
+        text = text.replace("</s>", "").replace("<|system|>", "").replace("<|user|>", "").replace("<|assistant|>", "")
+        
+        # 确保文本干净
+        text = text.strip()
+        
+        return text
     except Exception as e:
-        print(f"Ollama模型推理错误: {e}")
-        # 降级到简化模型
-        return simple_model.generate_response(input_text)
+        print(f"模型推理错误: {e}")
+        return "模型推理暂时失败，请稍后重试。"
 
 # API路由
 @app.route("/api/query", methods=["POST"])
@@ -199,10 +259,4 @@ def update_data():
 if __name__ == "__main__":
     print("启动地震知识图谱和大模型应用...")
     print("启动Flask应用...")
-    print("测试微调模型服务连接...")
-    finetuned_ok = test_finetuned_model_connection()
-
-    if not finetuned_ok:
-        print("微调模型服务不可用，将使用简化规则模型 simple_model")
-    
     app.run(host=config.DEPLOY_HOST, port=config.DEPLOY_PORT, debug=True)

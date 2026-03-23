@@ -3,6 +3,7 @@
 
 import os
 import sys
+import json
 
 import torch
 from flask import Flask, request, jsonify
@@ -106,8 +107,19 @@ def generate():
     # 只取新生成的部分
     generated = outputs[0][input_ids.shape[-1]:]
     text = tokenizer.decode(generated, skip_special_tokens=True).strip()
+    
+    # 过滤掉可能的特殊标记
+    text = text.replace("</s>", "").replace("<|system|>", "").replace("<|user|>", "").replace("<|assistant|>", "")
+    
+    # 确保文本干净
+    text = text.strip()
 
-    return jsonify({"response": text})
+    # 确保返回的JSON正确处理中文
+    response = {"response": text}
+    return app.response_class(
+        response=json.dumps(response, ensure_ascii=False),
+        mimetype='application/json'
+    )
 
 
 if __name__ == "__main__":
