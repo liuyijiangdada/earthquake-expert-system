@@ -23,6 +23,7 @@
 | `requirements.txt` | 增加 `sentence-transformers`、`pytest` |
 | `tests/test_emergency_chunks.py` | 分块与元数据单元测试（无 GPU/无大模型） |
 | `tests/test_emergency_rag_search.py` | 使用固定随机向量的 stub 嵌入器测试 Top-K 行为 |
+| `tests/test_emergency_rag_live.py` | 可选：真实嵌入模型集成测试（`RUN_LIVE_EMBED_TESTS=1`） |
 
 **本阶段不修改：** `kg/neo4j_kg.py`（spec 冻结）。  
 **范围外（注明即可）：** `llm/serve_earthquake_expert.py` 仅接受原始 `prompt`，v1 不强制改；若论文需双入口一致，可在本计划全部完成后再开小型 follow-up。
@@ -64,7 +65,9 @@ def test_load_emergency_chunks_count_and_ids():
 
 - [ ] **Step 2: 运行测试，确认失败**
 
-Run: `cd /Users/xiaoxiaoqingnian/Desktop/biyelunwen && pip install pytest -q && pytest tests/test_emergency_chunks.py -v`  
+在项目根目录执行：  
+`pip install pytest -q && pytest tests/test_emergency_chunks.py -v`  
+（根目录可用 `cd "$(git rev-parse --show-toplevel)"` 定位。）  
 Expected: **FAIL**（`load_emergency_chunks` 不存在或 ImportError）
 
 - [ ] **Step 3: 最小实现**
@@ -249,6 +252,8 @@ git commit -m "config: KG/RAG toggles and embedding settings"
 4. `tokenizer(..., max_length=1024)` **保持不变**；若超长，优先缩短 `【参考资料】` 条目数或每条条目字符（在代码里对 RAG 文本做 `[:RAG_MAX_CHUNK_CHARS]` 已缓解）。
 
 5. **可选：** `query_type == "llm"` 时若 `API_DEBUG_RAG`，在 `jsonify` 中增加 `debug: {"rag_topic_ids": [...], "kg_enabled": ..., "rag_enabled": ...}`。
+
+6. **离线注意：** `app.py` 已设 `HF_HUB_OFFLINE` / `TRANSFORMERS_OFFLINE` 时，若本机无嵌入模型缓存，`SentenceTransformer` 会失败并走 RAG 降级；需先在有网环境将 `RAG_EMBEDDING_MODEL` 拉入 HF 缓存（与 Task 3 说明一致）。
 
 - [ ] **Step 1: 手写或用脚本确认** 启动应用后，对同一问题切换 `.env` 或临时改 `Config` 三种组合，检查响应与日志（集成测试可选，不强制 pytest Flask client，以免加载大模型）。
 - [ ] **Step 2: Commit**
