@@ -255,6 +255,10 @@ OLLAMA_MODEL = "其他模型名称"
 - 增加系统内存到16GB以上
 - 优化知识图谱查询性能
 
+## 应急知识 RAG（可选）
+
+主应用会从 `data/emergency_knowledge.json` 构建句向量索引，默认嵌入模型为 `BAAI/bge-small-zh-v1.5`（见 `config/config.py` 的 `RAG_EMBEDDING_MODEL`）。若 `app.py` 使用离线 Hugging Face 环境，请先在可联网环境下将该模型下载到本机缓存；加载失败时服务仍会启动，仅 `【参考资料】` 显示为「无相关条目」。关闭 RAG：在配置中设 `RAG_ENABLED = False`。
+
 ## 总结
 
 本项目成功实现了地震知识图谱与大模型的深度融合，通过以下特点提供优质的地震知识服务：

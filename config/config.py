@@ -40,3 +40,11 @@ class Config:
     # 日志配置
     LOG_LEVEL = "INFO"
     LOG_FILE = "logs/app.log"
+
+    # RAG / KG 消融与应急知识向量检索
+    KG_CONTEXT_ENABLED = True
+    RAG_ENABLED = True
+    RAG_EMBEDDING_MODEL = "BAAI/bge-small-zh-v1.5"
+    RAG_TOP_K = 5
+    RAG_MAX_CHUNK_CHARS = 800
+    API_DEBUG_RAG = False
