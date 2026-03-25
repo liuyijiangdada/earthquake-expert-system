@@ -46,8 +46,9 @@
 
 **结构要点（实现依据）：**
 
-- 顶层含 `topics[]`，每项含 `id`、`title`、`category`、`source`、`steps[]`（`order`、`text`）。
-- 另含 `topic_relations[]`，v1 **可不写入向量块正文**，仍由图谱侧表达关系；若某实现选择把 `relations` 拼入某 topic 块以提升召回，须在实现中注明且控制长度。
+- 顶层含 `meta`（说明性文字）、`topics[]`、`topic_relations[]`。**`meta` 不纳入向量索引**，避免与可检索要点混淆。
+- `topics[]` 每项含 `id`、`title`、`category`、`source`、`steps[]`（`order`、`text`）。
+- `topic_relations[]`：v1 **可不写入向量块正文**，仍由图谱侧表达关系；若实现选择把关系摘要拼入某 topic 块以提升召回，须在实现中注明且控制长度。
 
 **推荐分块（二选一，规划阶段锁定一种即可）：**
 
@@ -70,7 +71,7 @@
 | `generate_response`（或等价封装） | 在构建 `prompt` 前：调用 RAG 检索模块，将结果追加为独立段落（如 `【参考资料】`）。 |
 | 新增模块（建议） | `rag/` 或 `kg/` 并列的 `rag/emergency_rag.py`：加载/构建索引、`search(query) -> list[{text, topic_id, score}]`，避免 `app.py` 过度膨胀。 |
 
-**配置：** 在 `config/config.py`（或环境变量）中增加嵌入模型路径、向量库路径、Top-K、每块最大字符数等，避免硬编码。
+**配置：** 在 `config/config.py`（或环境变量）中增加：嵌入模型路径、向量库路径、Top-K、每块最大字符数；并设 **独立开关** `KG_CONTEXT_ENABLED`、`RAG_ENABLED`（或等价命名），以支持消融「关 RAG / 关 KG / 全开」而无需改代码路径。
 
 ---
 
@@ -79,8 +80,8 @@
 **段落顺序（固定）：**
 
 1. 角色与任务说明（可与现有一致）。
-2. `【知识图谱】`（现有 `kg_context`，无结果则省略或显式写「无」）。
-3. `【参考资料】`（RAG Top-K；无结果则省略或显式写「无相关条目」）。
+2. `【知识图谱】`（现有 `kg_context`；**无结果时固定写一行** `（无）`；若配置关闭 KG 路径，固定写 `（本路径已关闭）`，与「无结果」区分）。
+3. `【参考资料】`（RAG Top-K；**无结果时固定写一行** `（无相关条目）`；RAG 功能关闭时写 `（本路径已关闭）`）。
 4. `【问题】` + 用户原文。
 5. 回答约束。
 
@@ -92,7 +93,7 @@
 **长度与截断：**
 
 - 图谱部分维持现有条数/长度策略。
-- RAG：Top-K 建议 3～5；单块长度上限与总 `max_length=1024`（当前 tokenizer 截断）协调——若不足，优先缩短 RAG 摘录或提高图谱摘要密度，在实现计划中给出具体数字。
+- RAG：Top-K 建议 3～5；单块长度上限与 **`generate_response` 实际使用的 tokenizer `max_length` / 模型上下文** 协调（实现计划阶段对照 `app.py` 或 `llm/serve_earthquake_expert.py` 等调用点核对具体数值，避免文档与代码不一致）。
 
 ---
 
