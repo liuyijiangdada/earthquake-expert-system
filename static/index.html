@@ -312,7 +312,21 @@
             height: 260px;
             width: 100%;
         }
-        .chart-box.tall { height: 300px; }
+        .chart-box.tall { height: 280px; }
+
+        .insight-hint {
+            font-size: 0.72rem;
+            color: var(--muted);
+            margin: 0 0 0.5rem;
+            line-height: 1.45;
+        }
+        .depth-strip {
+            font-size: 0.72rem;
+            color: var(--muted);
+            padding-top: 0.35rem;
+            border-top: 1px solid var(--border);
+        }
+        .depth-strip span strong { color: var(--accent); font-weight: 600; }
 
         .feedback-row {
             margin-top: 0.65rem;
@@ -411,23 +425,19 @@
                     </div>
                 </div>
 
-                <div class="card-dark mb-3">
-                    <div class="card-h text-white">
-                        <i class="fas fa-chart-bar text-warning"></i>
-                        震级分布（条形）
-                    </div>
-                    <div class="card-b">
-                        <div class="chart-box" id="magnitudeChart"></div>
-                    </div>
-                </div>
-
                 <div class="card-dark">
                     <div class="card-h text-white">
-                        <i class="fas fa-chart-pie text-warning"></i>
-                        地区占比
+                        <i class="fas fa-bolt text-warning"></i>
+                        震级分级与震源深度
                     </div>
                     <div class="card-b">
-                        <div class="chart-box tall" id="regionChart"></div>
+                        <p class="insight-hint">按震级区间统计当前知识库条数；深度按浅源(&lt;70km)、中源(70–300km)、深源(&gt;300km)划分，便于观察能量释放深度特征。</p>
+                        <div class="chart-box tall" id="insightChart"></div>
+                        <div class="depth-strip text-center" id="depthStrip">
+                            浅源 <strong id="depthShallow">—</strong> 条 ·
+                            中源 <strong id="depthMid">—</strong> 条 ·
+                            深源 <strong id="depthDeep">—</strong> 条
+                        </div>
                     </div>
                 </div>
             </div>
@@ -435,8 +445,7 @@
     </main>
 
     <script>
-        const magnitudeChart = echarts.init(document.getElementById('magnitudeChart'));
-        const regionChart = echarts.init(document.getElementById('regionChart'));
+        const insightChart = echarts.init(document.getElementById('insightChart'));
 
         const WELCOME = '你好，我是地震知识助手。你可以问我关于成因、避险、预警、历史震例等问题；我也会尽量结合后台知识图谱中的地震记录来回答。';
 
@@ -631,8 +640,7 @@
             .then(function (data) {
                 if (!data.results) return;
                 updateStats(data.results);
-                updateMagnitudeChart(data.results);
-                updateRegionChart(data.results);
+                updateInsightModule(data.results);
             })
             .catch(function () {
                 document.getElementById('totalEarthquakes').textContent = '—';
@@ -644,6 +652,9 @@
                 document.getElementById('totalEarthquakes').textContent = '0';
                 document.getElementById('maxMagnitude').textContent = '—';
                 document.getElementById('regionCount').textContent = '0';
+                document.getElementById('depthShallow').textContent = '—';
+                document.getElementById('depthMid').textContent = '—';
+                document.getElementById('depthDeep').textContent = '—';
                 return;
             }
             document.getElementById('totalEarthquakes').textContent = earthquakes.length;
@@ -654,92 +665,65 @@
             document.getElementById('regionCount').textContent = Object.keys(regions).length;
         }
 
-        function updateMagnitudeChart(earthquakes) {
-            const dark = {
-                textStyle: { color: '#8b95a8' },
-                axisLine: { lineStyle: { color: 'rgba(255,255,255,0.15)' } },
-                splitLine: { lineStyle: { color: 'rgba(255,255,255,0.06)' } }
-            };
-            const locations = earthquakes.map(function (eq) { return eq.location; });
-            const magnitudes = earthquakes.map(function (eq) { return eq.magnitude; });
-            magnitudeChart.setOption({
-                backgroundColor: 'transparent',
-                tooltip: {
-                    trigger: 'axis',
-                    backgroundColor: 'rgba(15, 23, 42, 0.95)',
-                    borderColor: 'rgba(255,255,255,0.1)',
-                    textStyle: { color: '#e8ecf4' },
-                    formatter: function (params) {
-                        var p = params[0];
-                        return p.name + '<br/>震级: ' + p.value;
-                    }
-                },
-                grid: { left: '3%', right: '4%', bottom: '18%', containLabel: true },
-                xAxis: {
-                    type: 'category',
-                    data: locations,
-                    axisLabel: { rotate: 40, interval: 0, color: '#8b95a8', fontSize: 10 },
-                    axisLine: dark.axisLine
-                },
-                yAxis: {
-                    type: 'value',
-                    name: '震级',
-                    nameTextStyle: { color: '#8b95a8' },
-                    min: 0,
-                    axisLabel: { color: '#8b95a8' },
-                    splitLine: dark.splitLine
-                },
-                series: [{
-                    data: magnitudes,
-                    type: 'bar',
-                    itemStyle: {
-                        color: function (params) {
-                            var m = params.value;
-                            if (m < 3) return '#34d399';
-                            if (m < 4) return '#3b82f6';
-                            if (m < 5) return '#fbbf24';
-                            if (m < 6) return '#f97316';
-                            if (m < 7) return '#ef4444';
-                            return '#a855f7';
-                        },
-                        borderRadius: [4, 4, 0, 0]
-                    }
-                }]
-            });
-        }
-
-        function updateRegionChart(earthquakes) {
-            var regionCount = {};
+        function updateInsightModule(earthquakes) {
+            var magLabels = ['<3 微震', '3–4 小震', '4–5 中震', '5–6 强震', '≥6 大震'];
+            var magBins = [0, 0, 0, 0, 0];
+            var shallow = 0, mid = 0, deep = 0;
             earthquakes.forEach(function (eq) {
-                regionCount[eq.location] = (regionCount[eq.location] || 0) + 1;
+                var m = parseFloat(eq.magnitude);
+                if (isNaN(m)) return;
+                if (m < 3) magBins[0]++;
+                else if (m < 4) magBins[1]++;
+                else if (m < 5) magBins[2]++;
+                else if (m < 6) magBins[3]++;
+                else magBins[4]++;
+                var d = parseFloat(eq.depth);
+                if (isNaN(d)) return;
+                if (d < 70) shallow++;
+                else if (d <= 300) mid++;
+                else deep++;
             });
-            var pieData = Object.keys(regionCount).map(function (k) {
-                return { name: k, value: regionCount[k] };
-            });
-            regionChart.setOption({
+            var pieData = [];
+            for (var i = 0; i < magLabels.length; i++) {
+                pieData.push({ name: magLabels[i], value: magBins[i] });
+            }
+            document.getElementById('depthShallow').textContent = shallow;
+            document.getElementById('depthMid').textContent = mid;
+            document.getElementById('depthDeep').textContent = deep;
+
+            insightChart.setOption({
                 backgroundColor: 'transparent',
                 tooltip: {
                     trigger: 'item',
                     backgroundColor: 'rgba(15, 23, 42, 0.95)',
                     borderColor: 'rgba(255,255,255,0.1)',
-                    textStyle: { color: '#e8ecf4' }
+                    textStyle: { color: '#e8ecf4' },
+                    formatter: function (p) {
+                        return p.name + '<br/>条数：' + p.value + (p.percent != null ? '（' + p.percent + '%）' : '');
+                    }
                 },
                 legend: {
-                    orient: 'vertical',
-                    left: 'left',
-                    top: 'middle',
-                    textStyle: { color: '#8b95a8', fontSize: 10 },
-                    type: 'scroll'
+                    orient: 'horizontal',
+                    bottom: 0,
+                    left: 'center',
+                    textStyle: { color: '#8b95a8', fontSize: 10 }
                 },
                 series: [{
-                    name: '占比',
+                    name: '震级分级',
                     type: 'pie',
-                    radius: ['38%', '62%'],
-                    center: ['58%', '50%'],
+                    radius: ['42%', '68%'],
+                    center: ['50%', '44%'],
+                    avoidLabelOverlap: true,
+                    itemStyle: {
+                        borderRadius: 6,
+                        borderColor: '#121a2e',
+                        borderWidth: 2
+                    },
+                    label: { color: '#c4cad6', fontSize: 11, formatter: '{b}\n{c}条' },
                     data: pieData,
-                    label: { color: '#c4cad6', formatter: '{b}\n{c}' },
+                    color: ['#34d399', '#3b82f6', '#fbbf24', '#f97316', '#ef4444'],
                     emphasis: {
-                        itemStyle: { shadowBlur: 12, shadowColor: 'rgba(0,0,0,0.45)' }
+                        itemStyle: { shadowBlur: 14, shadowColor: 'rgba(0,0,0,0.5)' }
                     }
                 }]
             });
@@ -768,8 +752,7 @@
         });
 
         window.addEventListener('resize', function () {
-            magnitudeChart.resize();
-            regionChart.resize();
+            insightChart.resize();
         });
     </script>
 </body>

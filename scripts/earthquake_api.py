@@ -21,7 +21,8 @@ def get_recent_earthquakes():
     }
     
     try:
-        response = requests.get(url, params=params)
+        response = requests.get(url, params=params, timeout=30)
+        response.raise_for_status()
         data = response.json()
         
         # 处理数据
@@ -51,38 +52,7 @@ def get_recent_earthquakes():
         return earthquakes
     except Exception as e:
         print(f"获取地震数据失败: {e}")
-        # 降级到模拟数据
-        return generate_mock_earthquakes()
-
-def generate_mock_earthquakes():
-    """生成模拟地震数据（当API调用失败时使用）"""
-    mock_data = [
-        {
-            "id": f"eq_{int(time.time())}_0",
-            "name": "四川宜宾地震",
-            "location": "四川宜宾",
-            "time": (datetime.now() - timedelta(hours=2)).strftime("%Y-%m-%d %H:%M:%S"),
-            "magnitude": 4.5,
-            "depth": 10,
-            "latitude": 28.43,
-            "longitude": 104.77,
-            "intensity": "VI度",
-            "description": "震级4.5级地震"
-        },
-        {
-            "id": f"eq_{int(time.time())}_1",
-            "name": "云南大理地震",
-            "location": "云南大理",
-            "time": (datetime.now() - timedelta(hours=5)).strftime("%Y-%m-%d %H:%M:%S"),
-            "magnitude": 3.8,
-            "depth": 8,
-            "latitude": 25.68,
-            "longitude": 100.13,
-            "intensity": "V度",
-            "description": "震级3.8级地震"
-        }
-    ]
-    return mock_data
+        return []
 
 def update_earthquake_data():
     """更新地震数据到文件"""

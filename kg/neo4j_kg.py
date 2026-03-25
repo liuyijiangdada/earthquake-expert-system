@@ -1,14 +1,24 @@
 #!/usr/bin/env python3
-# 基于 Neo4j 的地震知识图谱
+# 基于 Neo4j 的地震知识图谱（真实事件目录 + 应急知识关系）
 
+import json
 import os
 import sys
+from typing import Optional
 
 import pandas as pd
 from neo4j import GraphDatabase
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config.config import Config
+
+# 用于从文本中归并省级 Region（与 app 中地区列表一致）
+_REGION_NAMES = [
+    "四川", "云南", "青海", "西藏", "新疆", "甘肃", "河北", "台湾", "广东", "辽宁",
+    "北京", "上海", "江苏", "浙江", "安徽", "福建", "江西", "山东", "河南", "湖北",
+    "湖南", "广西", "海南", "重庆", "贵州", "陕西", "吉林", "黑龙江", "内蒙古",
+    "宁夏", "香港", "澳门",
+]
 
 
 def _node_to_dict(node) -> dict:
@@ -31,8 +41,17 @@ def _row_to_eq(record) -> dict:
     return _node_to_dict(record["e"])
 
 
+def _infer_region_from_location(location: str) -> Optional[str]:
+    if not location:
+        return None
+    for r in _REGION_NAMES:
+        if r in location:
+            return r
+    return None
+
+
 class Neo4jKG:
-    """地震数据存于 Neo4j，节点标签 Earthquake，属性与 CSV 列一致。"""
+    """地震事件 + 区域节点 + 应急知识主题与步骤关系。"""
 
     def __init__(self):
         self.config = Config()
@@ -58,15 +77,78 @@ class Neo4jKG:
             FOR (e:Earthquake) REQUIRE e.id IS UNIQUE
             """
         )
+        session.run(
+            """
+            CREATE CONSTRAINT region_name_unique IF NOT EXISTS
+            FOR (r:Region) REQUIRE r.name IS UNIQUE
+            """
+        )
+        session.run(
+            """
+            CREATE CONSTRAINT emergency_topic_id_unique IF NOT EXISTS
+            FOR (t:EmergencyTopic) REQUIRE t.id IS UNIQUE
+            """
+        )
+        session.run(
+            """
+            CREATE CONSTRAINT guidance_step_id_unique IF NOT EXISTS
+            FOR (s:GuidanceStep) REQUIRE s.id IS UNIQUE
+            """
+        )
 
-    def _import_csv(self, session):
-        path = self.config.EARTHQUAKE_DATA_FILE
-        if not os.path.isfile(path):
-            print(f"警告: 数据文件不存在 {path}，跳过 Neo4j 初始导入。")
-            return
-        df = pd.read_csv(path)
-        print(f"向 Neo4j 导入 {len(df)} 条地震数据（CSV）...")
-        for _, row in df.iterrows():
+    def _import_emergency_knowledge(self, session, path: str) -> None:
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        topics = data.get("topics", [])
+        print(f"导入应急知识主题 {len(topics)} 个…")
+        for topic in topics:
+            tid = topic["id"]
+            session.run(
+                """
+                MERGE (t:EmergencyTopic {id: $id})
+                SET t.title = $title, t.category = $category, t.source = $source
+                """,
+                id=tid,
+                title=topic.get("title", ""),
+                category=topic.get("category", ""),
+                source=topic.get("source", ""),
+            )
+            for step in topic.get("steps", []):
+                oid = int(step["order"])
+                sid = f"{tid}_step_{oid}"
+                session.run(
+                    """
+                    MATCH (t:EmergencyTopic {id: $tid})
+                    MERGE (s:GuidanceStep {id: $sid})
+                    SET s.text = $text, s.order = $ord
+                    MERGE (t)-[hs:HAS_STEP {order: $ord}]->(s)
+                    """,
+                    tid=tid,
+                    sid=sid,
+                    text=step.get("text", ""),
+                    ord=oid,
+                )
+        for rel in data.get("topic_relations", []):
+            session.run(
+                """
+                MATCH (a:EmergencyTopic {id: $fid}), (b:EmergencyTopic {id: $tid})
+                MERGE (a)-[r:RELATES_TO]->(b)
+                SET r.relation_type = $rtype
+                """,
+                fid=rel["from_id"],
+                tid=rel["to_id"],
+                rtype=rel.get("relation_type", ""),
+            )
+        print("应急知识关系导入完成。")
+
+    def _import_real_earthquake_catalog(self, session, path: str) -> None:
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        rows = data.get("earthquakes", [])
+        print(f"导入真实地震目录 {len(rows)} 条…")
+        for row in rows:
+            eid = str(row["id"])
+            region = row.get("region") or _infer_region_from_location(row.get("location", ""))
             session.run(
                 """
                 MERGE (e:Earthquake {id: $id})
@@ -80,21 +162,87 @@ class Neo4jKG:
                     e.intensity = $intensity,
                     e.description = $description
                 """,
-                id=str(row["id"]),
+                id=eid,
+                name=str(row.get("name", "")),
+                time=str(row.get("time", "")),
+                magnitude=float(row.get("magnitude", 0)),
+                depth=float(row.get("depth", 0)),
+                location=str(row.get("location", "")),
+                latitude=float(row.get("latitude", 0)),
+                longitude=float(row.get("longitude", 0)),
+                intensity=str(row.get("intensity", "")),
+                description=str(row.get("description", "")),
+            )
+            if region:
+                session.run(
+                    """
+                    MATCH (e:Earthquake {id: $eid})
+                    MERGE (r:Region {name: $rname})
+                    MERGE (e)-[:OCCURRED_IN]->(r)
+                    """,
+                    eid=eid,
+                    rname=region,
+                )
+            for tid in row.get("links_to_topics", []) or []:
+                session.run(
+                    """
+                    MATCH (e:Earthquake {id: $eid}), (t:EmergencyTopic {id: $tid})
+                    MERGE (e)-[:SUGGESTS_TOPIC]->(t)
+                    """,
+                    eid=eid,
+                    tid=tid,
+                )
+        print("真实地震目录与关联导入完成。")
+
+    def _import_csv(self, session):
+        path = self.config.EARTHQUAKE_DATA_FILE
+        if not os.path.isfile(path):
+            print(f"警告: 数据文件不存在 {path}，跳过 CSV 导入。")
+            return
+        df = pd.read_csv(path)
+        print(f"向 Neo4j 导入 {len(df)} 条地震数据（CSV，兼容旧版）...")
+        for _, row in df.iterrows():
+            eid = str(row["id"])
+            loc = str(row.get("location", ""))
+            region = _infer_region_from_location(loc)
+            session.run(
+                """
+                MERGE (e:Earthquake {id: $id})
+                SET e.name = $name,
+                    e.time = $time,
+                    e.magnitude = toFloat($magnitude),
+                    e.depth = toFloat($depth),
+                    e.location = $location,
+                    e.latitude = toFloat($latitude),
+                    e.longitude = toFloat($longitude),
+                    e.intensity = $intensity,
+                    e.description = $description
+                """,
+                id=eid,
                 name=str(row["name"]),
                 time=str(row["time"]),
                 magnitude=float(row["magnitude"]),
                 depth=float(row["depth"]),
-                location=str(row["location"]),
+                location=loc,
                 latitude=float(row["latitude"]),
                 longitude=float(row["longitude"]),
                 intensity=str(row["intensity"]),
                 description=str(row["description"]),
             )
+            if region:
+                session.run(
+                    """
+                    MATCH (e:Earthquake {id: $eid})
+                    MERGE (r:Region {name: $rname})
+                    MERGE (e)-[:OCCURRED_IN]->(r)
+                    """,
+                    eid=eid,
+                    rname=region,
+                )
         print("Neo4j CSV 导入完成。")
 
     def run(self):
-        """连接数据库；若无地震节点则从 CSV 导入。"""
+        """空库时优先加载「真实目录 + 应急知识」JSON；否则回退仅 CSV。"""
         driver = self._connect()
         try:
             with driver.session() as session:
@@ -104,7 +252,15 @@ class Neo4jKG:
                 ).single()["c"]
                 if n == 0:
                     print("初始化 Neo4j 知识图谱...")
-                    self._import_csv(session)
+                    cat = self.config.REAL_EARTHQUAKE_CATALOG_FILE
+                    emg = self.config.EMERGENCY_KNOWLEDGE_FILE
+                    if os.path.isfile(cat) and os.path.isfile(emg):
+                        self._import_emergency_knowledge(session, emg)
+                        self._import_real_earthquake_catalog(session, cat)
+                    elif os.path.isfile(self.config.EARTHQUAKE_DATA_FILE):
+                        self._import_csv(session)
+                    else:
+                        print("警告: 未找到 real_earthquakes_catalog.json / emergency_knowledge.json 或 earthquake_data.csv")
                 print("Neo4j 知识图谱就绪。")
         except Exception as e:
             print(f"Neo4j 连接或初始化失败: {e}")
@@ -112,7 +268,6 @@ class Neo4jKG:
 
     @property
     def earthquakes(self):
-        """兼容 InMemoryKG 的 .earthquakes 访问。"""
         return self.query_all_earthquakes()
 
     def count_earthquakes(self):
@@ -136,7 +291,7 @@ class Neo4jKG:
             result = session.run(
                 """
                 MATCH (e:Earthquake)
-                WHERE e.location = $region
+                WHERE e.location CONTAINS $region
                 RETURN e ORDER BY e.time DESC
                 """,
                 region=region,
@@ -144,7 +299,6 @@ class Neo4jKG:
             return [_row_to_eq(r) for r in result]
 
     def query_earthquakes_by_magnitude(self, min_magnitude, max_magnitude=10.0):
-        """min <= magnitude <= max；仅传 min 时与旧逻辑一致（上限 10）。"""
         driver = self._connect()
         with driver.session() as session:
             result = session.run(
@@ -230,6 +384,49 @@ class Neo4jKG:
             "t": {"id": f"time_{eq['time']}", "timestamp": eq["time"]},
         }
 
+    def query_emergency_context(self, user_text: str) -> str:
+        """当用户询问避险、怎么办等时，从图谱抽取应急要点供模型参考。"""
+        triggers = (
+            "怎么办", "如何做", "怎样", "避险", "避震", "应急", "自救", "互救",
+            "余震", "室内", "室外", "高楼", "学校", "准备", "演练", "逃生",
+        )
+        if not any(t in user_text for t in triggers):
+            return ""
+        driver = self._connect()
+        lines = []
+        with driver.session() as session:
+            result = session.run(
+                """
+                MATCH (t:EmergencyTopic)
+                OPTIONAL MATCH (t)-[hs:HAS_STEP]->(s:GuidanceStep)
+                RETURN t.id AS tid, t.title AS title, t.category AS cat, t.source AS src,
+                       hs.order AS ord, s.text AS stext
+                ORDER BY t.id, hs.order
+                """
+            )
+            by_topic = {}
+            for r in result:
+                tid = r["tid"]
+                if tid not in by_topic:
+                    by_topic[tid] = {
+                        "title": r["title"],
+                        "cat": r["cat"],
+                        "src": r["src"],
+                        "steps": [],
+                    }
+                if r["stext"]:
+                    by_topic[tid]["steps"].append((r["ord"], r["stext"]))
+        for _, info in by_topic.items():
+            lines.append(f"《{info['title']}》（{info['cat']}）")
+            for ord_, txt in sorted(info["steps"], key=lambda x: x[0] or 0):
+                lines.append(f"  {int(ord_)}. {txt}")
+            if info.get("src"):
+                lines.append(f"  参考说明：{info['src']}")
+            lines.append("")
+        if not lines:
+            return ""
+        return "【知识图谱·应急避险要点】\n" + "\n".join(lines).strip() + "\n\n"
+
     @staticmethod
     def _magnitude_level(magnitude):
         if magnitude < 3.0:
@@ -255,8 +452,11 @@ class Neo4jKG:
         return "深源地震"
 
     def upsert_earthquake(self, eq: dict):
-        """单条写入或更新（用于实时数据）。"""
+        """单条写入或更新（用于实时数据），并尽量关联 Region。"""
         driver = self._connect()
+        eid = str(eq["id"])
+        loc = str(eq.get("location", ""))
+        region = _infer_region_from_location(loc)
         with driver.session() as session:
             session.run(
                 """
@@ -271,17 +471,27 @@ class Neo4jKG:
                     e.intensity = $intensity,
                     e.description = $description
                 """,
-                id=str(eq["id"]),
+                id=eid,
                 name=str(eq.get("name", "")),
                 time=str(eq.get("time", "")),
                 magnitude=float(eq.get("magnitude", 0)),
                 depth=float(eq.get("depth", 0)),
-                location=str(eq.get("location", "")),
+                location=loc,
                 latitude=float(eq.get("latitude", 0)),
                 longitude=float(eq.get("longitude", 0)),
                 intensity=str(eq.get("intensity", "")),
                 description=str(eq.get("description", "")),
             )
+            if region:
+                session.run(
+                    """
+                    MATCH (e:Earthquake {id: $eid})
+                    MERGE (r:Region {name: $rname})
+                    MERGE (e)-[:OCCURRED_IN]->(r)
+                    """,
+                    eid=eid,
+                    rname=region,
+                )
 
     def update_from_realtime_data(self):
         sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -303,4 +513,5 @@ if __name__ == "__main__":
     kg = Neo4jKG()
     kg.run()
     print("条数:", kg.count_earthquakes())
-    print("示例查询(四川):", len(kg.query_earthquakes_by_region("四川")))
+    print("四川相关:", len(kg.query_earthquakes_by_region("四川")))
+    print(kg.query_emergency_context("地震来了室内怎么办")[:200])

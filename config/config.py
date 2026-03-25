@@ -9,6 +9,9 @@ class Config:
     # 数据配置
     DATA_DIR = "data"
     EARTHQUAKE_DATA_FILE = "data/earthquake_data.csv"
+    # 真实地震简录 + 应急知识（优先用于 Neo4j 初始化，见 kg/neo4j_kg.py）
+    REAL_EARTHQUAKE_CATALOG_FILE = "data/real_earthquakes_catalog.json"
+    EMERGENCY_KNOWLEDGE_FILE = "data/emergency_knowledge.json"
     KG_DATA_FILE = "data/kg_data.json"
     
     # 大模型配置（用于真微调的基础模型）

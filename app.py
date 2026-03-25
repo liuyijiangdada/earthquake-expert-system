@@ -114,6 +114,11 @@ def generate_response(instruction, input_text):
                             kg_context += f"{i+1}. {eq['location']}：{eq['magnitude']}级 ({eq['time']})\n"
                         kg_context += "\n"
         
+        # 应急避险、怎么办等：注入图谱中的结构化要点（与 EmergencyTopic / HAS_STEP 关联）
+        emg = kg.query_emergency_context(input_text)
+        if emg:
+            kg_context += emg
+        
         # 构建结构化提示词
         prompt = f"你是一个地震知识专家，请根据以下知识图谱信息回答问题：\n\n"
         if kg_context:
