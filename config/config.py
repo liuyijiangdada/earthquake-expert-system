@@ -21,6 +21,15 @@ class Config:
     MODEL_NAME = "Qwen/Qwen1.5-1.8B"
 
     FINETUNED_MODEL_PATH = "llm/earthquake_expert_deepseek_r1"
+
+    # 推理：与 app.generate 中 getattr 一致，便于调参与文档说明
+    LLM_INPUT_MAX_TOKENS = 4096
+    LLM_MAX_NEW_TOKENS = 384
+    LLM_TEMPERATURE = 0.55
+    LLM_TOP_P = 0.88
+    LLM_DO_SAMPLE = True
+    LLM_REPETITION_PENALTY = 1.15
+    LLM_NO_REPEAT_NGRAM_SIZE = 4
     
     # 微调配置
     TRAIN_DATA_FILE = "data/train_data.json"
@@ -45,6 +54,7 @@ class Config:
     KG_CONTEXT_ENABLED = True
     RAG_ENABLED = True
     RAG_EMBEDDING_MODEL = "BAAI/bge-small-zh-v1.5"
+    RAG_EMBEDDING_LOCAL_FILES_ONLY = True
     RAG_TOP_K = 5
     RAG_MAX_CHUNK_CHARS = 800
     API_DEBUG_RAG = False

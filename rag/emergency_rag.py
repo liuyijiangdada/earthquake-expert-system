@@ -114,7 +114,8 @@ def build_emergency_rag_from_config(config: Any) -> Optional[EmergencyRAG]:
             logging.error("No topics loaded from %s", path)
             return None
         model_name = getattr(config, "RAG_EMBEDDING_MODEL", "BAAI/bge-small-zh-v1.5")
-        model = SentenceTransformer(model_name)
+        local_only = bool(getattr(config, "RAG_EMBEDDING_LOCAL_FILES_ONLY", True))
+        model = SentenceTransformer(model_name, local_files_only=local_only)
 
         def embed(text: str) -> np.ndarray:
             v = model.encode(text, convert_to_numpy=True, normalize_embeddings=True)

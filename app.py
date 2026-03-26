@@ -1,21 +1,23 @@
 #!/usr/bin/env python3
 # 本地化部署应用
 
+import os
+
+# 必须在 import transformers / huggingface_hub 之前设置，否则库初始化阶段仍可能访问 Hub → [Errno 60] 超时
+os.environ["HF_HUB_OFFLINE"] = "1"
+os.environ["TRANSFORMERS_OFFLINE"] = "1"
+
 from flask import Flask, request, jsonify
 import logging
-import os
 import re
 import sys
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from peft import PeftModel
 
-# 设置环境变量，强制使用离线模式
-os.environ['HF_HUB_OFFLINE'] = '1'
-os.environ['TRANSFORMERS_OFFLINE'] = '1'
-
-# 添加项目根目录到Python路径
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+# 项目根目录（用于 sys.path、LoRA 绝对路径，避免在非项目目录下启动时误走 Hub 下载导致超时）
+_APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(_APP_ROOT)
 from config.config import Config
 from kg.neo4j_kg import Neo4jKG
 from rag.emergency_rag import build_emergency_rag_from_config
@@ -27,9 +29,19 @@ config = Config()
 kg = Neo4jKG()
 kg.run()
 
-# 微调模型：基础权重 + LoRA
+# 微调模型：基础权重 + LoRA（相对路径相对项目根目录解析，避免 cwd 不对时 PEFT 找不到本地 adapter 去 Hugging Face 拉取 → [Errno 60] 超时）
 MODEL_NAME = config.MODEL_NAME
-MODEL_DIR = config.FINETUNED_MODEL_PATH
+_fp = config.FINETUNED_MODEL_PATH
+MODEL_DIR = _fp if os.path.isabs(_fp) else os.path.join(_APP_ROOT, _fp)
+
+
+def _tokenizer_load_path() -> str:
+    """优先从 LoRA 目录加载 tokenizer（纯本地文件），避免对 MODEL_NAME 再走 Hub。"""
+    tj = os.path.join(MODEL_DIR, "tokenizer.json")
+    if os.path.isfile(tj):
+        return MODEL_DIR
+    return MODEL_NAME
+
 
 print(f"加载基础模型: {MODEL_NAME}")
 # 选择推理设备（优先 MPS，其次 CUDA，最后 CPU）
@@ -54,22 +66,35 @@ try:
         local_files_only=True,
     )
     
-    # 直接从本地缓存加载tokenizer
+    _tp = _tokenizer_load_path()
+    print(f"加载 tokenizer（路径: {_tp}）", flush=True)
     tokenizer = AutoTokenizer.from_pretrained(
-        MODEL_NAME, 
-        trust_remote_code=False,  # 禁用远程代码，避免网络请求
+        _tp,
+        trust_remote_code=False,
         local_files_only=True,
     )
     
-    print(f"加载微调模型: {MODEL_DIR}")
-    # 加载 LoRA 权重
-    model = PeftModel.from_pretrained(base_model, MODEL_DIR)
+    print(f"加载微调模型: {MODEL_DIR}", flush=True)
+    if not os.path.isfile(os.path.join(MODEL_DIR, "adapter_config.json")):
+        raise FileNotFoundError(
+            f"本地 LoRA 目录不存在或缺少 adapter_config.json: {MODEL_DIR} "
+            f"（请在项目根目录执行 python app.py，或把 FINETUNED_MODEL_PATH 设为绝对路径）"
+        )
+    # 加载 LoRA 权重（强制离线，避免误走 Hub 下载）
+    model = PeftModel.from_pretrained(base_model, MODEL_DIR, local_files_only=True)
     model.to(device)
     model.eval()
     print("微调模型加载成功!")
 except Exception as e:
+    import traceback
+
+    traceback.print_exc()
     print(f"模型加载失败: {e}")
     sys.exit(1)
+
+# 长提示必须从左侧截断，保留末尾的「问题」与 <|assistant|>；默认 right 会砍掉生成标记导致空输出
+tokenizer.truncation_side = "left"
+_llm_input_max = int(getattr(config, "LLM_INPUT_MAX_TOKENS", 4096))
 
 logging.basicConfig(level=getattr(logging, config.LOG_LEVEL, "INFO"))
 emergency_rag = None
@@ -159,11 +184,11 @@ def generate_response(instruction, input_text):
         rag_section, rag_hits = _build_rag_section(input_text)
         debug_meta["rag_topic_ids"] = [h.get("topic_id", "") for h in rag_hits]
 
+        # 用户问题放在整段末尾：在 left 截断时仍尽量保留真实提问（规则若在最后会先被截掉）
         prompt = (
             "你是一个地震知识专家。请结合【知识图谱】与【参考资料】回答问题。\n\n"
             f"【知识图谱】\n{kg_section}\n\n"
             f"【参考资料】\n{rag_section}\n\n"
-            f"【问题】\n{input_text}\n\n"
             "规则：数值、时间、震级、地点等可验证事实以知识图谱为准；参考资料仅作步骤与表述补充。"
             "若两者均未提供有效条目，可基于常识回答，并简要说明未命中本地知识库。\n"
             "回答要求：\n"
@@ -171,7 +196,8 @@ def generate_response(instruction, input_text):
             "2. 优先采用知识图谱中的可验证事实，并合理利用参考资料\n"
             "3. 回答要简洁明了，避免冗长\n"
             "4. 不要使用任何强调符号如***\n"
-            "5. 如果知识图谱与参考资料均未提供相关信息，请基于你的知识提供合理回答，并说明未命中本地知识库\n"
+            "5. 如果知识图谱与参考资料均未提供相关信息，请基于你的知识提供合理回答，并说明未命中本地知识库\n\n"
+            f"【问题】\n{input_text}\n"
         )
         
         # 直接使用本地微调模型进行推理
@@ -195,7 +221,13 @@ def generate_response(instruction, input_text):
         # 添加 assistant 标记，表示模型开始生成回答
         text += "<|assistant|>"
 
-        inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True, max_length=1024)
+        inputs = tokenizer(
+            text,
+            return_tensors="pt",
+            padding=True,
+            truncation=True,
+            max_length=_llm_input_max,
+        )
         input_ids = inputs.input_ids.to(device)
         attention_mask = inputs.attention_mask.to(device)
 
@@ -207,10 +239,12 @@ def generate_response(instruction, input_text):
             outputs = model.generate(
                 input_ids=input_ids,
                 attention_mask=attention_mask,
-                max_new_tokens=512,
-                temperature=0.7,
-                do_sample=True,
-                top_p=0.95,
+                max_new_tokens=int(getattr(config, "LLM_MAX_NEW_TOKENS", 384)),
+                temperature=float(getattr(config, "LLM_TEMPERATURE", 0.55)),
+                do_sample=bool(getattr(config, "LLM_DO_SAMPLE", True)),
+                top_p=float(getattr(config, "LLM_TOP_P", 0.88)),
+                repetition_penalty=float(getattr(config, "LLM_REPETITION_PENALTY", 1.15)),
+                no_repeat_ngram_size=int(getattr(config, "LLM_NO_REPEAT_NGRAM_SIZE", 4)),
             )
 
         # 只取新生成的部分

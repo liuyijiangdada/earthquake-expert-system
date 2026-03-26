@@ -11,7 +11,8 @@ rdflib==7.0.0
 
 # 大模型相关（transformers>=4.46 支持 Qwen3.5 等新架构）
 transformers>=4.46.0
-peft==0.11.1
+# 与 llm/*/adapter_config.json（含 lora_bias）兼容；Python<3.10 用 0.17.x
+peft>=0.17.0
 accelerate==0.32.1
 bitsandbytes==0.42.0
 
