@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 # 本地化部署应用
 
+import json
 import os
 
 # 必须在 import transformers / huggingface_hub 之前设置，否则库初始化阶段仍可能访问 Hub → [Errno 60] 超时
 os.environ["HF_HUB_OFFLINE"] = "1"
 os.environ["TRANSFORMERS_OFFLINE"] = "1"
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory, abort
 import logging
 import re
 import sys
@@ -25,6 +26,10 @@ from rag.emergency_rag import build_emergency_rag_from_config
 app = Flask(__name__)
 config = Config()
 
+# Vue 构建产物目录（frontend 执行 npm run build 后生成）；不存在则回退静态页 index.legacy.html
+_SPA_DIR = os.path.join(_APP_ROOT, "static", "spa")
+_SPA_INDEX = os.path.join(_SPA_DIR, "index.html")
+
 # 初始化知识图谱（Neo4j）
 kg = Neo4jKG()
 kg.run()
@@ -36,9 +41,18 @@ MODEL_DIR = _fp if os.path.isabs(_fp) else os.path.join(_APP_ROOT, _fp)
 
 
 def _tokenizer_load_path() -> str:
-    """优先从 LoRA 目录加载 tokenizer（纯本地文件），避免对 MODEL_NAME 再走 Hub。"""
+    """优先从 LoRA 目录加载 tokenizer（纯本地文件），避免对 MODEL_NAME 再走 Hub。
+    若 LoRA 内 tokenizer_config 含旧版 list 型 extra_special_tokens，则回退到基础模型缓存（与当前 transformers 兼容）。"""
     tj = os.path.join(MODEL_DIR, "tokenizer.json")
-    if os.path.isfile(tj):
+    tc = os.path.join(MODEL_DIR, "tokenizer_config.json")
+    if os.path.isfile(tj) and os.path.isfile(tc):
+        try:
+            with open(tc, encoding="utf-8") as f:
+                tcfg = json.load(f)
+            if isinstance(tcfg.get("extra_special_tokens"), list):
+                return MODEL_NAME
+        except OSError:
+            pass
         return MODEL_DIR
     return MODEL_NAME
 
@@ -315,10 +329,24 @@ def query():
     else:
         return jsonify({"error": "Invalid query type"}), 400
 
-# 根路由，返回前端页面
+# 根路由：优先 SPA（static/spa），否则旧版单页
 @app.route("/")
 def index():
-    return app.send_static_file("index.html")
+    if os.path.isfile(_SPA_INDEX):
+        return send_from_directory(_SPA_DIR, "index.html")
+    return app.send_static_file("index.legacy.html")
+
+
+@app.route("/assets/<path:filename>")
+def spa_assets(filename):
+    """Vite 打包后的 JS/CSS 等（仅当已构建 SPA 时可用）。"""
+    if not os.path.isfile(_SPA_INDEX):
+        abort(404)
+    assets_dir = os.path.join(_SPA_DIR, "assets")
+    path = os.path.join(assets_dir, filename)
+    if not os.path.isfile(path):
+        abort(404)
+    return send_from_directory(assets_dir, filename)
 
 # 实时数据更新API
 @app.route("/api/update-data", methods=["POST"])
@@ -343,4 +371,11 @@ def update_data():
 if __name__ == "__main__":
     print("启动地震知识图谱和大模型应用...")
     print("启动Flask应用...")
-    app.run(host=config.DEPLOY_HOST, port=config.DEPLOY_PORT, debug=True)
+    _env_dbg = os.environ.get("FLASK_DEBUG", "").strip().lower() in ("1", "true", "yes")
+    _flask_debug = _env_dbg or bool(getattr(config, "FLASK_DEBUG", False))
+    app.run(
+        host=config.DEPLOY_HOST,
+        port=config.DEPLOY_PORT,
+        debug=_flask_debug,
+        use_reloader=_flask_debug,
+    )

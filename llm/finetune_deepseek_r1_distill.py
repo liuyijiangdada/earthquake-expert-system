@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# 使用 DeepSeek R1 蒸馏模型进行 QLoRA 微调，显存约 16G 可运行
+# 使用 qianwen1.5b 蒸馏模型进行 QLoRA 微调，显存约 16G 可运行
 
 import json
 import os

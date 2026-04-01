@@ -15,8 +15,6 @@ class Config:
     KG_DATA_FILE = "data/kg_data.json"
     
     # 大模型配置（用于真微调的基础模型）
-    # 建议使用 DeepSeek R1 的开源蒸馏版本，请在 Hugging Face 上确认最终模型名称
-    # 示例： "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B"
     # MODEL_NAME = "Qwen/Qwen1.5-4B"
     MODEL_NAME = "Qwen/Qwen1.5-1.8B"
 
@@ -41,6 +39,8 @@ class Config:
     # 部署配置
     DEPLOY_PORT = 8000
     DEPLOY_HOST = "0.0.0.0"
+    # False：单进程启动，大模型/RAG 只加载一次；开发时可设环境变量 FLASK_DEBUG=1 或改此处为 True
+    FLASK_DEBUG = False
     
     # 爬取配置
     CRAWL_DELAY = 1
