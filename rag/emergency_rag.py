@@ -100,8 +100,8 @@ def resolve_emergency_knowledge_path(config: Any) -> str:
     return os.path.join(_project_root(), p)
 
 
-def build_emergency_rag_from_config(config: Any) -> Optional[EmergencyRAG]:
-    """加载 SentenceTransformer 与语料；失败返回 None 并记录日志。"""
+def build_emergency_rag_from_config(config: Any) -> Optional[Any]:
+    """加载 SentenceTransformer 与语料，默认写入 Milvus 并返回检索句柄；失败返回 None。"""
     try:
         from sentence_transformers import SentenceTransformer
 
@@ -121,7 +121,12 @@ def build_emergency_rag_from_config(config: Any) -> Optional[EmergencyRAG]:
             v = model.encode(text, convert_to_numpy=True, normalize_embeddings=True)
             return np.asarray(v, dtype=np.float32)
 
-        return EmergencyRAG(chunks=chunks, embed=embed, embed_query=embed)
+        if getattr(config, "RAG_USE_MEMORY_RAG", False):
+            return EmergencyRAG(chunks=chunks, embed=embed, embed_query=embed)
+
+        from rag.milvus_rag import build_milvus_emergency_rag
+
+        return build_milvus_emergency_rag(chunks, embed, embed, config)
     except Exception:
         logging.exception("Failed to build emergency RAG index")
         return None

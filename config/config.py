@@ -58,3 +58,11 @@ class Config:
     RAG_TOP_K = 5
     RAG_MAX_CHUNK_CHARS = 800
     API_DEBUG_RAG = False
+    # True：不连 Milvus，使用内存矩阵（测试或无 Docker 时）
+    RAG_USE_MEMORY_RAG = False
+    # Milvus（与 docker-compose 中 milvus-standalone 一致）
+    MILVUS_HOST = "localhost"
+    MILVUS_PORT = 19530
+    RAG_MILVUS_COLLECTION = "emergency_rag"
+    # True：每次启动删表重建（与 emergency_knowledge.json 一致）；False：复用已有集合并跳过写入
+    RAG_MILVUS_REBUILD_ON_START = True

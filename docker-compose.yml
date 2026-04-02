@@ -1,4 +1,6 @@
-# Neo4j 与 config/config.py 中 NEO4J_URI / NEO4J_USER / NEO4J_PASSWORD 对齐（默认 neo4j / password）
+# Neo4j：与 config/config.py 中 NEO4J_URI / NEO4J_USER / NEO4J_PASSWORD 对齐（默认 neo4j / password）
+# Milvus：pymilvus 默认连接 localhost:19530；健康检查 http://localhost:9091/healthz
+#   MinIO 控制台（可选排错）: http://localhost:9001  minioadmin / minioadmin
 services:
   neo4j:
     image: neo4j:5-community
@@ -12,5 +14,75 @@ services:
       - neo4j_data:/data
     restart: unless-stopped
 
+  # —— Milvus standalone（官方栈：etcd + minio + milvus），版本对齐 v2.4.23 ——
+  milvus-etcd:
+    image: quay.io/coreos/etcd:v3.5.18
+    container_name: biyelunwen-milvus-etcd
+    environment:
+      ETCD_AUTO_COMPACTION_MODE: revision
+      ETCD_AUTO_COMPACTION_RETENTION: "1000"
+      ETCD_QUOTA_BACKEND_BYTES: "4294967296"
+      ETCD_SNAPSHOT_COUNT: "50000"
+    volumes:
+      - milvus_etcd:/etcd
+    command: etcd -advertise-client-urls=http://127.0.0.1:2379 -listen-client-urls http://0.0.0.0:2379 --data-dir /etcd
+    healthcheck:
+      test: ["CMD", "etcdctl", "endpoint", "health"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+  milvus-minio:
+    image: minio/minio:RELEASE.2023-03-20T20-16-18Z
+    container_name: biyelunwen-milvus-minio
+    environment:
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - milvus_minio:/minio_data
+    command: minio server /minio_data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+
+  milvus-standalone:
+    image: milvusdb/milvus:v2.4.23
+    container_name: biyelunwen-milvus-standalone
+    command: ["milvus", "run", "standalone"]
+    security_opt:
+      - seccomp:unconfined
+    environment:
+      ETCD_ENDPOINTS: milvus-etcd:2379
+      MINIO_ADDRESS: milvus-minio:9000
+    volumes:
+      - milvus_data:/var/lib/milvus
+    ports:
+      - "19530:19530"
+      - "9091:9091"
+    depends_on:
+      milvus-etcd:
+        condition: service_healthy
+      milvus-minio:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9091/healthz"]
+      interval: 30s
+      start_period: 90s
+      timeout: 20s
+      retries: 3
+    restart: unless-stopped
+
 volumes:
   neo4j_data:
+  milvus_etcd:
+  milvus_minio:
+  milvus_data:

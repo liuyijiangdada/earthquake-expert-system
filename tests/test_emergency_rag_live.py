@@ -9,8 +9,17 @@ pytestmark = pytest.mark.skipif(
 
 
 def test_build_rag_live():
+    pytest.importorskip("pymilvus")
+    from pymilvus import connections
+
     from config.config import Config
     from rag.emergency_rag import build_emergency_rag_from_config
+
+    try:
+        connections.connect(alias="default", host="localhost", port=19530, timeout=5)
+        connections.disconnect("default")
+    except Exception:
+        pytest.skip("Milvus not reachable on localhost:19530 (docker compose up milvus-standalone)")
 
     rag = build_emergency_rag_from_config(Config())
     assert rag is not None
