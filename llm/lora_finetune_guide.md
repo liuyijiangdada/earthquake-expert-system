@@ -230,7 +230,7 @@ if __name__ == "__main__":
 ### 步骤 3: 运行微调脚本
 
 ```bash
-python llm/finetune_deepseek_r1_distill.py
+python llm/finetune_qianwen_distill.py
 ```
 
 ## 7. 加载和使用微调后的模型
