@@ -1,8 +1,11 @@
 package com.example.disaster_app.data.model
 
+import android.net.Uri
+
 data class ChatMessage(
     val role: String,
-    val content: String
+    val content: String,
+    val imageUri: Uri? = null
 )
 
 data class ChatRequest(

@@ -89,7 +89,8 @@ fun FamilyPage(
         AddMemberDialog(
             onDismiss = { showAddDialog = false },
             onConfirm = { name, phone ->
-                viewModel.addMember("1", FamilyMember(name = name, phone = phone))
+                val groupId = uiState.groups.firstOrNull()?.id ?: "1"
+                viewModel.addMember(groupId, FamilyMember(name = name, phone = phone))
                 showAddDialog = false
             }
         )

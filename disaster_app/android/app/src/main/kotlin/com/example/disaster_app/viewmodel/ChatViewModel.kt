@@ -1,5 +1,7 @@
 package com.example.disaster_app.viewmodel
 
+import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.disaster_app.data.model.ChatMessage
@@ -38,6 +40,35 @@ class ChatViewModel : ViewModel() {
             _uiState.value = _uiState.value.copy(messages = currentMessages, isLoading = true, error = null)
 
             repository.sendMessage(currentMessages, userInput)
+                .onSuccess { response ->
+                    currentMessages.add(ChatMessage(role = "assistant", content = response.response))
+                    _uiState.value = _uiState.value.copy(
+                        messages = currentMessages,
+                        isLoading = false
+                    )
+                }
+                .onFailure { exception ->
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        error = exception.message ?: "发送失败"
+                    )
+                }
+        }
+    }
+
+    fun sendMultimodalMessage(context: Context, imageUri: Uri, userInput: String) {
+        viewModelScope.launch {
+            val currentMessages = _uiState.value.messages.toMutableList()
+            currentMessages.add(
+                ChatMessage(
+                    role = "user",
+                    content = userInput.ifBlank { "请分析这张图片" },
+                    imageUri = imageUri
+                )
+            )
+            _uiState.value = _uiState.value.copy(messages = currentMessages, isLoading = true, error = null)
+
+            repository.sendMultimodalMessage(context, imageUri, userInput)
                 .onSuccess { response ->
                     currentMessages.add(ChatMessage(role = "assistant", content = response.response))
                     _uiState.value = _uiState.value.copy(

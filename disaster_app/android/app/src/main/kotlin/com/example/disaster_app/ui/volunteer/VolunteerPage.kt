@@ -316,9 +316,9 @@ fun RegisterVolunteerDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    val skills = if (skillsText.isNotBlank()) {
+                    val skills = skillChips.ifEmpty {
                         skillsText.split(",").map { it.trim() }.filter { it.isNotBlank() }
-                    } else skillChips
+                    }
                     onRegister(name, phone, skills, location)
                 },
                 enabled = name.isNotBlank() && phone.isNotBlank() && location.isNotBlank()

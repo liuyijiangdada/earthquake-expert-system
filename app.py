@@ -12,7 +12,9 @@ from flask import Flask, request, jsonify, send_from_directory, abort
 import logging
 import re
 import sys
+import io
 import torch
+from PIL import Image
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from peft import PeftModel
 
@@ -22,6 +24,7 @@ sys.path.append(_APP_ROOT)
 from config.config import Config
 from kg.neo4j_kg import Neo4jKG
 from rag.emergency_rag import build_emergency_rag_from_config
+from llm.vision_handler import vision_handler
 
 app = Flask(__name__)
 config = Config()
@@ -328,6 +331,43 @@ def query():
     
     else:
         return jsonify({"error": "Invalid query type"}), 400
+
+
+@app.route("/api/multimodal-query", methods=["POST"])
+def multimodal_query():
+    """多模态问答：接收图片 + 文字问题，返回 AI 回答"""
+    if "image" not in request.files:
+        return jsonify({"error": "No image file"}), 400
+
+    image_file = request.files["image"]
+    input_text = request.form.get("input", "")
+
+    if not input_text:
+        return jsonify({"error": "No input text"}), 400
+
+    try:
+        image = Image.open(io.BytesIO(image_file.read())).convert("RGB")
+    except Exception as e:
+        return jsonify({"error": f"Invalid image: {str(e)}"}), 400
+
+    try:
+        image_desc = vision_handler.describe_image_for_earthquake(image, input_text)
+    except Exception as e:
+        print(f"视觉模型推理失败: {e}")
+        image_desc = "（图片描述生成失败，仅基于文字回答）"
+
+    multimodal_prompt = (
+        f"用户上传了一张图片，图片内容描述如下：\n{image_desc}\n\n"
+        f"用户的问题是：{input_text}\n\n"
+        f"请结合图片描述和你的地震知识，回答用户的问题。"
+    )
+
+    response, meta = generate_response("回答用户关于地震的问题", multimodal_prompt)
+    payload = {"response": response}
+    if getattr(config, "API_DEBUG_RAG", False) and meta is not None:
+        payload["debug"] = meta
+    return jsonify(payload)
+
 
 # 根路由：优先 SPA（static/spa），否则旧版单页
 @app.route("/")

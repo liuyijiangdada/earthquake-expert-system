@@ -197,14 +197,15 @@ slide.addText("目录", {
 // 目录项
 const tocItems = [
   { num: "01", title: "研究背景与问题", desc: "地震应急问答现状分析" },
-  { num: "02", title: "核心创新点", desc: "三大技术创新方案" },
+  { num: "02", title: "核心创新点", desc: "四大技术创新方案" },
   { num: "03", title: "系统实现", desc: "技术架构与实现细节" },
-  { num: "04", title: "实验验证与结论", desc: "实验结果与工作总结" }
+  { num: "04", title: "移动端应用", desc: "安卓App功能与设计" },
+  { num: "05", title: "实验验证与结论", desc: "实验结果与工作总结" }
 ];
 
-const tocStartY = 1.4;
-const tocItemH = 0.9;
-const tocGap = 0.15;
+const tocStartY = 1.2;
+const tocItemH = 0.75;
+const tocGap = 0.1;
 
 tocItems.forEach((item, i) => {
   const y = tocStartY + i * (tocItemH + tocGap);
@@ -314,17 +315,18 @@ slide.addText("核心创新点", {
   charSpacing: 1.5
 });
 
-// 3个卡片
+// 4个卡片
 const innovations = [
   { num: "01", title: "知识图谱与RAG协同", desc: "结构化与语义检索融合" },
-  { num: "02", title: "左侧截断保尾策略", desc: "优化提示词结构" },
-  { num: "03", title: "完整离线部署方案", desc: "端到端技术栈实现" }
+  { num: "02", title: "跨平台移动端应用", desc: "安卓应急App开发" },
+  { num: "03", title: "左侧截断保尾策略", desc: "优化提示词结构" },
+  { num: "04", title: "完整离线部署方案", desc: "端到端技术栈实现" }
 ];
 
-const cardW = 2.6;
+const cardW = 2.0;
 const cardH = 3.0;
-const cardGap = 0.3;
-const startX = (SLIDE_W - (3 * cardW + 2 * cardGap)) / 2;
+const cardGap = 0.2;
+const startX = (SLIDE_W - (4 * cardW + 3 * cardGap)) / 2;
 
 innovations.forEach((item, i) => {
   const x = startX + i * (cardW + cardGap);
@@ -465,13 +467,129 @@ slide.addText("关键数据：图谱提供结构化事实，RAG补充语义表�
 slide.render();
 
 // ============================================================
-// 第6页 - 创新点2详解
+// 第6页 - 创新点2详解（安卓App）
 // ============================================================
 slide = pres.addSlide();
 slide.background = { color: COLORS.white };
 
 // 标题
-slide.addText("创新点2 - 左侧截断保尾策略", {
+slide.addText("创新点2 - 跨平台移动端应急应用", {
+  x: CONTENT_X, y: 0.3, w: CONTENT_W, h: 0.7,
+  fontSize: 28, fontFace: "Cambria", color: COLORS.primary,
+  bold: true,
+  charSpacing: 1.5
+});
+
+// 左侧：6个功能模块卡片（2x3网格）
+const appFeatures = [
+  { icon: "\uD83C\uDFE0", name: "AI智能问答", desc: "对接后端LLM，地震应急知识实时对话" },
+  { icon: "\uD83D\uDC65", name: "家庭组管理", desc: "成员安全状态追踪（安全/警告/危险/未知）" },
+  { icon: "\uD83D\uDE98", name: "紧急求助", desc: "一键发起求助（救援/医疗/物资/避难/其他）" },
+  { icon: "\uD83D\uDCDD", name: "灾情上报", desc: "多类型灾害上报（地震/火灾/洪水/滑坡）" },
+  { icon: "\uD83D\uDEE1\uFE0F", name: "安全状态", desc: "实时更新个人安全等级与位置" },
+  { icon: "\uD83E\uDD1D", name: "志愿者招募", desc: "技能标签匹配，就近调度" }
+];
+
+const appCardW = 2.15;
+const appCardH = 1.15;
+const appGapX = 0.15;
+const appGapY = 0.15;
+const appStartX = 0.4;
+const appStartY = 1.15;
+
+appFeatures.forEach((feat, i) => {
+  const row = Math.floor(i / 2);
+  const col = i % 2;
+  const x = appStartX + col * (appCardW + appGapX);
+  const y = appStartY + row * (appCardH + appGapY);
+
+  // 卡片背景
+  slide.addShape(pres.shapes.ROUNDED_RECTANGLE, {
+    x: x, y: y, w: appCardW, h: appCardH,
+    fill: { color: COLORS.light }, rectRadius: 0.08,
+    shadow: { type: "outer", blur: 3, offset: 1, color: "000000", opacity: 0.08 }
+  });
+
+  // 左侧装饰条
+  slide.addShape(pres.shapes.RECTANGLE, {
+    x: x, y: y, w: 0.06, h: appCardH,
+    fill: { color: COLORS.accent }
+  });
+
+  // 图标
+  slide.addText(feat.icon, {
+    x: x + 0.12, y: y + 0.1, w: 0.4, h: 0.4,
+    fontSize: 16, align: "center", valign: "middle"
+  });
+
+  // 功能名称
+  slide.addText(feat.name, {
+    x: x + 0.5, y: y + 0.08, w: appCardW - 0.65, h: 0.35,
+    fontSize: 12, fontFace: "Cambria", color: COLORS.primary,
+    bold: true
+  });
+
+  // 功能描述
+  slide.addText(feat.desc, {
+    x: x + 0.12, y: y + 0.5, w: appCardW - 0.24, h: 0.55,
+    fontSize: 9, fontFace: "Calibri", color: COLORS.textLight
+  });
+});
+
+// 右侧：技术栈
+slide.addShape(pres.shapes.ROUNDED_RECTANGLE, {
+  x: 5.0, y: 1.15, w: 4.6, h: 4.0,
+  fill: { color: COLORS.light }, rectRadius: 0.1
+});
+
+slide.addText("技术栈", {
+  x: 5.2, y: 1.3, w: 4.2, h: 0.5,
+  fontSize: 20, fontFace: "Cambria", color: COLORS.accent,
+  bold: true
+});
+
+const techItems = [
+  "Kotlin + Jetpack Compose",
+  "Material 3 设计",
+  "MVVM架构",
+  "Retrofit2 + OkHttp",
+  "Navigation Compose",
+  "亮色/暗色主题"
+];
+
+techItems.forEach((tech, i) => {
+  const y = 1.95 + i * 0.5;
+
+  // 技术项背景
+  slide.addShape(pres.shapes.ROUNDED_RECTANGLE, {
+    x: 5.3, y: y, w: 4.0, h: 0.4,
+    fill: { color: COLORS.white }, rectRadius: 0.06
+  });
+
+  // 小圆点
+  slide.addShape(pres.shapes.OVAL, {
+    x: 5.45, y: y + 0.1, w: 0.2, h: 0.2,
+    fill: { color: COLORS.secondary }
+  });
+
+  // 技术名称
+  slide.addText(tech, {
+    x: 5.75, y: y, w: 3.4, h: 0.4,
+    fontSize: 13, fontFace: "Calibri", color: COLORS.text,
+    valign: "middle"
+  });
+});
+
+slide.render();
+
+// ============================================================
+// 第7页 - 创新点3详解
+// ============================================================
+slide = pres.addSlide();
+slide.background = { color: COLORS.white };
+
+// 标题
+slide.addText("创新点3 - 左侧截断保尾策略", {
   x: CONTENT_X, y: 0.3, w: CONTENT_W, h: 0.7,
   fontSize: 28, fontFace: "Cambria", color: COLORS.primary,
   bold: true,
@@ -552,13 +670,13 @@ slide.addText("核心策略：将用户问题固定置于提示末尾，确保�
 slide.render();
 
 // ============================================================
-// 第7页 - 创新点3详解
+// 第8页 - 创新点4详解
 // ============================================================
 slide = pres.addSlide();
 slide.background = { color: COLORS.light };
 
 // 标题
-slide.addText("创新点3 - 完整离线部署方案", {
+slide.addText("创新点4 - 完整离线部署方案", {
   x: CONTENT_X, y: 0.3, w: CONTENT_W, h: 0.7,
   fontSize: 28, fontFace: "Cambria", color: COLORS.primary,
   bold: true,
@@ -619,7 +737,7 @@ techStack.forEach((tech, i) => {
 slide.render();
 
 // ============================================================
-// 第8页 - 系统架构
+// 第9页 - 系统架构
 // ============================================================
 slide = pres.addSlide();
 slide.background = { color: COLORS.white };
@@ -634,7 +752,7 @@ slide.addText("系统总体架构", {
 
 // 三层架构
 const layers = [
-  { label: "展示层", sub: "Vue 3 SPA", color: COLORS.primary },
+  { label: "展示层", sub: "Vue 3 SPA + Android App (Kotlin)", color: COLORS.primary },
   { label: "应用服务层", sub: "Flask API", color: COLORS.secondary },
   { label: "数据模型层", sub: "Neo4j + Milvus + LLM", color: COLORS.accent }
 ];
@@ -693,7 +811,7 @@ slide.addText("架构特点：前后端分离、微服务化设计、支持离�
 slide.render();
 
 // ============================================================
-// 第9页 - 知识图谱设计
+// 第10页 - 知识图谱设计
 // ============================================================
 slide = pres.addSlide();
 slide.background = { color: COLORS.light };
@@ -782,7 +900,7 @@ entities.forEach(ent => {
 slide.render();
 
 // ============================================================
-// 第10页 - RAG检索流程
+// 第11页 - RAG检索流程
 // ============================================================
 slide = pres.addSlide();
 slide.background = { color: COLORS.white };
@@ -857,7 +975,7 @@ slide.addText([
 slide.render();
 
 // ============================================================
-// 第11页 - 实验结果
+// 第12页 - 实验结果
 // ============================================================
 slide = pres.addSlide();
 slide.background = { color: COLORS.light };
@@ -907,7 +1025,7 @@ slide.addText("全协同方案在三项指标上均最优，准确率达91.2%", 
 slide.render();
 
 // ============================================================
-// 第12页 - 实验结论
+// 第13页 - 实验结论
 // ============================================================
 slide = pres.addSlide();
 slide.background = { color: COLORS.white };
@@ -951,7 +1069,7 @@ conclusions.forEach((con, i) => {
 slide.render();
 
 // ============================================================
-// 第13页 - 总结与展望
+// 第14页 - 总结与展望
 // ============================================================
 slide = pres.addSlide();
 slide.background = { color: COLORS.light };
@@ -1012,7 +1130,7 @@ slide.addText([
 slide.render();
 
 // ============================================================
-// 第14页 - 结束页
+// 第15页 - 结束页
 // ============================================================
 slide = pres.addSlide();
 slide.background = { color: COLORS.primary };

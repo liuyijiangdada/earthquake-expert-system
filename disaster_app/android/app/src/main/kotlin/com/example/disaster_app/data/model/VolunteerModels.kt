@@ -18,10 +18,10 @@ data class HelpRequest(
     val timestamp: Long = System.currentTimeMillis()
 )
 
-enum class HelpType {
-    RESCUE,
-    MEDICAL,
-    SUPPLY,
-    SHELTER,
-    OTHER
+enum class HelpType(val displayName: String) {
+    RESCUE("搜救"),
+    MEDICAL("医疗"),
+    SUPPLY("物资"),
+    SHELTER("避难所"),
+    OTHER("其他")
 }

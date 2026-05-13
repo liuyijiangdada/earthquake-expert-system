@@ -22,6 +22,19 @@ class SafetyViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(SafetyUiState())
     val uiState: StateFlow<SafetyUiState> = _uiState.asStateFlow()
 
+    init {
+        loadStatus()
+    }
+
+    private fun loadStatus() {
+        viewModelScope.launch {
+            repository.getSafetyStatus()
+                .onSuccess { status ->
+                    _uiState.value = _uiState.value.copy(currentStatus = status)
+                }
+        }
+    }
+
     fun updateStatus(level: SafetyLevel, location: String) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)

@@ -15,6 +15,7 @@ class DisasterRepository {
     private val familyGroups = mutableListOf<FamilyGroup>()
     private val volunteers = mutableListOf<Volunteer>()
     private val helpRequests = mutableListOf<HelpRequest>()
+    private var currentSafetyStatus: SafetyStatus = SafetyStatus()
 
     suspend fun submitReport(report: DisasterReport): Result<DisasterReport> = withContext(Dispatchers.IO) {
         try {
@@ -31,7 +32,16 @@ class DisasterRepository {
     }
 
     suspend fun updateSafetyStatus(status: SafetyStatus): Result<SafetyStatus> = withContext(Dispatchers.IO) {
-        Result.success(status)
+        try {
+            currentSafetyStatus = status
+            Result.success(status)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getSafetyStatus(): Result<SafetyStatus> = withContext(Dispatchers.IO) {
+        Result.success(currentSafetyStatus)
     }
 
     suspend fun getFamilyGroups(): Result<List<FamilyGroup>> = withContext(Dispatchers.IO) {

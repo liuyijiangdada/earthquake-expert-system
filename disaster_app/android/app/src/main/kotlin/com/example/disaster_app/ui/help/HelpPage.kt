@@ -118,7 +118,7 @@ fun HelpRequestCard(request: HelpRequest) {
             ) {
                 AssistChip(
                     onClick = { },
-                    label = { Text(request.type.name) }
+                    label = { Text(request.type.displayName) }
                 )
 
                 if (request.urgent) {
@@ -193,7 +193,7 @@ fun SubmitHelpDialog(
                     onExpandedChange = { expanded = !expanded }
                 ) {
                     OutlinedTextField(
-                        value = selectedType.name,
+                        value = selectedType.displayName,
                         onValueChange = { },
                         readOnly = true,
                         label = { Text("求助类型") },
@@ -206,7 +206,7 @@ fun SubmitHelpDialog(
                     ) {
                         HelpType.entries.forEach { type ->
                             DropdownMenuItem(
-                                text = { Text(type.name) },
+                                text = { Text(type.displayName) },
                                 onClick = {
                                     selectedType = type
                                     expanded = false
