@@ -12,15 +12,9 @@ from neo4j import GraphDatabase
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config.config import Config
+from config.constants import CHINA_REGION_NAMES as _REGION_NAMES
 
 logger = logging.getLogger(__name__)
-
-_REGION_NAMES = [
-    "四川", "云南", "青海", "西藏", "新疆", "甘肃", "河北", "台湾", "广东", "辽宁",
-    "北京", "上海", "江苏", "浙江", "安徽", "福建", "江西", "山东", "河南", "湖北",
-    "湖南", "广西", "海南", "重庆", "贵州", "陕西", "吉林", "黑龙江", "内蒙古",
-    "宁夏", "香港", "澳门",
-]
 
 
 def _node_to_dict(node) -> dict:

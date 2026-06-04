@@ -28,6 +28,9 @@ pnpm-debug.log*
 logs/
 *.log
 
+# 第三层动态生成的时序图
+static/generated/*.png
+
 # Python 打包
 *.egg-info/
 dist/

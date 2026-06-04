@@ -3,13 +3,13 @@
 
 import json
 import os
+from typing import Optional
 
 os.environ["HF_HUB_OFFLINE"] = "1"
 os.environ["TRANSFORMERS_OFFLINE"] = "1"
 
-from flask import Flask, request, jsonify, send_from_directory, abort
+from flask import Flask, request, jsonify, send_from_directory, abort, Response
 import logging
-import re
 import sys
 import io
 import torch
@@ -27,6 +27,9 @@ from core.phase_classifier import PhaseClassifier
 from core.dynamic_retriever import DynamicRetriever
 from core.scheduler import Scheduler
 from core.multimodal_output import MultimodalOutput
+from services.context_builder import QueryContextBuilder, QueryContextDeps
+from core.amap_client import AmapClient
+from services.output_enricher import OutputEnricher, merge_media_resources
 
 app = Flask(__name__)
 config = Config()
@@ -188,6 +191,29 @@ if getattr(config, "MULTIMODAL_OUTPUT_ENABLED", True):
     multimodal_output = MultimodalOutput(config)
     print(f"多模态输出模块已初始化（启用={multimodal_output.enabled}）")
 
+context_builder = QueryContextBuilder(
+    QueryContextDeps(
+        config=config,
+        kg=kg,
+        emergency_rag=emergency_rag,
+        phase_classifier=phase_classifier,
+        scheduler=scheduler,
+        dynamic_retriever=dynamic_retriever,
+        multimodal_output=multimodal_output,
+    )
+)
+
+amap_client = AmapClient.from_config(config)
+if amap_client.available:
+    print("高德 Web 服务已启用（静态图/地理编码/步行规划）")
+else:
+    print("高德 Web 服务未配置 Key，地图使用 OSM/URI 降级（见 .env.example）")
+
+output_enricher = None
+if getattr(config, "LAYER3_ENABLED", True):
+    output_enricher = OutputEnricher(config, amap_client=amap_client)
+    print(f"第三层输出增强已初始化（启用={output_enricher.enabled}）")
+
 qwen_vl_handler = None
 if getattr(config, "QWEN_VL_ENABLED", True):
     qwen_vl_handler = QwenVLHandler(config)
@@ -206,11 +232,16 @@ _FORBIDDEN_OPENERS = [
     "instruction:", "input:", "output:", "Napište", "Zlepšení",
     "Human:", "human:", "Human：", "human：",
     "Assistant:", "assistant:", "Assistant：", "assistant：",
+    "用户：", "用户:", "助手：", "助手:",
+    "User:", "user:", "User：", "user：",
 ]
 
 _CONVERSATION_DELIMITERS = [
     "Human:", "human:", "Human：", "human：",
     "Assistant:", "assistant:", "Assistant：", "assistant：",
+    "用户：", "用户:", "助手：", "助手:",
+    "User:", "user:", "User：", "user：",
+    "<|im_start|>", "</s>",
     "###", "---", "===",
 ]
 
@@ -270,234 +301,55 @@ def _sanitize_response(text: str, input_text: str) -> str:
     return text
 
 
-def _normalize_chat_history(raw, max_rounds: int = None) -> list:
-    """解析前端传来的 [{role, content}, ...]，保留最近 max_rounds 轮。"""
-    if max_rounds is None:
-        max_rounds = int(getattr(config, "CHAT_HISTORY_MAX_ROUNDS", 3))
-    max_chars = int(getattr(config, "CHAT_HISTORY_MAX_CHARS_PER_MSG", 500))
-    if not raw or not isinstance(raw, list):
-        return []
-
-    out = []
-    for item in raw:
-        if not isinstance(item, dict):
-            continue
-        role = item.get("role")
-        content = (item.get("content") or "").strip()
-        if role not in ("user", "assistant") or not content:
-            continue
-        out.append({"role": role, "content": content[:max_chars]})
-
-    cap = max(0, max_rounds) * 2
-    return out[-cap:] if cap else []
+def _attach_debug(payload: dict, meta: Optional[dict]) -> dict:
+    """按 DEBUG_PAYLOAD_ENABLED 决定是否附带 debug 字段。"""
+    if meta is not None and getattr(config, "DEBUG_PAYLOAD_ENABLED", True):
+        payload["debug"] = meta
+    return payload
 
 
-def _format_history_section(history: list) -> str:
-    if not history:
-        return ""
-    lines = ["【最近对话（供延续上下文，仅供参考）】"]
-    for i, h in enumerate(history, 1):
-        label = "用户" if h["role"] == "user" else "助手"
-        lines.append(f"{i}. {label}：{h['content']}")
-    lines.append("")
-    return "\n".join(lines)
+def _dynamic_items_from_cache() -> list:
+    if dynamic_retriever and getattr(dynamic_retriever, "_cache", None):
+        return list(dynamic_retriever._cache.items or [])
+    return []
 
 
-def _build_rag_section(input_text: str):
-    if not getattr(config, "RAG_ENABLED", True):
-        return "（本路径已关闭）", []
-    if emergency_rag is None:
-        return "（无相关条目）", []
-    top_k = getattr(config, "RAG_TOP_K", 5)
-    max_chars = getattr(config, "RAG_MAX_CHUNK_CHARS", 800)
-    hits = emergency_rag.search(input_text, top_k=top_k)
-    if not hits:
-        return "（无相关条目）", []
-    lines = []
-    for i, h in enumerate(hits, 1):
-        body = (h.get("text") or "")[:max_chars]
-        lines.append(f"{i}. [{h.get('topic_id', '')}] {h.get('title', '')}\n{body}")
-    return "\n".join(lines), hits
-
-
-def _prepare_query_context(
-    input_text: str,
-    *,
-    for_vision: bool = False,
-    history: list | None = None,
-):
-    """组装 KG/RAG/动态检索与阶段调度上下文，供文本 LLM 与 Qwen-VL 共用。"""
-    kg_context = ""
-    normalized_history = _normalize_chat_history(history)
-    debug_meta = {
-        "kg_enabled": bool(getattr(config, "KG_CONTEXT_ENABLED", True)),
-        "rag_enabled": bool(getattr(config, "RAG_ENABLED", True)),
-        "rag_topic_ids": [],
-        "phase": "通用",
-        "phase_confidence": 0.0,
-        "urgency": 0.0,
-        "need_dynamic": False,
-        "schedule_reasoning": "",
-        "multimodal_backend": "qwen_vl" if for_vision else "text_llm",
-        "history_rounds": len(normalized_history) // 2,
-        "history_messages": len(normalized_history),
-    }
-
-    phase_result = None
-    schedule_decision = None
-    if phase_classifier:
-        phase_result = phase_classifier.classify(input_text)
-        debug_meta["phase"] = phase_result.phase.value
-        debug_meta["phase_confidence"] = round(phase_result.confidence, 2)
-        debug_meta["urgency"] = round(phase_result.urgency, 2)
-        debug_meta["need_dynamic"] = phase_result.need_dynamic
-
-    if scheduler and phase_result:
-        schedule_decision = scheduler.decide(phase_result)
-        debug_meta["schedule_reasoning"] = schedule_decision.reasoning
-
-    phase_tag = phase_result.phase.value if phase_result else ""
-
-    if getattr(config, "KG_CONTEXT_ENABLED", True):
-        use_kg = schedule_decision.use_kg if schedule_decision else True
-        if use_kg:
-            regions = [
-                "四川", "云南", "青海", "西藏", "新疆", "甘肃", "河北", "台湾", "广东", "辽宁",
-                "北京", "上海", "江苏", "浙江", "安徽", "福建", "江西", "山东", "河南", "湖北",
-                "湖南", "广西", "海南", "重庆", "贵州", "陕西", "吉林", "黑龙江", "内蒙古",
-                "宁夏", "香港", "澳门",
-            ]
-
-            matched_region = None
-            for region in regions:
-                if region in input_text:
-                    matched_region = region
-                    break
-
-            if matched_region:
-                region_results = kg.query_earthquakes_by_region(matched_region)
-                if region_results:
-                    kg_context += "【知识图谱信息】\n"
-                    for i, eq in enumerate(region_results[:3]):
-                        kg_context += f"{i+1}. {eq['location']}地震：\n"
-                        kg_context += f"   时间：{eq['time']}\n"
-                        kg_context += f"   震级：{eq['magnitude']}级\n"
-                        kg_context += f"   深度：{eq['depth']}公里\n"
-                        kg_context += f"   烈度：{eq['intensity']}\n"
-                        kg_context += f"   描述：{eq['description']}\n\n"
-
-            if "震级" in input_text:
-                if "大于" in input_text or "高于" in input_text:
-                    match = re.search(r"(大于|高于)(\d+\.?\d*)", input_text)
-                    if match:
-                        min_mag = float(match.group(2))
-                        mag_results = kg.query_earthquakes_by_magnitude(min_mag)
-                        if mag_results:
-                            kg_context += f"【震级大于{min_mag}级的地震】\n"
-                            for i, eq in enumerate(mag_results[:3]):
-                                kg_context += f"{i+1}. {eq['location']}：{eq['magnitude']}级 ({eq['time']})\n"
-                            kg_context += "\n"
-
-            emg = kg.query_emergency_context(input_text, phase_tag=phase_tag)
-            if emg:
-                kg_context += emg
-
-    if getattr(config, "KG_CONTEXT_ENABLED", True):
-        kg_section = kg_context.strip() if kg_context.strip() else "（无）"
-    else:
-        kg_section = "（本路径已关闭）"
-
-    use_rag = schedule_decision.use_rag if schedule_decision else True
-    if use_rag:
-        rag_section, rag_hits = _build_rag_section(input_text)
-    else:
-        rag_section = "（调度器判定本路径无需启用）"
-        rag_hits = []
-    debug_meta["rag_topic_ids"] = [h.get("topic_id", "") for h in rag_hits]
-
-    dynamic_section = ""
-    use_dynamic = schedule_decision.use_dynamic if schedule_decision else False
-    if use_dynamic and dynamic_retriever and dynamic_retriever.enabled:
-        dynamic_result = dynamic_retriever.fetch_for_phase(phase_tag, input_text)
-        dynamic_section = dynamic_result.to_context_text()
-        debug_meta["dynamic_source"] = dynamic_result.source
-        debug_meta["dynamic_items_count"] = len(dynamic_result.items)
-
-    phase_instruction = ""
-    if schedule_decision and schedule_decision.prompt_suffix:
-        phase_instruction = schedule_decision.prompt_suffix + "\n"
-
-    validity_hint = ""
-    if getattr(config, "VALIDITY_HINT_ENABLED", True) and schedule_decision and schedule_decision.validity_hint:
-        fetched_at = ""
-        if dynamic_retriever and dynamic_retriever._cache:
-            fetched_at = dynamic_retriever._cache.fetched_at
-        validity_hint = schedule_decision.validity_hint.format(
-            fetched_at=fetched_at or "刚刚",
-            refresh_minutes=10,
-        )
-
-    prompt = "你是一个地震知识专家。请结合【知识图谱】与【参考资料】回答问题。\n\n"
-
-    if phase_tag and phase_tag != "通用":
-        prompt += f"当前判定为【{phase_tag}阶段】的问题。\n\n"
-
-    prompt += f"【知识图谱】\n{kg_section}\n\n"
-    prompt += f"【参考资料】\n{rag_section}\n\n"
-
-    if dynamic_section:
-        prompt += f"{dynamic_section}\n\n"
-
-    prompt += (
-        "规则：数值、时间、震级、地点等可验证事实以知识图谱为准；参考资料仅作步骤与表述补充；"
-        "动态信息为实时数据，可能随时更新。"
-        "若三者均未提供有效条目，可基于常识回答，并简要说明未命中本地知识库。\n"
+def _apply_layer3_prompt(prompt: str, input_text: str, phase_tag: str, debug_meta: dict) -> str:
+    if not output_enricher or not output_enricher.enabled:
+        debug_meta.setdefault("layer3_media_pending", [])
+        return prompt
+    enrichment = output_enricher.enrich(
+        input_text,
+        phase_tag,
+        dynamic_items=_dynamic_items_from_cache(),
     )
+    if enrichment.layer3_meta:
+        debug_meta["layer3"] = enrichment.layer3_meta
+    debug_meta["layer3_media_pending"] = enrichment.media_resources
+    if enrichment.prompt_section:
+        for needle in ("【问题】\n", "【用户问题】\n"):
+            if needle in prompt:
+                return prompt.replace(needle, enrichment.prompt_section + needle, 1)
+    return prompt
 
-    if phase_instruction:
-        prompt += f"{phase_instruction}\n"
 
-    if for_vision:
-        prompt += (
-            "回答要求：\n"
-            "1. 请直接观察用户上传的图片，结合上述知识上下文作答\n"
-            "2. 优先采用知识图谱中的可验证事实，合理利用参考资料与动态信息\n"
-            "3. 回答简洁明了，不要使用强调符号如***\n"
-            "4. 若图片与地震应急无关，请说明并引导用户上传相关图片\n"
-        )
-    else:
-        prompt += (
-            "回答要求：\n"
-            "1. 直接回答问题，不要有任何引言或开场白\n"
-            "2. 优先采用知识图谱中的可验证事实，合理利用参考资料与动态信息\n"
-            "3. 回答要简洁明了，避免冗长\n"
-            "4. 不要使用任何强调符号如***\n"
-            "5. 如果知识图谱与参考资料均未提供相关信息，请基于你的知识提供合理回答，并说明未命中本地知识库\n"
-        )
-
-    if validity_hint:
-        prompt += f"6. 在回答末尾附上时效提示：{validity_hint}\n"
-
-    history_section = _format_history_section(normalized_history)
-    if history_section:
-        prompt += f"\n{history_section}"
-
-    if for_vision:
-        prompt += (
-            f"【图片问答】请结合图片内容回答；若与上文对话相关请保持连贯。\n"
-            f"【用户问题】\n{input_text}\n"
-        )
-    else:
-        prompt += f"【问题】\n{input_text}\n"
-
-    return prompt, debug_meta, phase_tag
+def _finalize_media_resources(debug_meta: dict, input_text: str, phase_tag: str):
+    layer3 = debug_meta.pop("layer3_media_pending", [])
+    keyword_media = []
+    if multimodal_output and multimodal_output.enabled:
+        keyword_media = multimodal_output.match_as_dicts(input_text, phase_tag)
+    max_total = int(getattr(config, "LAYER3_MEDIA_MAX_TOTAL", 8))
+    debug_meta["media_resources"] = merge_media_resources(
+        keyword_media, layer3, max_total=max_total
+    )
 
 
 def generate_response(instruction, input_text, history=None):
     try:
-        prompt, debug_meta, phase_tag = _prepare_query_context(
+        prompt, debug_meta, phase_tag = context_builder.prepare(
             input_text, for_vision=False, history=history
         )
+        prompt = _apply_layer3_prompt(prompt, input_text, phase_tag, debug_meta)
 
         messages = [
             {"role": "system", "content": "你是一个地震专家，专注于回答地震相关问题。"},
@@ -550,10 +402,7 @@ def generate_response(instruction, input_text, history=None):
 
         text = _sanitize_response(text, input_text)
 
-        media_resources = []
-        if multimodal_output and multimodal_output.enabled:
-            media_resources = multimodal_output.match_as_dicts(input_text, phase_tag)
-            debug_meta["media_resources"] = media_resources
+        _finalize_media_resources(debug_meta, input_text, phase_tag)
 
         return text, debug_meta
     except Exception as e:
@@ -629,14 +478,11 @@ def query():
         if len(input_text) > 2000:
             return jsonify({"error": f"输入内容过长（{len(input_text)}字），请控制在2000字以内"}), 400
 
-        history = _normalize_chat_history(params.get("history"))
+        history = context_builder.normalize_history(params.get("history"))
         response, meta = generate_response(
             "回答用户关于地震的问题", input_text, history=history
         )
-        payload = {"response": response}
-        if meta is not None:
-            payload["debug"] = meta
-        return jsonify(payload)
+        return jsonify(_attach_debug({"response": response}, meta))
 
     else:
         return jsonify({"error": f"不支持的查询类型：{query_type}，可选值：llm、kg"}), 400
@@ -651,7 +497,7 @@ def _parse_history_form_field() -> list:
     except json.JSONDecodeError:
         logging.warning("history 字段 JSON 解析失败")
         return []
-    return _normalize_chat_history(data)
+    return context_builder.normalize_history(data)
 
 
 @app.route("/api/multimodal-query", methods=["POST"])
@@ -698,19 +544,18 @@ def multimodal_query():
 
     try:
         chat_history = _parse_history_form_field()
-        context_prompt, debug_meta, phase_tag = _prepare_query_context(
+        context_prompt, debug_meta, phase_tag = context_builder.prepare(
             input_text, for_vision=True, history=chat_history
+        )
+        context_prompt = _apply_layer3_prompt(
+            context_prompt, input_text, phase_tag, debug_meta
         )
         response = qwen_vl_handler.generate(image, context_prompt)
         response = _sanitize_response(response, input_text)
 
-        if multimodal_output and multimodal_output.enabled:
-            debug_meta["media_resources"] = multimodal_output.match_as_dicts(
-                input_text, phase_tag
-            )
+        _finalize_media_resources(debug_meta, input_text, phase_tag)
 
-        payload = {"response": response, "debug": debug_meta}
-        return jsonify(payload)
+        return jsonify(_attach_debug({"response": response}, debug_meta))
     except Exception as e:
         logging.exception("Qwen-VL 推理失败: %s", e)
         err = str(e)
@@ -731,6 +576,66 @@ def index():
     if os.path.isfile(_SPA_INDEX):
         return send_from_directory(_SPA_DIR, "index.html")
     return app.send_static_file("index.legacy.html")
+
+
+_EMERGENCY_MEDIA_DIR = os.path.join(_APP_ROOT, "static", "emergency")
+_GENERATED_MEDIA_DIR = os.path.join(_APP_ROOT, "static", "generated")
+
+
+@app.route("/emergency-media/<path:filename>")
+def emergency_media(filename):
+    path = os.path.join(_EMERGENCY_MEDIA_DIR, filename)
+    if not os.path.isfile(path):
+        abort(404)
+    return send_from_directory(_EMERGENCY_MEDIA_DIR, filename)
+
+
+@app.route("/api/amap/static-map")
+def amap_static_map_proxy():
+    """代理高德静态图，避免在前端暴露 Web 服务 Key。"""
+    if not amap_client.available:
+        return jsonify({
+            "error": "高德 Web 服务未配置，请在项目根目录 .env 设置 AMAP_WEB_SERVICE_KEY",
+        }), 503
+    if not getattr(config, "AMAP_STATIC_MAP_PROXY_ENABLED", True):
+        return jsonify({"error": "静态图代理已关闭"}), 503
+    try:
+        lon = float(request.args.get("lon", ""))
+        lat = float(request.args.get("lat", ""))
+        zoom = int(request.args.get("zoom", 10))
+    except (TypeError, ValueError):
+        return jsonify({"error": "参数 lon/lat/zoom 格式错误"}), 400
+
+    if not (3 <= zoom <= 18):
+        return jsonify({"error": "zoom 须在 3–18 之间"}), 400
+    if not (73 <= lon <= 135 and 18 <= lat <= 54):
+        return jsonify({"error": "坐标超出服务范围"}), 400
+
+    markers = None
+    mlon = request.args.get("mlon")
+    mlat = request.args.get("mlat")
+    if mlon is not None and mlat is not None:
+        try:
+            markers = [(float(mlon), float(mlat), "B")]
+        except ValueError:
+            return jsonify({"error": "mlon/mlat 格式错误"}), 400
+
+    try:
+        img = amap_client.fetch_static_map(lon, lat, zoom=zoom, markers=markers)
+        return Response(img, mimetype="image/png")
+    except Exception as e:
+        logging.warning("高德静态图代理失败: %s", e)
+        return jsonify({"error": f"静态图获取失败：{type(e).__name__}"}), 502
+
+
+@app.route("/generated-media/<path:filename>")
+def generated_media(filename):
+    if ".." in filename or filename.startswith("/"):
+        abort(404)
+    path = os.path.join(_GENERATED_MEDIA_DIR, filename)
+    if not os.path.isfile(path):
+        abort(404)
+    return send_from_directory(_GENERATED_MEDIA_DIR, filename)
 
 
 @app.route("/assets/<path:filename>")
@@ -763,6 +668,40 @@ def update_data():
             "status": "error",
             "message": f"更新数据失败：{type(e).__name__}，请确认 USGS API 是否可达"
         }), 500
+
+
+@app.route("/api/eval-set", methods=["GET"])
+def eval_set():
+    """返回分阶段评测问集（论文实验用）。"""
+    rel = getattr(config, "EVAL_QUESTIONS_FILE", "data/eval/phase_questions.json")
+    path = rel if os.path.isabs(rel) else os.path.join(_APP_ROOT, rel)
+    if not os.path.isfile(path):
+        return jsonify({"error": f"评测集文件不存在：{path}"}), 404
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except (OSError, json.JSONDecodeError) as e:
+        return jsonify({"error": f"评测集读取失败：{type(e).__name__}"}), 500
+
+    phase = (request.args.get("phase") or "").strip()
+    phases = data.get("phases", {})
+    if phase:
+        if phase not in phases:
+            return jsonify({
+                "error": f"未知阶段：{phase}，可选：{', '.join(phases.keys())}",
+            }), 400
+        return jsonify({
+            "version": data.get("version"),
+            "phase": phase,
+            "count": len(phases[phase]),
+            "questions": phases[phase],
+        })
+    return jsonify({
+        "version": data.get("version"),
+        "description": data.get("description"),
+        "phases": {k: len(v) for k, v in phases.items()},
+        "questions_by_phase": phases,
+    })
 
 
 @app.route("/api/phase-classify", methods=["POST"])

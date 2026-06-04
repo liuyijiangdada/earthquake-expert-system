@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""不确定性感知调度器：根据阶段、置信度、紧急度决定知识源路由策略。"""
+"""不确定性感知调度器：根据阶段、置信度、紧急度与知识源探测结果决定路由策略。"""
 
 from __future__ import annotations
 
@@ -10,6 +10,11 @@ from typing import Optional
 from core.phase_classifier import Phase, PhaseResult
 
 logger = logging.getLogger(__name__)
+
+try:
+    from core.knowledge_signals import KnowledgeSignals
+except ImportError:
+    KnowledgeSignals = None  # type: ignore
 
 
 @dataclass
@@ -24,12 +29,18 @@ class ScheduleDecision:
     validity_hint: str = ""
     phase_label: str = "通用"
     reasoning: str = ""
+    static_confidence: float = 0.0
+    dynamic_availability: float = 0.0
+    reliability_hint: str = ""
 
 
 class Scheduler:
     def __init__(self, config=None):
         self._dynamic_confidence_threshold = getattr(
             config, "SCHEDULER_DYNAMIC_CONFIDENCE_THRESHOLD", 0.4
+        )
+        self._static_confidence_threshold = getattr(
+            config, "SCHEDULER_STATIC_CONFIDENCE_THRESHOLD", 0.9
         )
         self._urgency_high_threshold = getattr(
             config, "SCHEDULER_URGENCY_HIGH_THRESHOLD", 0.5
@@ -38,7 +49,11 @@ class Scheduler:
             config, "SCHEDULER_URGENCY_CRITICAL_THRESHOLD", 0.7
         )
 
-    def decide(self, phase_result: PhaseResult) -> ScheduleDecision:
+    def decide(
+        self,
+        phase_result: PhaseResult,
+        signals: Optional["KnowledgeSignals"] = None,
+    ) -> ScheduleDecision:
         try:
             phase = phase_result.phase
             confidence = phase_result.confidence
@@ -47,6 +62,10 @@ class Scheduler:
 
             d = ScheduleDecision()
             d.phase_label = phase.value
+
+            if signals is not None:
+                d.static_confidence = signals.static_confidence
+                d.dynamic_availability = signals.dynamic_availability
 
             if phase == Phase.PRE:
                 d = self._schedule_pre(d, confidence, urgency)
@@ -62,13 +81,59 @@ class Scheduler:
                     d.use_dynamic = True
                     d.dynamic_priority = "high"
 
-            d.reasoning = self._build_reasoning(phase_result, d)
+            if signals is not None:
+                d = self._apply_signal_policy(d, phase_result, signals)
+
+            d.reasoning = self._build_reasoning(phase_result, d, signals)
             return d
         except Exception as e:
             logger.error("调度决策异常: %s", e, exc_info=True)
             fallback = ScheduleDecision()
             fallback.reasoning = f"调度异常：{type(e).__name__}，已降级为全源默认策略"
             return fallback
+
+    def _apply_signal_policy(
+        self,
+        d: ScheduleDecision,
+        phase_result: PhaseResult,
+        signals: "KnowledgeSignals",
+    ) -> ScheduleDecision:
+        urgency = phase_result.urgency
+        sc = signals.static_confidence
+        da = signals.dynamic_availability
+
+        if (
+            urgency >= self._urgency_critical_threshold
+            and da >= self._dynamic_confidence_threshold
+        ):
+            d.use_dynamic = True
+            d.dynamic_priority = "high"
+            d.reliability_hint = "高紧急度且实时数据可用，优先结合动态信息作答。"
+        elif sc >= self._static_confidence_threshold:
+            if urgency < self._urgency_critical_threshold:
+                d.use_dynamic = False
+                d.dynamic_priority = "low"
+            suffix = (
+                "本地知识库匹配度较高；如需最新震情可追问「最新」「刚才」等关键词。"
+            )
+            d.prompt_suffix = f"{d.prompt_suffix} {suffix}".strip()
+            d.reliability_hint = "静态知识置信度高，回答以本地知识库为主。"
+        elif signals.prefers_dynamic and da >= self._dynamic_confidence_threshold:
+            d.use_dynamic = True
+            d.dynamic_priority = "high"
+            d.reliability_hint = "问题时效性强，已启用动态数据源。"
+        elif sc < 0.35 and da < self._dynamic_confidence_threshold:
+            d.rag_priority = "high"
+            d.reliability_hint = "本地匹配较弱，已提高向量检索权重。"
+
+        if d.use_dynamic and da < self._dynamic_confidence_threshold:
+            d.use_dynamic = False
+            d.dynamic_priority = "low"
+            extra = "实时数据暂不可用，以下回答主要依据本地知识库。"
+            d.validity_hint = f"{d.validity_hint} {extra}".strip()
+            d.reliability_hint = "动态源不可用，已降级为静态知识。"
+
+        return d
 
     def _schedule_pre(self, d: ScheduleDecision, confidence: float,
                       urgency: float) -> ScheduleDecision:
@@ -141,8 +206,12 @@ class Scheduler:
         d.validity_hint = ""
         return d
 
-    def _build_reasoning(self, phase_result: PhaseResult,
-                         d: ScheduleDecision) -> str:
+    def _build_reasoning(
+        self,
+        phase_result: PhaseResult,
+        d: ScheduleDecision,
+        signals: Optional["KnowledgeSignals"] = None,
+    ) -> str:
         sources = []
         if d.use_kg:
             sources.append(f"知识图谱({d.kg_priority})")
@@ -151,9 +220,17 @@ class Scheduler:
         if d.use_dynamic:
             sources.append(f"动态数据({d.dynamic_priority})")
 
-        return (
-            f"阶段={d.phase_label}, "
-            f"置信度={phase_result.confidence:.2f}, "
-            f"紧急度={phase_result.urgency:.2f}, "
-            f"启用知识源=[{', '.join(sources)}]"
-        )
+        parts = [
+            f"阶段={d.phase_label}",
+            f"阶段置信度={phase_result.confidence:.2f}",
+            f"紧急度={phase_result.urgency:.2f}",
+        ]
+        if signals is not None:
+            parts.append(f"静态置信度={d.static_confidence:.2f}")
+            parts.append(f"动态可用性={d.dynamic_availability:.2f}")
+            if signals.temporal_validity:
+                parts.append(f"知识时效={signals.temporal_validity}")
+        parts.append(f"启用知识源=[{', '.join(sources)}]")
+        if d.reliability_hint:
+            parts.append(d.reliability_hint)
+        return "；".join(parts)

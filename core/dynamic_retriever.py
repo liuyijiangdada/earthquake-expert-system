@@ -56,7 +56,11 @@ class DynamicRetriever:
         self._timeout = 15
         self._min_magnitude = 4.5
         self._max_items = 10
-        self._china_bbox = (18, 135, 73, 53)
+        self._china_filter = True
+        self._china_min_lat = 18.0
+        self._china_max_lat = 54.0
+        self._china_min_lon = 73.0
+        self._china_max_lon = 135.0
 
         if config:
             self._enabled = getattr(config, "DYNAMIC_RETRIEVAL_ENABLED", True)
@@ -64,6 +68,11 @@ class DynamicRetriever:
             self._timeout = getattr(config, "DYNAMIC_API_TIMEOUT", 15)
             self._min_magnitude = getattr(config, "DYNAMIC_MIN_MAGNITUDE", 4.5)
             self._max_items = getattr(config, "DYNAMIC_MAX_ITEMS", 10)
+            self._china_filter = getattr(config, "DYNAMIC_CHINA_FILTER_ENABLED", True)
+            self._china_min_lat = float(getattr(config, "DYNAMIC_CHINA_MIN_LAT", 18.0))
+            self._china_max_lat = float(getattr(config, "DYNAMIC_CHINA_MAX_LAT", 54.0))
+            self._china_min_lon = float(getattr(config, "DYNAMIC_CHINA_MIN_LON", 73.0))
+            self._china_max_lon = float(getattr(config, "DYNAMIC_CHINA_MAX_LON", 135.0))
 
     @property
     def enabled(self) -> bool:
@@ -91,15 +100,28 @@ class DynamicRetriever:
                 return self._cache
             return DynamicResult(error=str(e))
 
+    def _in_china_bbox(self, latitude: float, longitude: float) -> bool:
+        return (
+            self._china_min_lat <= latitude <= self._china_max_lat
+            and self._china_min_lon <= longitude <= self._china_max_lon
+        )
+
     def _fetch_usgs(self) -> DynamicResult:
         params = {
             "format": "geojson",
             "starttime": (datetime.utcnow() - timedelta(hours=48)).isoformat(),
             "endtime": datetime.utcnow().isoformat(),
             "minmagnitude": self._min_magnitude,
-            "limit": self._max_items,
+            "limit": self._max_items * 3 if self._china_filter else self._max_items,
             "orderby": "time",
         }
+        if self._china_filter:
+            params.update({
+                "minlatitude": self._china_min_lat,
+                "maxlatitude": self._china_max_lat,
+                "minlongitude": self._china_min_lon,
+                "maxlongitude": self._china_max_lon,
+            })
 
         try:
             resp = requests.get(self._usgs_url, params=params, timeout=self._timeout)
@@ -132,21 +154,29 @@ class DynamicRetriever:
             except Exception:
                 t_str = "未知"
 
+            lat = coords[1] if len(coords) > 1 else 0.0
+            lon = coords[0] if len(coords) > 0 else 0.0
+            if self._china_filter and not self._in_china_bbox(lat, lon):
+                continue
+
             items.append({
                 "id": feature.get("id", ""),
                 "magnitude": props.get("mag", 0),
                 "location": props.get("place", "未知"),
                 "time": t_str,
                 "depth": abs(coords[2]) if len(coords) > 2 else 0,
-                "latitude": coords[1] if len(coords) > 1 else 0,
-                "longitude": coords[0] if len(coords) > 0 else 0,
+                "latitude": lat,
+                "longitude": lon,
                 "url": props.get("url", ""),
             })
+            if len(items) >= self._max_items:
+                break
 
         fetched_at = datetime.now(TZ_CN).strftime("%Y-%m-%d %H:%M:%S")
+        source = "USGS实时地震目录（中国区）" if self._china_filter else "USGS实时地震目录"
         return DynamicResult(
             items=items,
-            source="USGS实时地震目录",
+            source=source,
             fetched_at=fetched_at,
         )
 

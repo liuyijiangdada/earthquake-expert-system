@@ -31,6 +31,7 @@ spacy==3.7.4
 # 工具
 tqdm==4.66.4
 python-dotenv==1.0.0
+matplotlib>=3.7.0
 
 # RAG（应急知识句向量 + Milvus）
 sentence-transformers>=2.7.0

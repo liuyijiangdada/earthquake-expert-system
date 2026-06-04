@@ -1,5 +1,16 @@
 # 项目配置文件
 
+import os
+from pathlib import Path
+
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv(Path(__file__).resolve().parent.parent / ".env")
+except ImportError:
+    pass
+
+
 class Config:
     # 知识图谱配置
     NEO4J_URI = "bolt://localhost:7687"
@@ -57,14 +68,17 @@ class Config:
     RAG_EMBEDDING_LOCAL_FILES_ONLY = True
     RAG_TOP_K = 5
     RAG_MAX_CHUNK_CHARS = 800
-    API_DEBUG_RAG = False
-    # True：不连 Milvus，使用内存矩阵（测试或无 Docker 时）
+    # True：API 响应附带 debug（阶段、RAG 命中、媒体资源等）；False 仅返回 response
+    DEBUG_PAYLOAD_ENABLED = True
+    # True：将匹配到的示意图摘要写入 LLM prompt（默认 False，仅前端展示）
+    MULTIMODAL_INJECT_PROMPT = False
+    # True：不连 Milvus，使用内存矩阵（本地开发推荐 True）
     RAG_USE_MEMORY_RAG = False
     # Milvus（与 docker-compose 中 milvus-standalone 一致）
     MILVUS_HOST = "localhost"
     MILVUS_PORT = 19530
     RAG_MILVUS_COLLECTION = "emergency_rag"
-    # True：每次启动删表重建（与 emergency_knowledge.json 一致）；False：复用已有集合并跳过写入
+    # True：每次启动删表重建（慢）；开发建议 False；无 Docker 时用 RAG_USE_MEMORY_RAG=True
     RAG_MILVUS_REBUILD_ON_START = True
 
     # 三阶段协同配置
@@ -74,8 +88,15 @@ class Config:
     DYNAMIC_API_TIMEOUT = 15
     DYNAMIC_MIN_MAGNITUDE = 4.5
     DYNAMIC_MAX_ITEMS = 10
+    # USGS 结果限制在中国范围（API  bbox + 客户端二次过滤）
+    DYNAMIC_CHINA_FILTER_ENABLED = True
+    DYNAMIC_CHINA_MIN_LAT = 18.0
+    DYNAMIC_CHINA_MAX_LAT = 54.0
+    DYNAMIC_CHINA_MIN_LON = 73.0
+    DYNAMIC_CHINA_MAX_LON = 135.0
     SCHEDULER_ENABLED = True
     SCHEDULER_DYNAMIC_CONFIDENCE_THRESHOLD = 0.4
+    SCHEDULER_STATIC_CONFIDENCE_THRESHOLD = 0.9
     SCHEDULER_URGENCY_HIGH_THRESHOLD = 0.5
     SCHEDULER_URGENCY_CRITICAL_THRESHOLD = 0.7
     VALIDITY_HINT_ENABLED = True
@@ -102,3 +123,29 @@ class Config:
     # 多轮对话：注入最近 N 轮 user/assistant 到 prompt（无服务端 session）
     CHAT_HISTORY_MAX_ROUNDS = 3
     CHAT_HISTORY_MAX_CHARS_PER_MSG = 500
+
+    # 高德地图 Web 服务（Key 放 .env：AMAP_WEB_SERVICE_KEY=你的Key）
+    # 控制台：https://console.amap.com/dev/key/app  需开通「Web服务」
+    AMAP_WEB_SERVICE_KEY = os.environ.get("AMAP_WEB_SERVICE_KEY", "").strip()
+    AMAP_WEB_SERVICE_ENABLED = True
+    AMAP_API_TIMEOUT = 12
+    AMAP_STATIC_MAP_SIZE = "480*280"
+    AMAP_COORD_SYSTEM = "gcj02"
+    AMAP_STATIC_MAP_PROXY_ENABLED = True
+
+    # 第三层增强：地图/避难所/余震图/政策 RSS
+    LAYER3_ENABLED = True
+    LAYER3_MAP_ENABLED = True
+    LAYER3_SHELTER_ENABLED = True
+    LAYER3_AFTERSHOCK_CHART_ENABLED = True
+    LAYER3_POLICY_RSS_ENABLED = True
+    LAYER3_INJECT_PROMPT = False
+    SHELTERS_DATA_FILE = "data/shelters.json"
+    GENERATED_MEDIA_DIR = "static/generated"
+    GENERATED_MEDIA_URL_PREFIX = "/generated-media"
+    LAYER3_AFTERSHOCK_MIN_ITEMS = 2
+    LAYER3_POLICY_RSS_TIMEOUT = 12
+    LAYER3_POLICY_RSS_CACHE_SECONDS = 3600
+    LAYER3_POLICY_RSS_URLS = None
+    LAYER3_MEDIA_MAX_TOTAL = 8
+    EVAL_QUESTIONS_FILE = "data/eval/phase_questions.json"

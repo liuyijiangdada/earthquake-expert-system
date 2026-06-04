@@ -1,5 +1,12 @@
 <script setup>
+import { ref } from 'vue'
 import { formatBotHtml } from '@/utils/format.js'
+
+const brokenMediaIds = ref(new Set())
+
+function onMediaImageError(resId) {
+  brokenMediaIds.value = new Set([...brokenMediaIds.value, resId])
+}
 
 defineProps({
   messages: { type: Array, default: () => [] },
@@ -53,7 +60,17 @@ function phaseClass(phase) {
                   <div v-for="res in m.mediaResources" :key="res.id" class="media-item">
                     <template v-if="res.type === 'image'">
                       <div class="media-image-card">
-                        <img :src="res.url" :alt="res.caption" class="img-fluid rounded" loading="lazy" />
+                        <img
+                          v-if="!brokenMediaIds.has(res.id)"
+                          :src="res.url"
+                          :alt="res.caption"
+                          class="img-fluid rounded"
+                          loading="lazy"
+                          @error="onMediaImageError(res.id)"
+                        />
+                        <p v-else class="media-fallback text-muted small mb-2">
+                          示意图暂不可用，请参考下方说明。
+                        </p>
                         <p class="media-caption mb-0">{{ res.caption }}</p>
                       </div>
                     </template>
