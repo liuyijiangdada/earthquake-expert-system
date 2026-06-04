@@ -9,6 +9,8 @@ import InsightChart from '@/components/InsightChart.vue'
 import { WELCOME } from '@/constants.js'
 import { nowTimeStr } from '@/utils/format.js'
 import { queryLlm, queryKgAll, updateEarthquakeData } from '@/api.js'
+import { compressImageDataUrl } from '@/utils/imageCompress.js'
+import { buildChatHistory } from '@/utils/chatHistory.js'
 
 const userInput = ref('')
 const messages = ref([])
@@ -103,6 +105,8 @@ async function sendMessage() {
     return
   }
 
+  const history = buildChatHistory(messages.value, 3)
+
   pushMessage({ role: 'user', text })
   userInput.value = ''
   showTyping.value = true
@@ -113,7 +117,7 @@ async function sendMessage() {
     const controller = new AbortController()
     const timeoutId = setTimeout(() => controller.abort(), 60000)
 
-    const { ok, data } = await queryLlm(text)
+    const { ok, data } = await queryLlm(text, history)
     clearTimeout(timeoutId)
     showTyping.value = false
     if (!ok) {
@@ -182,13 +186,16 @@ async function sendImageMessage({ dataUrl, name, text }) {
     text = '请分析这张与地震相关的图片'
   }
 
+  const history = buildChatHistory(messages.value, 3)
+
   pushMessage({ role: 'user', text, imageUrl: dataUrl })
   showTyping.value = true
   sending.value = true
   loadingBadge.value = true
 
   try {
-    const blob = await (await fetch(dataUrl)).blob()
+    const compressed = await compressImageDataUrl(dataUrl)
+    const blob = compressed.blob
 
     if (blob.size > 10 * 1024 * 1024) {
       showTyping.value = false
@@ -197,8 +204,11 @@ async function sendImageMessage({ dataUrl, name, text }) {
     }
 
     const formData = new FormData()
-    formData.append('image', blob, name || 'image.jpg')
+    formData.append('image', blob, compressed.name || name || 'image.jpg')
     formData.append('input', text)
+    if (history.length) {
+      formData.append('history', JSON.stringify(history))
+    }
 
     const r = await fetch('/api/multimodal-query', {
       method: 'POST',

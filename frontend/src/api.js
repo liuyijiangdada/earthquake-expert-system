@@ -1,8 +1,11 @@
-export async function queryLlm(input) {
+export async function queryLlm(input, history = []) {
   const r = await fetch('/api/query', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ query_type: 'llm', params: { input } }),
+    body: JSON.stringify({
+      query_type: 'llm',
+      params: { input, history },
+    }),
   })
   const data = await r.json().catch(() => ({}))
   return { ok: r.ok, data }

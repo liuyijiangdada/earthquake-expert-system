@@ -1,5 +1,6 @@
 <script setup>
 import { ref, watch, nextTick, onMounted } from 'vue'
+import { compressImageFile } from '@/utils/imageCompress.js'
 
 const props = defineProps({
   modelValue: { type: String, default: '' },
@@ -41,7 +42,7 @@ function triggerFileInput() {
   fileInput.value?.click()
 }
 
-function onFileChange(e) {
+async function onFileChange(e) {
   const file = e.target.files?.[0]
   if (!file) return
   if (!file.type.startsWith('image/')) {
@@ -54,16 +55,19 @@ function onFileChange(e) {
     clearPreview()
     return
   }
-  previewName.value = file.name
-  const reader = new FileReader()
-  reader.onload = (ev) => {
-    previewSrc.value = ev.target.result
-  }
-  reader.onerror = () => {
-    alert('图片读取失败，请重新选择')
+  try {
+    const compressed = await compressImageFile(file)
+    previewName.value = compressed.name
+    previewSrc.value = compressed.dataUrl
+    if (file.size > compressed.size * 1.1) {
+      console.info(
+        `图片已压缩：${(file.size / 1024).toFixed(0)}KB → ${(compressed.size / 1024).toFixed(0)}KB`,
+      )
+    }
+  } catch {
+    alert('图片处理失败，请换一张较小的图片重试')
     clearPreview()
   }
-  reader.readAsDataURL(file)
 }
 
 function clearPreview() {

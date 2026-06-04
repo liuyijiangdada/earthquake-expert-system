@@ -38,6 +38,26 @@ _MAX_IMAGE_SIZE = 10 * 1024 * 1024
 _ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/gif", "image/webp"}
 
 
+def _compress_upload_image(image: Image.Image) -> Image.Image:
+    """服务端二次压缩，与 Qwen-VL 输入尺寸对齐。"""
+    max_edge = int(getattr(config, "UPLOAD_IMAGE_MAX_EDGE", 1280))
+    jpeg_quality = int(getattr(config, "UPLOAD_IMAGE_JPEG_QUALITY", 82))
+
+    image = image.convert("RGB")
+    w, h = image.size
+    if max(w, h) > max_edge:
+        scale = max_edge / float(max(w, h))
+        image = image.resize(
+            (max(1, int(w * scale)), max(1, int(h * scale))),
+            Image.Resampling.LANCZOS,
+        )
+
+    buf = io.BytesIO()
+    image.save(buf, format="JPEG", quality=jpeg_quality, optimize=True)
+    buf.seek(0)
+    return Image.open(buf).convert("RGB")
+
+
 @app.errorhandler(400)
 def bad_request(e):
     return jsonify({"error": f"请求参数错误：{e}"}), 400
@@ -250,6 +270,39 @@ def _sanitize_response(text: str, input_text: str) -> str:
     return text
 
 
+def _normalize_chat_history(raw, max_rounds: int = None) -> list:
+    """解析前端传来的 [{role, content}, ...]，保留最近 max_rounds 轮。"""
+    if max_rounds is None:
+        max_rounds = int(getattr(config, "CHAT_HISTORY_MAX_ROUNDS", 3))
+    max_chars = int(getattr(config, "CHAT_HISTORY_MAX_CHARS_PER_MSG", 500))
+    if not raw or not isinstance(raw, list):
+        return []
+
+    out = []
+    for item in raw:
+        if not isinstance(item, dict):
+            continue
+        role = item.get("role")
+        content = (item.get("content") or "").strip()
+        if role not in ("user", "assistant") or not content:
+            continue
+        out.append({"role": role, "content": content[:max_chars]})
+
+    cap = max(0, max_rounds) * 2
+    return out[-cap:] if cap else []
+
+
+def _format_history_section(history: list) -> str:
+    if not history:
+        return ""
+    lines = ["【最近对话（供延续上下文，仅供参考）】"]
+    for i, h in enumerate(history, 1):
+        label = "用户" if h["role"] == "user" else "助手"
+        lines.append(f"{i}. {label}：{h['content']}")
+    lines.append("")
+    return "\n".join(lines)
+
+
 def _build_rag_section(input_text: str):
     if not getattr(config, "RAG_ENABLED", True):
         return "（本路径已关闭）", []
@@ -267,9 +320,15 @@ def _build_rag_section(input_text: str):
     return "\n".join(lines), hits
 
 
-def _prepare_query_context(input_text: str, *, for_vision: bool = False):
+def _prepare_query_context(
+    input_text: str,
+    *,
+    for_vision: bool = False,
+    history: list | None = None,
+):
     """组装 KG/RAG/动态检索与阶段调度上下文，供文本 LLM 与 Qwen-VL 共用。"""
     kg_context = ""
+    normalized_history = _normalize_chat_history(history)
     debug_meta = {
         "kg_enabled": bool(getattr(config, "KG_CONTEXT_ENABLED", True)),
         "rag_enabled": bool(getattr(config, "RAG_ENABLED", True)),
@@ -280,6 +339,8 @@ def _prepare_query_context(input_text: str, *, for_vision: bool = False):
         "need_dynamic": False,
         "schedule_reasoning": "",
         "multimodal_backend": "qwen_vl" if for_vision else "text_llm",
+        "history_rounds": len(normalized_history) // 2,
+        "history_messages": len(normalized_history),
     }
 
     phase_result = None
@@ -417,20 +478,26 @@ def _prepare_query_context(input_text: str, *, for_vision: bool = False):
     if validity_hint:
         prompt += f"6. 在回答末尾附上时效提示：{validity_hint}\n"
 
+    history_section = _format_history_section(normalized_history)
+    if history_section:
+        prompt += f"\n{history_section}"
+
     if for_vision:
         prompt += (
-            f"\n【图片问答】请结合图片内容回答。\n"
+            f"【图片问答】请结合图片内容回答；若与上文对话相关请保持连贯。\n"
             f"【用户问题】\n{input_text}\n"
         )
     else:
-        prompt += f"\n【问题】\n{input_text}\n"
+        prompt += f"【问题】\n{input_text}\n"
 
     return prompt, debug_meta, phase_tag
 
 
-def generate_response(instruction, input_text):
+def generate_response(instruction, input_text, history=None):
     try:
-        prompt, debug_meta, phase_tag = _prepare_query_context(input_text, for_vision=False)
+        prompt, debug_meta, phase_tag = _prepare_query_context(
+            input_text, for_vision=False, history=history
+        )
 
         messages = [
             {"role": "system", "content": "你是一个地震专家，专注于回答地震相关问题。"},
@@ -562,7 +629,10 @@ def query():
         if len(input_text) > 2000:
             return jsonify({"error": f"输入内容过长（{len(input_text)}字），请控制在2000字以内"}), 400
 
-        response, meta = generate_response("回答用户关于地震的问题", input_text)
+        history = _normalize_chat_history(params.get("history"))
+        response, meta = generate_response(
+            "回答用户关于地震的问题", input_text, history=history
+        )
         payload = {"response": response}
         if meta is not None:
             payload["debug"] = meta
@@ -570,6 +640,18 @@ def query():
 
     else:
         return jsonify({"error": f"不支持的查询类型：{query_type}，可选值：llm、kg"}), 400
+
+
+def _parse_history_form_field() -> list:
+    raw = request.form.get("history", "").strip()
+    if not raw:
+        return []
+    try:
+        data = json.loads(raw)
+    except json.JSONDecodeError:
+        logging.warning("history 字段 JSON 解析失败")
+        return []
+    return _normalize_chat_history(data)
 
 
 @app.route("/api/multimodal-query", methods=["POST"])
@@ -598,6 +680,14 @@ def multimodal_query():
 
     try:
         image = Image.open(io.BytesIO(image_data)).convert("RGB")
+        raw_kb = len(image_data) // 1024
+        image = _compress_upload_image(image)
+        logging.info(
+            "上传图片已压缩: %dKB → %dx%d",
+            raw_kb,
+            image.size[0],
+            image.size[1],
+        )
     except Exception as e:
         return jsonify({"error": f"图片解析失败，请确认文件是否损坏：{type(e).__name__}"}), 400
 
@@ -607,8 +697,9 @@ def multimodal_query():
         }), 503
 
     try:
+        chat_history = _parse_history_form_field()
         context_prompt, debug_meta, phase_tag = _prepare_query_context(
-            input_text, for_vision=True
+            input_text, for_vision=True, history=chat_history
         )
         response = qwen_vl_handler.generate(image, context_prompt)
         response = _sanitize_response(response, input_text)

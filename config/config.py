@@ -94,3 +94,11 @@ class Config:
     QWEN_VL_MAX_PIXELS = 512 * 28 * 28
     QWEN_VL_MAX_IMAGE_EDGE = 768
     QWEN_VL_MAX_CONTEXT_CHARS = 6000
+
+    # 上传图片压缩（前端 + 服务端）
+    UPLOAD_IMAGE_MAX_EDGE = 1280
+    UPLOAD_IMAGE_JPEG_QUALITY = 82
+
+    # 多轮对话：注入最近 N 轮 user/assistant 到 prompt（无服务端 session）
+    CHAT_HISTORY_MAX_ROUNDS = 3
+    CHAT_HISTORY_MAX_CHARS_PER_MSG = 500
