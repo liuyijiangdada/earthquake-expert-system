@@ -24,3 +24,12 @@ export async function updateEarthquakeData() {
   })
   return r.json().catch(() => ({}))
 }
+
+export async function classifyPhase(text) {
+  const r = await fetch('/api/phase-classify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text }),
+  })
+  return r.json().catch(() => ({}))
+}

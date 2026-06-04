@@ -32,7 +32,14 @@ def load_emergency_chunks(path: str) -> List[Dict[str, Any]]:
 
         steps = sorted(topic.get("steps", []), key=_step_order)
         step_lines = [s.get("text") or "" for s in steps]
-        text = f"{title}\n{category}\n" + "\n".join(step_lines)
+        phase_tag = topic.get("phase_tag", "")
+        temporal_validity = topic.get("temporal_validity", "")
+        header_parts = [title, category]
+        if phase_tag:
+            header_parts.append(f"适用阶段：{phase_tag}")
+        if temporal_validity and temporal_validity != "永久":
+            header_parts.append(f"时效：{temporal_validity}")
+        text = "\n".join(header_parts) + "\n" + "\n".join(step_lines)
         chunks.append(
             {
                 "topic_id": tid,

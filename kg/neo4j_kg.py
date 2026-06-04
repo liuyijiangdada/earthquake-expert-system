@@ -2,6 +2,7 @@
 # 基于 Neo4j 的地震知识图谱（真实事件目录 + 应急知识关系）
 
 import json
+import logging
 import os
 import sys
 from typing import Optional
@@ -12,7 +13,8 @@ from neo4j import GraphDatabase
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config.config import Config
 
-# 用于从文本中归并省级 Region（与 app 中地区列表一致）
+logger = logging.getLogger(__name__)
+
 _REGION_NAMES = [
     "四川", "云南", "青海", "西藏", "新疆", "甘肃", "河北", "台湾", "广东", "辽宁",
     "北京", "上海", "江苏", "浙江", "安徽", "福建", "江西", "山东", "河南", "湖北",
@@ -103,15 +105,23 @@ class Neo4jKG:
         print(f"导入应急知识主题 {len(topics)} 个…")
         for topic in topics:
             tid = topic["id"]
+            phase_tag = topic.get("phase_tag", "通用")
+            temporal_validity = topic.get("temporal_validity", "永久")
+            action_template = topic.get("action_template", "")
             session.run(
                 """
                 MERGE (t:EmergencyTopic {id: $id})
-                SET t.title = $title, t.category = $category, t.source = $source
+                SET t.title = $title, t.category = $category, t.source = $source,
+                    t.phase_tag = $phase_tag, t.temporal_validity = $temporal_validity,
+                    t.action_template = $action_template
                 """,
                 id=tid,
                 title=topic.get("title", ""),
                 category=topic.get("category", ""),
                 source=topic.get("source", ""),
+                phase_tag=phase_tag,
+                temporal_validity=temporal_validity,
+                action_template=action_template,
             )
             for step in topic.get("steps", []):
                 oid = int(step["order"])
@@ -278,53 +288,69 @@ class Neo4jKG:
             ).single()["c"]
 
     def query_all_earthquakes(self):
-        driver = self._connect()
-        with driver.session() as session:
-            result = session.run(
-                "MATCH (e:Earthquake) RETURN e ORDER BY e.time DESC"
-            )
-            return [_row_to_eq(r) for r in result]
+        try:
+            driver = self._connect()
+            with driver.session() as session:
+                result = session.run(
+                    "MATCH (e:Earthquake) RETURN e ORDER BY e.time DESC"
+                )
+                return [_row_to_eq(r) for r in result]
+        except Exception as e:
+            logger.error("查询全部地震失败: %s", e)
+            return []
 
     def query_earthquakes_by_region(self, region):
-        driver = self._connect()
-        with driver.session() as session:
-            result = session.run(
-                """
-                MATCH (e:Earthquake)
-                WHERE e.location CONTAINS $region
-                RETURN e ORDER BY e.time DESC
-                """,
-                region=region,
-            )
-            return [_row_to_eq(r) for r in result]
+        try:
+            driver = self._connect()
+            with driver.session() as session:
+                result = session.run(
+                    """
+                    MATCH (e:Earthquake)
+                    WHERE e.location CONTAINS $region
+                    RETURN e ORDER BY e.time DESC
+                    """,
+                    region=region,
+                )
+                return [_row_to_eq(r) for r in result]
+        except Exception as e:
+            logger.error("按地区查询地震失败(region=%s): %s", region, e)
+            return []
 
     def query_earthquakes_by_magnitude(self, min_magnitude, max_magnitude=10.0):
-        driver = self._connect()
-        with driver.session() as session:
-            result = session.run(
-                """
-                MATCH (e:Earthquake)
-                WHERE toFloat(e.magnitude) >= $min_m AND toFloat(e.magnitude) <= $max_m
-                RETURN e ORDER BY e.magnitude DESC
-                """,
-                min_m=float(min_magnitude),
-                max_m=float(max_magnitude),
-            )
-            return [_row_to_eq(r) for r in result]
+        try:
+            driver = self._connect()
+            with driver.session() as session:
+                result = session.run(
+                    """
+                    MATCH (e:Earthquake)
+                    WHERE toFloat(e.magnitude) >= $min_m AND toFloat(e.magnitude) <= $max_m
+                    RETURN e ORDER BY e.magnitude DESC
+                    """,
+                    min_m=float(min_magnitude),
+                    max_m=float(max_magnitude),
+                )
+                return [_row_to_eq(r) for r in result]
+        except Exception as e:
+            logger.error("按震级查询地震失败: %s", e)
+            return []
 
     def query_earthquakes_by_depth(self, min_depth, max_depth):
-        driver = self._connect()
-        with driver.session() as session:
-            result = session.run(
-                """
-                MATCH (e:Earthquake)
-                WHERE toFloat(e.depth) >= $min_d AND toFloat(e.depth) <= $max_d
-                RETURN e ORDER BY e.depth
-                """,
-                min_d=float(min_depth),
-                max_d=float(max_depth),
-            )
-            return [_row_to_eq(r) for r in result]
+        try:
+            driver = self._connect()
+            with driver.session() as session:
+                result = session.run(
+                    """
+                    MATCH (e:Earthquake)
+                    WHERE toFloat(e.depth) >= $min_d AND toFloat(e.depth) <= $max_d
+                    RETURN e ORDER BY e.depth
+                    """,
+                    min_d=float(min_depth),
+                    max_d=float(max_depth),
+                )
+                return [_row_to_eq(r) for r in result]
+        except Exception as e:
+            logger.error("按深度查询地震失败: %s", e)
+            return []
 
     def query_earthquakes_by_time_range(self, start_time, end_time):
         driver = self._connect()
@@ -384,48 +410,75 @@ class Neo4jKG:
             "t": {"id": f"time_{eq['time']}", "timestamp": eq["time"]},
         }
 
-    def query_emergency_context(self, user_text: str) -> str:
-        """当用户询问避险、怎么办等时，从图谱抽取应急要点供模型参考。"""
+    def query_emergency_context(self, user_text: str, phase_tag: str = "") -> str:
+        """当用户询问避险、怎么办等时，从图谱抽取应急要点供模型参考。
+        若指定 phase_tag，则优先返回该阶段的主题。"""
         triggers = (
             "怎么办", "如何做", "怎样", "避险", "避震", "应急", "自救", "互救",
             "余震", "室内", "室外", "高楼", "学校", "准备", "演练", "逃生",
         )
         if not any(t in user_text for t in triggers):
             return ""
-        driver = self._connect()
-        lines = []
-        with driver.session() as session:
-            result = session.run(
-                """
-                MATCH (t:EmergencyTopic)
-                OPTIONAL MATCH (t)-[hs:HAS_STEP]->(s:GuidanceStep)
-                RETURN t.id AS tid, t.title AS title, t.category AS cat, t.source AS src,
-                       hs.order AS ord, s.text AS stext
-                ORDER BY t.id, hs.order
-                """
-            )
-            by_topic = {}
-            for r in result:
-                tid = r["tid"]
-                if tid not in by_topic:
-                    by_topic[tid] = {
-                        "title": r["title"],
-                        "cat": r["cat"],
-                        "src": r["src"],
-                        "steps": [],
-                    }
-                if r["stext"]:
-                    by_topic[tid]["steps"].append((r["ord"], r["stext"]))
-        for _, info in by_topic.items():
-            lines.append(f"《{info['title']}》（{info['cat']}）")
-            for ord_, txt in sorted(info["steps"], key=lambda x: x[0] or 0):
-                lines.append(f"  {int(ord_)}. {txt}")
-            if info.get("src"):
-                lines.append(f"  参考说明：{info['src']}")
-            lines.append("")
-        if not lines:
+        try:
+            driver = self._connect()
+            lines = []
+            with driver.session() as session:
+                if phase_tag and phase_tag != "通用":
+                    result = session.run(
+                        """
+                        MATCH (t:EmergencyTopic)
+                        WHERE t.phase_tag = $phase_tag OR t.phase_tag = '通用' OR t.phase_tag IS NULL
+                        OPTIONAL MATCH (t)-[hs:HAS_STEP]->(s:GuidanceStep)
+                        RETURN t.id AS tid, t.title AS title, t.category AS cat, t.source AS src,
+                               t.phase_tag AS ptag, t.temporal_validity AS tval, t.action_template AS atmpl,
+                               hs.order AS ord, s.text AS stext
+                        ORDER BY t.id, hs.order
+                        """,
+                        phase_tag=phase_tag,
+                    )
+                else:
+                    result = session.run(
+                        """
+                        MATCH (t:EmergencyTopic)
+                        OPTIONAL MATCH (t)-[hs:HAS_STEP]->(s:GuidanceStep)
+                        RETURN t.id AS tid, t.title AS title, t.category AS cat, t.source AS src,
+                               t.phase_tag AS ptag, t.temporal_validity AS tval, t.action_template AS atmpl,
+                               hs.order AS ord, s.text AS stext
+                        ORDER BY t.id, hs.order
+                        """
+                    )
+                by_topic = {}
+                for r in result:
+                    tid = r["tid"]
+                    if tid not in by_topic:
+                        by_topic[tid] = {
+                            "title": r["title"],
+                            "cat": r["cat"],
+                            "src": r["src"],
+                            "ptag": r["ptag"] or "通用",
+                            "tval": r["tval"] or "永久",
+                            "atmpl": r["atmpl"] or "",
+                            "steps": [],
+                        }
+                    if r["stext"]:
+                        by_topic[tid]["steps"].append((r["ord"], r["stext"]))
+            for _, info in by_topic.items():
+                phase_label = f"【{info['ptag']}阶段】" if info["ptag"] != "通用" else ""
+                validity_label = f"（时效：{info['tval']}）" if info["tval"] != "永久" else ""
+                lines.append(f"《{info['title']}》（{info['cat']}）{phase_label}{validity_label}")
+                if info["atmpl"]:
+                    lines.append(f"  ⚡快速指令：{info['atmpl']}")
+                for ord_, txt in sorted(info["steps"], key=lambda x: x[0] or 0):
+                    lines.append(f"  {int(ord_)}. {txt}")
+                if info.get("src"):
+                    lines.append(f"  参考说明：{info['src']}")
+                lines.append("")
+            if not lines:
+                return ""
+            return "【知识图谱·应急避险要点】\n" + "\n".join(lines).strip() + "\n\n"
+        except Exception as e:
+            logger.error("查询应急知识失败: %s", e)
             return ""
-        return "【知识图谱·应急避险要点】\n" + "\n".join(lines).strip() + "\n\n"
 
     @staticmethod
     def _magnitude_level(magnitude):

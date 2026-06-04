@@ -4,7 +4,6 @@
 import json
 import os
 
-# 必须在 import transformers / huggingface_hub 之前设置，否则库初始化阶段仍可能访问 Hub → [Errno 60] 超时
 os.environ["HF_HUB_OFFLINE"] = "1"
 os.environ["TRANSFORMERS_OFFLINE"] = "1"
 
@@ -18,34 +17,66 @@ from PIL import Image
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from peft import PeftModel
 
-# 项目根目录（用于 sys.path、LoRA 绝对路径，避免在非项目目录下启动时误走 Hub 下载导致超时）
 _APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(_APP_ROOT)
 from config.config import Config
 from kg.neo4j_kg import Neo4jKG
 from rag.emergency_rag import build_emergency_rag_from_config
-from llm.vision_handler import vision_handler
+from llm.qwen_vl_handler import QwenVLHandler
+from core.phase_classifier import PhaseClassifier
+from core.dynamic_retriever import DynamicRetriever
+from core.scheduler import Scheduler
+from core.multimodal_output import MultimodalOutput
 
 app = Flask(__name__)
 config = Config()
 
-# Vue 构建产物目录（frontend 执行 npm run build 后生成）；不存在则回退静态页 index.legacy.html
 _SPA_DIR = os.path.join(_APP_ROOT, "static", "spa")
 _SPA_INDEX = os.path.join(_SPA_DIR, "index.html")
 
-# 初始化知识图谱（Neo4j）
+_MAX_IMAGE_SIZE = 10 * 1024 * 1024
+_ALLOWED_IMAGE_TYPES = {"image/jpeg", "image/png", "image/gif", "image/webp"}
+
+
+@app.errorhandler(400)
+def bad_request(e):
+    return jsonify({"error": f"请求参数错误：{e}"}), 400
+
+
+@app.errorhandler(404)
+def not_found(e):
+    return jsonify({"error": "请求的资源不存在"}), 404
+
+
+@app.errorhandler(405)
+def method_not_allowed(e):
+    return jsonify({"error": "请求方法不允许"}), 405
+
+
+@app.errorhandler(413)
+def request_too_large(e):
+    return jsonify({"error": "上传文件过大，图片最大支持10MB"}), 413
+
+
+@app.errorhandler(500)
+def internal_error(e):
+    return jsonify({"error": "服务器内部错误，请稍后重试"}), 500
+
+
+@app.errorhandler(Exception)
+def handle_unexpected(e):
+    logging.exception("未捕获异常")
+    return jsonify({"error": f"服务异常：{type(e).__name__}"}), 500
+
 kg = Neo4jKG()
 kg.run()
 
-# 微调模型：基础权重 + LoRA（相对路径相对项目根目录解析，避免 cwd 不对时 PEFT 找不到本地 adapter 去 Hugging Face 拉取 → [Errno 60] 超时）
 MODEL_NAME = config.MODEL_NAME
 _fp = config.FINETUNED_MODEL_PATH
 MODEL_DIR = _fp if os.path.isabs(_fp) else os.path.join(_APP_ROOT, _fp)
 
 
 def _tokenizer_load_path() -> str:
-    """优先从 LoRA 目录加载 tokenizer（纯本地文件），避免对 MODEL_NAME 再走 Hub。
-    若 LoRA 内 tokenizer_config 含旧版 list 型 extra_special_tokens，则回退到基础模型缓存（与当前 transformers 兼容）。"""
     tj = os.path.join(MODEL_DIR, "tokenizer.json")
     tc = os.path.join(MODEL_DIR, "tokenizer_config.json")
     if os.path.isfile(tj) and os.path.isfile(tc):
@@ -61,7 +92,6 @@ def _tokenizer_load_path() -> str:
 
 
 print(f"加载基础模型: {MODEL_NAME}")
-# 选择推理设备（优先 MPS，其次 CUDA，最后 CPU）
 if torch.backends.mps.is_available():
     device = torch.device("mps")
 elif torch.cuda.is_available():
@@ -71,18 +101,16 @@ else:
 
 dtype = torch.float16 if device.type in {"cuda", "mps"} else torch.float32
 
-# 加载基础模型
 try:
-    # 直接从本地缓存加载模型，避免网络请求
     base_model = AutoModelForCausalLM.from_pretrained(
         MODEL_NAME,
         dtype=dtype,
         device_map=None,
-        trust_remote_code=False,  # 禁用远程代码，避免网络请求
+        trust_remote_code=False,
         low_cpu_mem_usage=True,
         local_files_only=True,
     )
-    
+
     _tp = _tokenizer_load_path()
     print(f"加载 tokenizer（路径: {_tp}）", flush=True)
     tokenizer = AutoTokenizer.from_pretrained(
@@ -90,14 +118,13 @@ try:
         trust_remote_code=False,
         local_files_only=True,
     )
-    
+
     print(f"加载微调模型: {MODEL_DIR}", flush=True)
     if not os.path.isfile(os.path.join(MODEL_DIR, "adapter_config.json")):
         raise FileNotFoundError(
             f"本地 LoRA 目录不存在或缺少 adapter_config.json: {MODEL_DIR} "
             f"（请在项目根目录执行 python app.py，或把 FINETUNED_MODEL_PATH 设为绝对路径）"
         )
-    # 加载 LoRA 权重（强制离线，避免误走 Hub 下载）
     model = PeftModel.from_pretrained(base_model, MODEL_DIR, local_files_only=True)
     model.to(device)
     model.eval()
@@ -109,7 +136,6 @@ except Exception as e:
     print(f"模型加载失败: {e}")
     sys.exit(1)
 
-# 长提示必须从左侧截断，保留末尾的「问题」与 <|assistant|>；默认 right 会砍掉生成标记导致空输出
 tokenizer.truncation_side = "left"
 _llm_input_max = int(getattr(config, "LLM_INPUT_MAX_TOKENS", 4096))
 
@@ -122,9 +148,109 @@ if getattr(config, "RAG_ENABLED", True):
     else:
         print("应急知识 RAG 未加载（将使用「无相关条目」占位，可检查嵌入模型缓存与 RAG_ENABLED）")
 
+phase_classifier = None
+if getattr(config, "PHASE_CLASSIFIER_ENABLED", True):
+    phase_classifier = PhaseClassifier()
+    print("三阶段问题分类器已初始化")
+
+dynamic_retriever = None
+if getattr(config, "DYNAMIC_RETRIEVAL_ENABLED", True):
+    dynamic_retriever = DynamicRetriever(config)
+    print(f"动态知识检索模块已初始化（启用={dynamic_retriever.enabled}）")
+
+scheduler = None
+if getattr(config, "SCHEDULER_ENABLED", True):
+    scheduler = Scheduler(config)
+    print("不确定性感知调度器已初始化")
+
+multimodal_output = None
+if getattr(config, "MULTIMODAL_OUTPUT_ENABLED", True):
+    multimodal_output = MultimodalOutput(config)
+    print(f"多模态输出模块已初始化（启用={multimodal_output.enabled}）")
+
+qwen_vl_handler = None
+if getattr(config, "QWEN_VL_ENABLED", True):
+    qwen_vl_handler = QwenVLHandler(config)
+    print(
+        f"Qwen-VL 多模态输入已配置（模型={qwen_vl_handler.model_name}，首次图片问答时加载）"
+    )
+
+
+_UNRELATED_TOPICS = [
+    "聚氯乙烯", "聚乙烯", "期货", "产能", "开工率", "供需", "下游需求", "库存水平",
+    "成本的", "弱势震荡", "PVC", "能源化工", "甲醇", "乙二醇", "纯碱",
+]
+
+_FORBIDDEN_OPENERS = [
+    "给定", "提出一组", "根据您提供的", "Instructions", "Assistant:",
+    "instruction:", "input:", "output:", "Napište", "Zlepšení",
+    "Human:", "human:", "Human：", "human：",
+    "Assistant:", "assistant:", "Assistant：", "assistant：",
+]
+
+_CONVERSATION_DELIMITERS = [
+    "Human:", "human:", "Human：", "human：",
+    "Assistant:", "assistant:", "Assistant：", "assistant：",
+    "###", "---", "===",
+]
+
+
+def _contains_chinese(text: str) -> bool:
+    """检查文本是否包含中文"""
+    return any("\u4e00" <= c <= "\u9fff" for c in text)
+
+
+def _sanitize_response(text: str, input_text: str) -> str:
+    """过滤模型跑偏输出，确保回答是中文地震相关内容"""
+    if not text or len(text) < 5:
+        return text
+
+    has_chinese = _contains_chinese(text)
+    if not has_chinese:
+        logging.warning("模型输出不含中文，触发过滤: %s...", text[:80])
+        return "抱歉，模型生成了不相关的内容。请重新提问您关心的地震相关问题。"
+
+    cut_index = len(text)
+    for delimiter in _CONVERSATION_DELIMITERS:
+        idx = text.find(delimiter)
+        if idx != -1 and idx < cut_index:
+            cut_index = idx
+
+    if cut_index < len(text):
+        logging.warning("检测到多轮对话标记，在位置 %d 截断", cut_index)
+        text = text[:cut_index]
+
+    lines = text.split("\n")
+    clean_lines = []
+    for line in lines:
+        stripped = line.strip()
+        if not stripped:
+            clean_lines.append(line)
+            continue
+        should_skip = False
+        for pat in _FORBIDDEN_OPENERS:
+            if stripped.startswith(pat):
+                should_skip = True
+                break
+        if not should_skip:
+            clean_lines.append(line)
+
+    text = "\n".join(clean_lines).strip()
+
+    for topic in _UNRELATED_TOPICS:
+        pos = text.find(topic)
+        if pos != -1:
+            logging.warning("检测到无关话题 '%s'，在位置 %d 截断", topic, pos)
+            text = text[:pos].strip()
+            break
+
+    if not _contains_chinese(text):
+        return "抱歉，模型生成了不相关的内容。请重新提问您关心的地震相关问题。"
+
+    return text
+
 
 def _build_rag_section(input_text: str):
-    """返回 (展示文本, hits 列表)。"""
     if not getattr(config, "RAG_ENABLED", True):
         return "（本路径已关闭）", []
     if emergency_rag is None:
@@ -141,17 +267,39 @@ def _build_rag_section(input_text: str):
     return "\n".join(lines), hits
 
 
-# 模型推理函数
-def generate_response(instruction, input_text):
-    try:
-        kg_context = ""
-        debug_meta = {
-            "kg_enabled": bool(getattr(config, "KG_CONTEXT_ENABLED", True)),
-            "rag_enabled": bool(getattr(config, "RAG_ENABLED", True)),
-            "rag_topic_ids": [],
-        }
+def _prepare_query_context(input_text: str, *, for_vision: bool = False):
+    """组装 KG/RAG/动态检索与阶段调度上下文，供文本 LLM 与 Qwen-VL 共用。"""
+    kg_context = ""
+    debug_meta = {
+        "kg_enabled": bool(getattr(config, "KG_CONTEXT_ENABLED", True)),
+        "rag_enabled": bool(getattr(config, "RAG_ENABLED", True)),
+        "rag_topic_ids": [],
+        "phase": "通用",
+        "phase_confidence": 0.0,
+        "urgency": 0.0,
+        "need_dynamic": False,
+        "schedule_reasoning": "",
+        "multimodal_backend": "qwen_vl" if for_vision else "text_llm",
+    }
 
-        if getattr(config, "KG_CONTEXT_ENABLED", True):
+    phase_result = None
+    schedule_decision = None
+    if phase_classifier:
+        phase_result = phase_classifier.classify(input_text)
+        debug_meta["phase"] = phase_result.phase.value
+        debug_meta["phase_confidence"] = round(phase_result.confidence, 2)
+        debug_meta["urgency"] = round(phase_result.urgency, 2)
+        debug_meta["need_dynamic"] = phase_result.need_dynamic
+
+    if scheduler and phase_result:
+        schedule_decision = scheduler.decide(phase_result)
+        debug_meta["schedule_reasoning"] = schedule_decision.reasoning
+
+    phase_tag = phase_result.phase.value if phase_result else ""
+
+    if getattr(config, "KG_CONTEXT_ENABLED", True):
+        use_kg = schedule_decision.use_kg if schedule_decision else True
+        if use_kg:
             regions = [
                 "四川", "云南", "青海", "西藏", "新疆", "甘肃", "河北", "台湾", "广东", "辽宁",
                 "北京", "上海", "江苏", "浙江", "安徽", "福建", "江西", "山东", "河南", "湖北",
@@ -189,54 +337,118 @@ def generate_response(instruction, input_text):
                                 kg_context += f"{i+1}. {eq['location']}：{eq['magnitude']}级 ({eq['time']})\n"
                             kg_context += "\n"
 
-            emg = kg.query_emergency_context(input_text)
+            emg = kg.query_emergency_context(input_text, phase_tag=phase_tag)
             if emg:
                 kg_context += emg
 
-        if getattr(config, "KG_CONTEXT_ENABLED", True):
-            kg_section = kg_context.strip() if kg_context.strip() else "（无）"
-        else:
-            kg_section = "（本路径已关闭）"
+    if getattr(config, "KG_CONTEXT_ENABLED", True):
+        kg_section = kg_context.strip() if kg_context.strip() else "（无）"
+    else:
+        kg_section = "（本路径已关闭）"
 
+    use_rag = schedule_decision.use_rag if schedule_decision else True
+    if use_rag:
         rag_section, rag_hits = _build_rag_section(input_text)
-        debug_meta["rag_topic_ids"] = [h.get("topic_id", "") for h in rag_hits]
+    else:
+        rag_section = "（调度器判定本路径无需启用）"
+        rag_hits = []
+    debug_meta["rag_topic_ids"] = [h.get("topic_id", "") for h in rag_hits]
 
-        # 用户问题放在整段末尾：在 left 截断时仍尽量保留真实提问（规则若在最后会先被截掉）
-        prompt = (
-            "你是一个地震知识专家。请结合【知识图谱】与【参考资料】回答问题。\n\n"
-            f"【知识图谱】\n{kg_section}\n\n"
-            f"【参考资料】\n{rag_section}\n\n"
-            "规则：数值、时间、震级、地点等可验证事实以知识图谱为准；参考资料仅作步骤与表述补充。"
-            "若两者均未提供有效条目，可基于常识回答，并简要说明未命中本地知识库。\n"
+    dynamic_section = ""
+    use_dynamic = schedule_decision.use_dynamic if schedule_decision else False
+    if use_dynamic and dynamic_retriever and dynamic_retriever.enabled:
+        dynamic_result = dynamic_retriever.fetch_for_phase(phase_tag, input_text)
+        dynamic_section = dynamic_result.to_context_text()
+        debug_meta["dynamic_source"] = dynamic_result.source
+        debug_meta["dynamic_items_count"] = len(dynamic_result.items)
+
+    phase_instruction = ""
+    if schedule_decision and schedule_decision.prompt_suffix:
+        phase_instruction = schedule_decision.prompt_suffix + "\n"
+
+    validity_hint = ""
+    if getattr(config, "VALIDITY_HINT_ENABLED", True) and schedule_decision and schedule_decision.validity_hint:
+        fetched_at = ""
+        if dynamic_retriever and dynamic_retriever._cache:
+            fetched_at = dynamic_retriever._cache.fetched_at
+        validity_hint = schedule_decision.validity_hint.format(
+            fetched_at=fetched_at or "刚刚",
+            refresh_minutes=10,
+        )
+
+    prompt = "你是一个地震知识专家。请结合【知识图谱】与【参考资料】回答问题。\n\n"
+
+    if phase_tag and phase_tag != "通用":
+        prompt += f"当前判定为【{phase_tag}阶段】的问题。\n\n"
+
+    prompt += f"【知识图谱】\n{kg_section}\n\n"
+    prompt += f"【参考资料】\n{rag_section}\n\n"
+
+    if dynamic_section:
+        prompt += f"{dynamic_section}\n\n"
+
+    prompt += (
+        "规则：数值、时间、震级、地点等可验证事实以知识图谱为准；参考资料仅作步骤与表述补充；"
+        "动态信息为实时数据，可能随时更新。"
+        "若三者均未提供有效条目，可基于常识回答，并简要说明未命中本地知识库。\n"
+    )
+
+    if phase_instruction:
+        prompt += f"{phase_instruction}\n"
+
+    if for_vision:
+        prompt += (
+            "回答要求：\n"
+            "1. 请直接观察用户上传的图片，结合上述知识上下文作答\n"
+            "2. 优先采用知识图谱中的可验证事实，合理利用参考资料与动态信息\n"
+            "3. 回答简洁明了，不要使用强调符号如***\n"
+            "4. 若图片与地震应急无关，请说明并引导用户上传相关图片\n"
+        )
+    else:
+        prompt += (
             "回答要求：\n"
             "1. 直接回答问题，不要有任何引言或开场白\n"
-            "2. 优先采用知识图谱中的可验证事实，并合理利用参考资料\n"
+            "2. 优先采用知识图谱中的可验证事实，合理利用参考资料与动态信息\n"
             "3. 回答要简洁明了，避免冗长\n"
             "4. 不要使用任何强调符号如***\n"
-            "5. 如果知识图谱与参考资料均未提供相关信息，请基于你的知识提供合理回答，并说明未命中本地知识库\n\n"
-            f"【问题】\n{input_text}\n"
+            "5. 如果知识图谱与参考资料均未提供相关信息，请基于你的知识提供合理回答，并说明未命中本地知识库\n"
         )
-        
-        # 直接使用本地微调模型进行推理
-        # 使用与微调时相同的聊天格式
+
+    if validity_hint:
+        prompt += f"6. 在回答末尾附上时效提示：{validity_hint}\n"
+
+    if for_vision:
+        prompt += (
+            f"\n【图片问答】请结合图片内容回答。\n"
+            f"【用户问题】\n{input_text}\n"
+        )
+    else:
+        prompt += f"\n【问题】\n{input_text}\n"
+
+    return prompt, debug_meta, phase_tag
+
+
+def generate_response(instruction, input_text):
+    try:
+        prompt, debug_meta, phase_tag = _prepare_query_context(input_text, for_vision=False)
+
         messages = [
             {"role": "system", "content": "你是一个地震专家，专注于回答地震相关问题。"},
             {"role": "user", "content": prompt}
         ]
-        
+
         text = ""
         for m in messages:
             role = m["role"]
             content = m["content"]
             if role == "system":
-                text += f"<|system|>{content}</s>"
+                text += f"<|im_start|>{content}</s>"
             elif role == "user":
-                text += f"<|user|>{content}</s>"
+                text += f"<|im_start|>user\n{content}</s>"
             elif role == "assistant":
-                text += f"<|assistant|>{content}</s>"
-        
-        # 添加 assistant 标记，表示模型开始生成回答
-        text += "<|assistant|>"
+                text += f"<|im_start|>assistant\n{content}</s>"
+
+        text += "<|im_start|>assistant\n"
 
         inputs = tokenizer(
             text,
@@ -248,7 +460,6 @@ def generate_response(instruction, input_text):
         input_ids = inputs.input_ids.to(device)
         attention_mask = inputs.attention_mask.to(device)
 
-        # 检查 pad_token_id
         if tokenizer.pad_token_id is None:
             tokenizer.pad_token_id = tokenizer.eos_token_id
 
@@ -264,112 +475,166 @@ def generate_response(instruction, input_text):
                 no_repeat_ngram_size=int(getattr(config, "LLM_NO_REPEAT_NGRAM_SIZE", 4)),
             )
 
-        # 只取新生成的部分
         generated = outputs[0][input_ids.shape[-1]:]
         text = tokenizer.decode(generated, skip_special_tokens=True).strip()
-        
-        # 过滤掉可能的特殊标记
-        text = text.replace("</s>", "").replace("<|system|>", "").replace("<|user|>", "").replace("<|assistant|>", "")
-        
-        # 确保文本干净
+
+        text = text.replace("</s>", "").replace("<|im_start|>", "").replace("<|im_end|>", "")
         text = text.strip()
+
+        text = _sanitize_response(text, input_text)
+
+        media_resources = []
+        if multimodal_output and multimodal_output.enabled:
+            media_resources = multimodal_output.match_as_dicts(input_text, phase_tag)
+            debug_meta["media_resources"] = media_resources
 
         return text, debug_meta
     except Exception as e:
         print(f"模型推理错误: {e}")
         return "模型推理暂时失败，请稍后重试。", None
 
-# API路由
+
 @app.route("/api/query", methods=["POST"])
 def query():
     data = request.json
     if not data:
-        return jsonify({"error": "No input data"}), 400
-    
+        return jsonify({"error": "请求体为空，请提供 JSON 格式数据"}), 400
+
     query_type = data.get("query_type")
+    if not query_type:
+        return jsonify({"error": "缺少 query_type 参数，可选值：llm、kg"}), 400
+
     params = data.get("params", {})
-    
+
     if query_type == "kg":
-        # 知识图谱查询
         kg_query_type = params.get("type")
-        
-        if kg_query_type == "by_region":
-            region = params.get("region")
-            results = kg.query_earthquakes_by_region(region)
-            return jsonify({"results": results})
-        
-        elif kg_query_type == "by_magnitude":
-            min_magnitude = float(params.get("min_magnitude", 0))
-            max_magnitude = float(params.get("max_magnitude", 10))
-            results = kg.query_earthquakes_by_magnitude(min_magnitude, max_magnitude)
-            return jsonify({"results": results})
-        
-        elif kg_query_type == "by_depth":
-            min_depth = float(params.get("min_depth", 0))
-            max_depth = float(params.get("max_depth", 1000))
-            results = kg.query_earthquakes_by_depth(min_depth, max_depth)
-            return jsonify({"results": results})
-        
-        elif kg_query_type == "all":
-            results = kg.query_all_earthquakes()
-            return jsonify({"results": results})
-        
-        else:
-            return jsonify({"error": "Invalid knowledge graph query type"}), 400
-    
+        if not kg_query_type:
+            return jsonify({"error": "缺少知识图谱查询类型参数 params.type，可选值：all、by_region、by_magnitude、by_depth"}), 400
+
+        try:
+            if kg_query_type == "by_region":
+                region = params.get("region")
+                if not region:
+                    return jsonify({"error": "缺少参数 params.region，请指定查询地区"}), 400
+                results = kg.query_earthquakes_by_region(region)
+                return jsonify({"results": results})
+
+            elif kg_query_type == "by_magnitude":
+                try:
+                    min_magnitude = float(params.get("min_magnitude", 0))
+                    max_magnitude = float(params.get("max_magnitude", 10))
+                except (ValueError, TypeError):
+                    return jsonify({"error": "震级参数格式错误，min_magnitude 和 max_magnitude 应为数字"}), 400
+                if min_magnitude < 0 or max_magnitude < 0:
+                    return jsonify({"error": "震级参数不能为负数"}), 400
+                if min_magnitude > max_magnitude:
+                    return jsonify({"error": f"最小震级({min_magnitude})不能大于最大震级({max_magnitude})"}), 400
+                results = kg.query_earthquakes_by_magnitude(min_magnitude, max_magnitude)
+                return jsonify({"results": results})
+
+            elif kg_query_type == "by_depth":
+                try:
+                    min_depth = float(params.get("min_depth", 0))
+                    max_depth = float(params.get("max_depth", 1000))
+                except (ValueError, TypeError):
+                    return jsonify({"error": "深度参数格式错误，min_depth 和 max_depth 应为数字"}), 400
+                if min_depth < 0 or max_depth < 0:
+                    return jsonify({"error": "深度参数不能为负数"}), 400
+                if min_depth > max_depth:
+                    return jsonify({"error": f"最小深度({min_depth})不能大于最大深度({max_depth})"}), 400
+                results = kg.query_earthquakes_by_depth(min_depth, max_depth)
+                return jsonify({"results": results})
+
+            elif kg_query_type == "all":
+                results = kg.query_all_earthquakes()
+                return jsonify({"results": results})
+
+            else:
+                return jsonify({"error": f"不支持的知识图谱查询类型：{kg_query_type}，可选值：all、by_region、by_magnitude、by_depth"}), 400
+        except Exception as e:
+            logging.error("知识图谱查询失败: %s", e)
+            return jsonify({"error": f"知识图谱查询失败，请确认 Neo4j 服务是否正常运行：{type(e).__name__}"}), 500
+
     elif query_type == "llm":
-        # 大模型查询
         input_text = params.get("input", "")
-        if not input_text:
-            return jsonify({"error": "No input text"}), 400
-        
+        if not input_text or not input_text.strip():
+            return jsonify({"error": "输入内容不能为空，请输入地震相关问题"}), 400
+        if len(input_text) > 2000:
+            return jsonify({"error": f"输入内容过长（{len(input_text)}字），请控制在2000字以内"}), 400
+
         response, meta = generate_response("回答用户关于地震的问题", input_text)
         payload = {"response": response}
-        if getattr(config, "API_DEBUG_RAG", False) and meta is not None:
+        if meta is not None:
             payload["debug"] = meta
         return jsonify(payload)
-    
+
     else:
-        return jsonify({"error": "Invalid query type"}), 400
+        return jsonify({"error": f"不支持的查询类型：{query_type}，可选值：llm、kg"}), 400
 
 
 @app.route("/api/multimodal-query", methods=["POST"])
 def multimodal_query():
-    """多模态问答：接收图片 + 文字问题，返回 AI 回答"""
     if "image" not in request.files:
-        return jsonify({"error": "No image file"}), 400
+        return jsonify({"error": "未检测到图片文件，请选择一张图片上传"}), 400
 
     image_file = request.files["image"]
+    if image_file.filename == "":
+        return jsonify({"error": "未选择图片文件，请重新选择"}), 400
+
+    if image_file.content_type not in _ALLOWED_IMAGE_TYPES:
+        return jsonify({
+            "error": f"不支持的图片格式：{image_file.content_type}，支持格式：JPEG、PNG、GIF、WebP"
+        }), 400
+
+    image_data = image_file.read()
+    if len(image_data) > _MAX_IMAGE_SIZE:
+        return jsonify({
+            "error": f"图片文件过大（{len(image_data) // 1024 // 1024}MB），最大支持10MB"
+        }), 400
+
     input_text = request.form.get("input", "")
-
-    if not input_text:
-        return jsonify({"error": "No input text"}), 400
-
-    try:
-        image = Image.open(io.BytesIO(image_file.read())).convert("RGB")
-    except Exception as e:
-        return jsonify({"error": f"Invalid image: {str(e)}"}), 400
+    if not input_text or not input_text.strip():
+        return jsonify({"error": "请输入与图片相关的问题描述"}), 400
 
     try:
-        image_desc = vision_handler.describe_image_for_earthquake(image, input_text)
+        image = Image.open(io.BytesIO(image_data)).convert("RGB")
     except Exception as e:
-        print(f"视觉模型推理失败: {e}")
-        image_desc = "（图片描述生成失败，仅基于文字回答）"
+        return jsonify({"error": f"图片解析失败，请确认文件是否损坏：{type(e).__name__}"}), 400
 
-    multimodal_prompt = (
-        f"用户上传了一张图片，图片内容描述如下：\n{image_desc}\n\n"
-        f"用户的问题是：{input_text}\n\n"
-        f"请结合图片描述和你的地震知识，回答用户的问题。"
-    )
+    if not qwen_vl_handler:
+        return jsonify({
+            "error": "Qwen-VL 多模态未启用，请在 config.py 中设置 QWEN_VL_ENABLED=True"
+        }), 503
 
-    response, meta = generate_response("回答用户关于地震的问题", multimodal_prompt)
-    payload = {"response": response}
-    if getattr(config, "API_DEBUG_RAG", False) and meta is not None:
-        payload["debug"] = meta
-    return jsonify(payload)
+    try:
+        context_prompt, debug_meta, phase_tag = _prepare_query_context(
+            input_text, for_vision=True
+        )
+        response = qwen_vl_handler.generate(image, context_prompt)
+        response = _sanitize_response(response, input_text)
+
+        if multimodal_output and multimodal_output.enabled:
+            debug_meta["media_resources"] = multimodal_output.match_as_dicts(
+                input_text, phase_tag
+            )
+
+        payload = {"response": response, "debug": debug_meta}
+        return jsonify(payload)
+    except Exception as e:
+        logging.exception("Qwen-VL 推理失败: %s", e)
+        err = str(e)
+        if "Invalid buffer size" in err or "out of memory" in err.lower():
+            hint = "图片分辨率或显存占用过高，已自动限制尺寸；请重启服务后重试，或换更小图片。"
+        elif "本地未找到模型" in err:
+            hint = err
+        else:
+            hint = (
+                f"{type(e).__name__}: {err[:200]}。"
+                "请确认已安装 qwen-vl-utils、torchvision，并已下载 Qwen2-VL 模型。"
+            )
+        return jsonify({"error": f"多模态推理失败：{hint}"}), 500
 
 
-# 根路由：优先 SPA（static/spa），否则旧版单页
 @app.route("/")
 def index():
     if os.path.isfile(_SPA_INDEX):
@@ -379,7 +644,6 @@ def index():
 
 @app.route("/assets/<path:filename>")
 def spa_assets(filename):
-    """Vite 打包后的 JS/CSS 等（仅当已构建 SPA 时可用）。"""
     if not os.path.isfile(_SPA_INDEX):
         abort(404)
     assets_dir = os.path.join(_SPA_DIR, "assets")
@@ -388,25 +652,52 @@ def spa_assets(filename):
         abort(404)
     return send_from_directory(assets_dir, filename)
 
-# 实时数据更新API
+
 @app.route("/api/update-data", methods=["POST"])
 def update_data():
-    """更新地震数据"""
     try:
-        # 更新 Neo4j 知识图谱
         updated_count = kg.update_from_realtime_data()
-        
+
+        if dynamic_retriever:
+            dynamic_retriever.invalidate_cache()
+
         return jsonify({
             "status": "success",
             "updated": updated_count,
             "message": f"成功更新了 {updated_count} 条地震数据"
         })
     except Exception as e:
-        print(f"更新数据错误: {e}")
+        logging.error("更新数据错误: %s", e)
         return jsonify({
             "status": "error",
-            "message": f"更新数据失败: {str(e)}"
+            "message": f"更新数据失败：{type(e).__name__}，请确认 USGS API 是否可达"
         }), 500
+
+
+@app.route("/api/phase-classify", methods=["POST"])
+def phase_classify():
+    if not phase_classifier:
+        return jsonify({"error": "三阶段分类器未启用，请在配置中开启 PHASE_CLASSIFIER_ENABLED"}), 400
+    data = request.json
+    if not data or "text" not in data:
+        return jsonify({"error": "缺少 text 参数，请提供待分类的文本"}), 400
+    text = data["text"]
+    if not text or not text.strip():
+        return jsonify({"error": "待分类文本不能为空"}), 400
+    try:
+        result = phase_classifier.classify(text)
+        return jsonify({
+            "phase": result.phase.value,
+            "confidence": result.confidence,
+            "urgency": result.urgency,
+            "need_dynamic": result.need_dynamic,
+            "matched_keywords": result.matched_keywords,
+            "reasoning": result.reasoning,
+        })
+    except Exception as e:
+        logging.error("阶段分类失败: %s", e)
+        return jsonify({"error": f"阶段分类失败：{type(e).__name__}"}), 500
+
 
 if __name__ == "__main__":
     print("启动地震知识图谱和大模型应用...")

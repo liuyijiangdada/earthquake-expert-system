@@ -6,9 +6,12 @@ const props = defineProps({
   disabled: { type: Boolean, default: false },
 })
 
-const emit = defineEmits(['update:modelValue', 'send', 'clear', 'refreshData'])
+const emit = defineEmits(['update:modelValue', 'send', 'clear', 'refreshData', 'sendImage'])
 
 const ta = ref(null)
+const fileInput = ref(null)
+const previewSrc = ref('')
+const previewName = ref('')
 
 function autoResize() {
   const el = ta.value
@@ -34,11 +37,74 @@ function onKeydown(e) {
   }
 }
 
+function triggerFileInput() {
+  fileInput.value?.click()
+}
+
+function onFileChange(e) {
+  const file = e.target.files?.[0]
+  if (!file) return
+  if (!file.type.startsWith('image/')) {
+    alert('请选择图片文件（支持 JPEG、PNG、GIF、WebP）')
+    clearPreview()
+    return
+  }
+  if (file.size > 10 * 1024 * 1024) {
+    alert(`图片文件过大（${(file.size / 1024 / 1024).toFixed(1)}MB），最大支持10MB`)
+    clearPreview()
+    return
+  }
+  previewName.value = file.name
+  const reader = new FileReader()
+  reader.onload = (ev) => {
+    previewSrc.value = ev.target.result
+  }
+  reader.onerror = () => {
+    alert('图片读取失败，请重新选择')
+    clearPreview()
+  }
+  reader.readAsDataURL(file)
+}
+
+function clearPreview() {
+  previewSrc.value = ''
+  previewName.value = ''
+  if (fileInput.value) fileInput.value.value = ''
+}
+
+function sendWithImage() {
+  if (!previewSrc.value) return
+  emit('sendImage', { dataUrl: previewSrc.value, name: previewName.value, text: props.modelValue })
+  clearPreview()
+}
+
 onMounted(() => nextTick(autoResize))
 </script>
 
 <template>
   <div class="composer">
+    <input
+      ref="fileInput"
+      type="file"
+      accept="image/*"
+      class="d-none"
+      @change="onFileChange"
+    />
+    <div v-if="previewSrc" class="image-preview-bar">
+      <img :src="previewSrc" :alt="previewName" class="preview-thumb" />
+      <span class="preview-name">{{ previewName }}</span>
+      <button type="button" class="btn btn-sm btn-ghost" @click="clearPreview">
+        <i class="fas fa-times"></i>
+      </button>
+      <button
+        type="button"
+        class="btn btn-sm btn-send ms-2"
+        :disabled="disabled"
+        @click="sendWithImage"
+      >
+        <i class="fas fa-paper-plane me-1"></i>发送图片
+      </button>
+    </div>
     <label for="userInput" class="visually-hidden">输入问题</label>
     <textarea
       id="userInput"
@@ -54,6 +120,14 @@ onMounted(() => nextTick(autoResize))
     <div class="d-flex flex-wrap gap-2 align-items-center">
       <button type="button" class="btn btn-send" :disabled="disabled" @click="emit('send')">
         <i class="fas fa-paper-plane me-1"></i>发送
+      </button>
+      <button
+        type="button"
+        class="btn btn-ghost btn-sm"
+        title="上传图片进行多模态问答"
+        @click="triggerFileInput"
+      >
+        <i class="fas fa-image me-1"></i>上传图片
       </button>
       <button type="button" class="btn btn-ghost btn-sm" title="清空对话区" @click="emit('clear')">
         <i class="fas fa-eraser me-1"></i>清空对话

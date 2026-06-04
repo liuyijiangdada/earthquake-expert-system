@@ -1,6 +1,6 @@
 {
   "meta": {
-    "description": "应急避险与自救要点，结构用于知识图谱；内容综编自公开的防震减灾科普表述，非医疗法律意见。"
+    "description": "应急避险与自救要点，结构用于知识图谱；内容综编自公开的防震减灾科普表述，非医疗法律意见。phase_tag 标注适用阶段（震前/震中/震后/通用），temporal_validity 标注知识半衰期。"
   },
   "topics": [
     {
@@ -8,6 +8,10 @@
       "title": "振动发生时室内如何避险",
       "category": "应急避险",
       "source": "综编自中国地震局及减灾委公众科普常见表述",
+      "phase_tag": "震中",
+      "temporal_validity": "永久",
+      "action_template": "立刻躲避到{坚固家具}下，保护{头部}，避开{窗户、悬挂物}",
+      "action_placeholders": {"坚固家具": ["桌子", "床底"], "头部": ["头部", "颈部"], "窗户、悬挂物": ["窗户", "悬挂物", "玻璃"]},
       "steps": [
         {"order": 1, "text": "保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。"},
         {"order": 2, "text": "远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。"},
@@ -19,6 +23,10 @@
       "title": "室外与公共场所避险",
       "category": "应急避险",
       "source": "综编自公开科普资料",
+      "phase_tag": "震中",
+      "temporal_validity": "永久",
+      "action_template": "远离{建筑物}，蹲下护头，注意{坠物}",
+      "action_placeholders": {"建筑物": ["建筑物", "围墙", "玻璃幕墙"], "坠物": ["地面裂缝", "坠物", "广告牌"]},
       "steps": [
         {"order": 1, "text": "远离建筑物、围墙、玻璃幕墙、立交桥、高压线、广告牌和危险品仓库。"},
         {"order": 2, "text": "在开阔地蹲下护头，注意脚下地面裂缝与坠物；驾车时可减速靠边停车，勿停在桥梁或隧道内。"},
@@ -30,6 +38,8 @@
       "title": "主震后余震与次生灾害防范",
       "category": "震后处置",
       "source": "综编自公开科普资料",
+      "phase_tag": "震后",
+      "temporal_validity": "永久",
       "steps": [
         {"order": 1, "text": "余震可能持续数日甚至更久，勿立即返回危楼或室内取物。"},
         {"order": 2, "text": "警惕滑坡、泥石流、堰塞湖、火灾、燃气泄漏等次生灾害，避开陡坡与河道。"},
@@ -41,6 +51,10 @@
       "title": "学校等场所的避险要点",
       "category": "特定场景",
       "source": "综编自校园地震演练常见要求",
+      "phase_tag": "震中",
+      "temporal_validity": "永久",
+      "action_template": "听从老师指挥，护头避险于{课桌}旁，震动减轻后按{疏散路线}撤离",
+      "action_placeholders": {"课桌": ["课桌", "墙角"], "疏散路线": ["疏散路线", "安全通道"]},
       "steps": [
         {"order": 1, "text": "课堂中应听从老师指挥，迅速护头避险于课桌旁，震动减轻后按疏散路线撤离。"},
         {"order": 2, "text": "楼道与楼梯不推挤，注意脚下；到操场等开阔地清点人数。"}
@@ -51,6 +65,10 @@
       "title": "高层建筑内注意事项",
       "category": "特定场景",
       "source": "综编自公开科普资料",
+      "phase_tag": "震中",
+      "temporal_validity": "永久",
+      "action_template": "在{坚固家具}旁避险，保护{头颈}，走{楼梯}撤离",
+      "action_placeholders": {"坚固家具": ["坚固家具", "承重墙角"], "头颈": ["头颈"], "楼梯": ["楼梯", "安全通道"]},
       "steps": [
         {"order": 1, "text": "切忌慌乱跳楼；优先在坚固家具旁避险，保护头颈。"},
         {"order": 2, "text": "疏散时走楼梯勿乘电梯；注意防火门与疏散指示。"}
@@ -61,9 +79,63 @@
       "title": "家庭应急准备（物资与预案）",
       "category": "震前准备",
       "source": "综编自减灾科普清单",
+      "phase_tag": "震前",
+      "temporal_validity": "长期",
       "steps": [
         {"order": 1, "text": "常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。"},
         {"order": 2, "text": "与家人约定震后集合地点与联络方式，熟悉社区疏散路线。"}
+      ]
+    },
+    {
+      "id": "em_earthquake_basics",
+      "title": "地震基本知识",
+      "category": "科普知识",
+      "source": "综编自中国地震局科普资料",
+      "phase_tag": "震前",
+      "temporal_validity": "长期",
+      "steps": [
+        {"order": 1, "text": "地震是地壳快速释放能量产生的振动，震级每增加1级，能量约增加32倍。"},
+        {"order": 2, "text": "震级衡量地震本身大小，烈度衡量地面受影响程度；同一次地震只有一个震级，但不同地点烈度不同。"},
+        {"order": 3, "text": "浅源地震（深度<70km）破坏力通常更大，中源（70-300km）和深源（>300km）影响相对较小。"}
+      ]
+    },
+    {
+      "id": "em_post_safety",
+      "title": "震后房屋安全评估",
+      "category": "震后恢复",
+      "source": "综编自住建部门公开指引",
+      "phase_tag": "震后",
+      "temporal_validity": "长期",
+      "steps": [
+        {"order": 1, "text": "震后不要立即返回室内，等待专业人员或社区安全评估后再进入。"},
+        {"order": 2, "text": "观察房屋是否有明显裂缝、倾斜、地基下沉等损伤，如有应标记为危险并远离。"},
+        {"order": 3, "text": "联系当地住建部门或应急管理部门申请房屋安全鉴定。"}
+      ]
+    },
+    {
+      "id": "em_post_aid",
+      "title": "灾后救助与补偿政策",
+      "category": "震后恢复",
+      "source": "综编自应急管理部公开政策摘要",
+      "phase_tag": "震后",
+      "temporal_validity": "政策更新",
+      "steps": [
+        {"order": 1, "text": "受灾居民可向当地民政部门申请临时救助金和生活物资。"},
+        {"order": 2, "text": "房屋损毁可申请住房重建补助，具体标准以省级政府发布的灾后恢复重建方案为准。"},
+        {"order": 3, "text": "可通过12345政务服务热线或当地应急管理局官网查询最新救助政策。"}
+      ]
+    },
+    {
+      "id": "em_realtime_info",
+      "title": "实时震情信息获取渠道",
+      "category": "震中响应",
+      "source": "综编自中国地震台网中心公开信息",
+      "phase_tag": "震中",
+      "temporal_validity": "实时",
+      "steps": [
+        {"order": 1, "text": "关注中国地震台网中心官方发布（www.ceic.ac.cn），获取最新地震速报信息。"},
+        {"order": 2, "text": "下载官方地震预警APP，开启实时推送通知。"},
+        {"order": 3, "text": "收听当地广播电台或关注应急管理部官方社交媒体账号获取权威信息。"}
       ]
     }
   ],
@@ -71,6 +143,10 @@
     {"from_id": "em_indoor", "to_id": "em_aftershock", "relation_type": "震后需关注"},
     {"from_id": "em_outdoor", "to_id": "em_aftershock", "relation_type": "震后需关注"},
     {"from_id": "em_indoor", "to_id": "em_highrise", "relation_type": "场景细化"},
-    {"from_id": "em_kit", "to_id": "em_indoor", "relation_type": "准备有助于"}
+    {"from_id": "em_kit", "to_id": "em_indoor", "relation_type": "准备有助于"},
+    {"from_id": "em_earthquake_basics", "to_id": "em_kit", "relation_type": "知识促进准备"},
+    {"from_id": "em_aftershock", "to_id": "em_post_safety", "relation_type": "震后延续"},
+    {"from_id": "em_post_safety", "to_id": "em_post_aid", "relation_type": "安全评估后申请救助"},
+    {"from_id": "em_realtime_info", "to_id": "em_indoor", "relation_type": "获取信息后避险"}
   ]
 }

@@ -11,6 +11,17 @@ const emit = defineEmits(['feedback'])
 function onFeedback(msgId, type) {
   emit('feedback', { id: msgId, type })
 }
+
+const phaseColors = {
+  '震前': 'bg-info',
+  '震中': 'bg-danger',
+  '震后': 'bg-success',
+  '通用': 'bg-secondary',
+}
+
+function phaseClass(phase) {
+  return phaseColors[phase] || 'bg-secondary'
+}
 </script>
 
 <template>
@@ -25,9 +36,40 @@ function onFeedback(msgId, type) {
             <div class="msg-bubble">
               <template v-if="m.role === 'user'">
                 <p class="mb-0">{{ m.text }}</p>
+                <div v-if="m.imageUrl" class="user-image-preview mt-2">
+                  <img :src="m.imageUrl" alt="用户上传的图片" class="img-fluid rounded" style="max-height: 200px;" />
+                </div>
               </template>
               <template v-else>
+                <div v-if="m.phase && m.phase !== '通用'" class="phase-badge-row mb-1">
+                  <span class="badge" :class="phaseClass(m.phase)">{{ m.phase }}阶段</span>
+                  <span v-if="m.urgency > 0.5" class="badge bg-warning text-dark ms-1">
+                    <i class="fas fa-exclamation-triangle me-1"></i>紧急
+                  </span>
+                </div>
                 <p class="mb-0" v-html="formatBotHtml(m.text)"></p>
+
+                <div v-if="m.mediaResources && m.mediaResources.length" class="media-section mt-2">
+                  <div v-for="res in m.mediaResources" :key="res.id" class="media-item">
+                    <template v-if="res.type === 'image'">
+                      <div class="media-image-card">
+                        <img :src="res.url" :alt="res.caption" class="img-fluid rounded" loading="lazy" />
+                        <p class="media-caption mb-0">{{ res.caption }}</p>
+                      </div>
+                    </template>
+                    <template v-else-if="res.type === 'link'">
+                      <a :href="res.url" target="_blank" rel="noopener noreferrer" class="media-link">
+                        <i class="fas fa-external-link-alt me-1"></i>{{ res.caption }}
+                      </a>
+                    </template>
+                    <template v-else-if="res.type === 'video'">
+                      <a :href="res.url" target="_blank" rel="noopener noreferrer" class="media-link">
+                        <i class="fas fa-video me-1"></i>{{ res.caption }}
+                      </a>
+                    </template>
+                  </div>
+                </div>
+
                 <div v-if="m.feedback !== false" class="feedback-row">
                   <button
                     type="button"

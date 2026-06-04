@@ -98,6 +98,11 @@ async function sendMessage() {
   const text = userInput.value.trim()
   if (!text || sending.value) return
 
+  if (text.length > 2000) {
+    pushMessage({ role: 'bot', text: `输入内容过长（${text.length}字），请控制在2000字以内。`, feedback: false })
+    return
+  }
+
   pushMessage({ role: 'user', text })
   userInput.value = ''
   showTyping.value = true
@@ -105,24 +110,46 @@ async function sendMessage() {
   loadingBadge.value = true
 
   try {
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 60000)
+
     const { ok, data } = await queryLlm(text)
+    clearTimeout(timeoutId)
     showTyping.value = false
-    if (!ok || data.error) {
-      pushMessage({
-        role: 'bot',
-        text: data.error || data.message || '服务暂时不可用，请稍后重试。',
-        feedback: false,
-      })
+    if (!ok) {
+      if (data.error) {
+        pushMessage({ role: 'bot', text: `请求失败：${data.error}`, feedback: false })
+      } else {
+        pushMessage({ role: 'bot', text: '服务暂时不可用，请稍后重试。', feedback: false })
+      }
+      return
+    }
+    if (data.error) {
+      pushMessage({ role: 'bot', text: `系统提示：${data.error}`, feedback: false })
       return
     }
     if (typeof data.response !== 'string' || !data.response.trim()) {
       pushMessage({ role: 'bot', text: '未收到有效回答，请换种问法或稍后重试。' })
       return
     }
-    pushMessage({ role: 'bot', text: data.response })
-  } catch {
+    const msgExtra = {}
+    if (data.debug) {
+      msgExtra.phase = data.debug.phase || '通用'
+      msgExtra.urgency = data.debug.urgency || 0
+      if (data.debug.media_resources && data.debug.media_resources.length) {
+        msgExtra.mediaResources = data.debug.media_resources
+      }
+    }
+    pushMessage({ role: 'bot', text: data.response, ...msgExtra })
+  } catch (err) {
     showTyping.value = false
-    pushMessage({ role: 'bot', text: '网络异常，请检查连接后重试。', feedback: false })
+    if (err.name === 'AbortError') {
+      pushMessage({ role: 'bot', text: '请求超时（60秒），模型推理可能较慢，请稍后重试。', feedback: false })
+    } else if (err instanceof TypeError && err.message.includes('fetch')) {
+      pushMessage({ role: 'bot', text: '无法连接服务器，请确认后端服务已启动。', feedback: false })
+    } else {
+      pushMessage({ role: 'bot', text: '网络异常，请检查连接后重试。', feedback: false })
+    }
   } finally {
     sending.value = false
     loadingBadge.value = false
@@ -145,6 +172,72 @@ async function refreshData() {
     }
   } catch {
     pushMessage({ role: 'bot', text: '更新请求失败，请稍后重试。', feedback: false })
+  }
+}
+
+async function sendImageMessage({ dataUrl, name, text }) {
+  if (sending.value) return
+
+  if (!text || !text.trim()) {
+    text = '请分析这张与地震相关的图片'
+  }
+
+  pushMessage({ role: 'user', text, imageUrl: dataUrl })
+  showTyping.value = true
+  sending.value = true
+  loadingBadge.value = true
+
+  try {
+    const blob = await (await fetch(dataUrl)).blob()
+
+    if (blob.size > 10 * 1024 * 1024) {
+      showTyping.value = false
+      pushMessage({ role: 'bot', text: `图片文件过大（${(blob.size / 1024 / 1024).toFixed(1)}MB），最大支持10MB。`, feedback: false })
+      return
+    }
+
+    const formData = new FormData()
+    formData.append('image', blob, name || 'image.jpg')
+    formData.append('input', text)
+
+    const r = await fetch('/api/multimodal-query', {
+      method: 'POST',
+      body: formData,
+    })
+    const data = await r.json().catch(() => ({}))
+    showTyping.value = false
+
+    if (!r.ok) {
+      pushMessage({ role: 'bot', text: data.error || `图片分析请求失败（HTTP ${r.status}），请稍后重试。`, feedback: false })
+      return
+    }
+
+    if (data.error) {
+      pushMessage({ role: 'bot', text: `图片分析失败：${data.error}`, feedback: false })
+      return
+    }
+
+    const msgExtra = {}
+    if (data.debug) {
+      msgExtra.phase = data.debug.phase || '通用'
+      msgExtra.urgency = data.debug.urgency || 0
+      if (data.debug.media_resources && data.debug.media_resources.length) {
+        msgExtra.mediaResources = data.debug.media_resources
+      }
+    }
+    pushMessage({ role: 'bot', text: data.response, ...msgExtra })
+  } catch (err) {
+    showTyping.value = false
+    if (err.name === 'AbortError') {
+      pushMessage({ role: 'bot', text: '图片分析请求超时，请稍后重试。', feedback: false })
+    } else if (err instanceof TypeError && err.message.includes('fetch')) {
+      pushMessage({ role: 'bot', text: '无法连接服务器，请确认后端服务已启动。', feedback: false })
+    } else {
+      pushMessage({ role: 'bot', text: '图片上传失败，请检查网络后重试。', feedback: false })
+    }
+  } finally {
+    sending.value = false
+    loadingBadge.value = false
   }
 }
 
@@ -192,6 +285,7 @@ watch(
               v-model="userInput"
               :disabled="sending"
               @send="sendMessage"
+              @send-image="sendImageMessage"
               @clear="clearChat"
               @refresh-data="refreshData"
             />
