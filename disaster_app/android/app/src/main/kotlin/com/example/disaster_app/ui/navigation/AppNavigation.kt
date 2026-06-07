@@ -7,6 +7,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -19,26 +20,28 @@ import com.example.disaster_app.ui.home.HomePage
 import com.example.disaster_app.ui.report.ReportPage
 import com.example.disaster_app.ui.safety.SafetyPage
 import com.example.disaster_app.ui.volunteer.VolunteerPage
+import com.example.disaster_app.ui.theme.BgCard
+import com.example.disaster_app.ui.theme.BgDeep
 
 sealed class Screen(
     val route: String,
     val title: String,
     val icon: ImageVector
 ) {
-    data object Home : Screen("home", "首页", Icons.Default.Home)
-    data object Family : Screen("family", "家庭", Icons.Default.People)
+    data object Home : Screen("home", "问答", Icons.Default.Forum)
+    data object Safety : Screen("safety", "指引", Icons.Default.MenuBook)
     data object Help : Screen("help", "求助", Icons.Default.Warning)
+    data object Family : Screen("family", "家人", Icons.Default.People)
     data object Report : Screen("report", "上报", Icons.Default.Description)
-    data object Safety : Screen("safety", "安全", Icons.Default.Security)
     data object Volunteer : Screen("volunteer", "志愿", Icons.Default.VolunteerActivism)
 }
 
 val bottomNavItems = listOf(
     Screen.Home,
-    Screen.Family,
-    Screen.Help,
-    Screen.Report,
     Screen.Safety,
+    Screen.Help,
+    Screen.Family,
+    Screen.Report,
     Screen.Volunteer
 )
 
@@ -49,8 +52,12 @@ fun AppNavigation() {
     val currentDestination = navBackStackEntry?.destination
 
     Scaffold(
+        containerColor = BgDeep,
         bottomBar = {
-            NavigationBar {
+            NavigationBar(
+                containerColor = BgCard,
+                tonalElevation = 0.dp
+            ) {
                 bottomNavItems.forEach { screen ->
                     NavigationBarItem(
                         icon = { Icon(screen.icon, contentDescription = screen.title) },

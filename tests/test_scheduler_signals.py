@@ -52,3 +52,9 @@ class TestSchedulerSignals(unittest.TestCase):
         d = self.scheduler.decide(phase, signals)
         self.assertFalse(d.use_dynamic)
         self.assertIn("实时数据暂不可用", d.validity_hint)
+
+    def test_medium_static_confidence_hint(self):
+        phase = PhaseResult(phase=Phase.DURING, confidence=0.8, urgency=0.3)
+        signals = KnowledgeSignals(static_confidence=0.54, dynamic_availability=1.0)
+        d = self.scheduler.decide(phase, signals)
+        self.assertIn("匹配度一般", d.reliability_hint)

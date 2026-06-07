@@ -9,6 +9,7 @@ from typing import Any, List, Optional, Tuple
 
 from config.constants import match_region_in_text
 from core.knowledge_signals import compute_knowledge_signals
+from services.response_guard import build_rag_fallback_text
 
 
 @dataclass
@@ -223,6 +224,8 @@ class QueryContextBuilder:
             rag_section = "（调度器判定本路径无需启用）"
             rag_hits = []
         debug_meta["rag_topic_ids"] = [h.get("topic_id", "") for h in rag_hits]
+        if rag_hits:
+            debug_meta["rag_fallback_text"] = build_rag_fallback_text(rag_hits)
 
         dynamic_section = ""
         use_dynamic = schedule_decision.use_dynamic if schedule_decision else False

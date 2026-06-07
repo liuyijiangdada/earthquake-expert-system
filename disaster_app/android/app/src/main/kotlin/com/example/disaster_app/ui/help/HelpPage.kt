@@ -33,17 +33,18 @@ fun HelpPage(
             .fillMaxSize()
             .padding(16.dp)
     ) {
+        com.example.disaster_app.ui.components.EmergencyTopBar(
+            title = "震后紧急求助",
+            subtitle = "救援 · 医疗 · 物资 · 避难所（与 Web 应急问答互补）"
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.End,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = "紧急求助",
-                style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.primary
-            )
-
             Button(onClick = { showSubmitDialog = true }) {
                 Icon(Icons.Default.Add, contentDescription = null)
                 Spacer(modifier = Modifier.width(4.dp))

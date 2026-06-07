@@ -40,6 +40,18 @@ function pushMessage(partial) {
   })
 }
 
+function mapDebugToMessage(debug) {
+  if (!debug) return {}
+  return {
+    phase: debug.phase || '通用',
+    urgency: debug.urgency || 0,
+    staticConfidence: debug.static_confidence,
+    dynamicAvailability: debug.dynamic_availability,
+    reliabilityHint: debug.reliability_hint,
+    mediaResources: debug.media_resources?.length ? debug.media_resources : undefined,
+  }
+}
+
 function updateStats(eq) {
   if (!eq.length) {
     totalEarthquakes.value = '0'
@@ -136,14 +148,7 @@ async function sendMessage() {
       pushMessage({ role: 'bot', text: '未收到有效回答，请换种问法或稍后重试。' })
       return
     }
-    const msgExtra = {}
-    if (data.debug) {
-      msgExtra.phase = data.debug.phase || '通用'
-      msgExtra.urgency = data.debug.urgency || 0
-      if (data.debug.media_resources && data.debug.media_resources.length) {
-        msgExtra.mediaResources = data.debug.media_resources
-      }
-    }
+    const msgExtra = mapDebugToMessage(data.debug)
     pushMessage({ role: 'bot', text: data.response, ...msgExtra })
   } catch (err) {
     showTyping.value = false
@@ -227,14 +232,7 @@ async function sendImageMessage({ dataUrl, name, text }) {
       return
     }
 
-    const msgExtra = {}
-    if (data.debug) {
-      msgExtra.phase = data.debug.phase || '通用'
-      msgExtra.urgency = data.debug.urgency || 0
-      if (data.debug.media_resources && data.debug.media_resources.length) {
-        msgExtra.mediaResources = data.debug.media_resources
-      }
-    }
+    const msgExtra = mapDebugToMessage(data.debug)
     pushMessage({ role: 'bot', text: data.response, ...msgExtra })
   } catch (err) {
     showTyping.value = false
@@ -286,7 +284,7 @@ watch(
         <div class="card-dark h-100">
           <div class="card-h text-white">
             <i class="fas fa-comments text-info"></i>
-            对话区
+            应急问答对话
           </div>
           <div class="card-b" ref="chatRoot">
             <QuickPanel v-model="userInput" @submit-quick="onSubmitQuick" />

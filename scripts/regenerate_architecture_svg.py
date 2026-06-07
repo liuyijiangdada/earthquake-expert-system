@@ -108,24 +108,25 @@ def main() -> None:
   <path class="arrow" d="M 360 172 L 360 194"/>
   <rect class="node" x="240" y="196" width="240" height="40"/>
   <text x="360" y="222" text-anchor="middle" class="lbl">generate_response（app.py）</text>
-  <path class="arrow" d="M 280 236 L 200 260"/>
+  <path class="arrow" d="M 280 236 L 140 260"/>
   <path class="arrow" d="M 360 236 L 360 260"/>
-  <path class="arrow" d="M 440 236 L 520 260"/>
-  <rect class="node-g" x="80" y="262" width="240" height="76"/>
-  <text x="200" y="288" text-anchor="middle" class="lbl">""" + esc("知识图谱分支") + r"""</text>
-  <text x="200" y="308" text-anchor="middle" class="sml">""" + esc("省名 / 震级规则 / 应急语境") + r"""</text>
-  <text x="200" y="326" text-anchor="middle" class="sml">""" + esc("Neo4j 查询得到图谱上下文") + r"""</text>
+  <path class="arrow" d="M 440 236 L 580 260"/>
+  <rect class="node-g" x="40" y="262" width="200" height="76"/>
+  <text x="140" y="288" text-anchor="middle" class="lbl">""" + esc("知识图谱分支") + r"""</text>
+  <text x="140" y="308" text-anchor="middle" class="sml">""" + esc("省名 / 震级规则 / 应急语境") + r"""</text>
+  <text x="140" y="326" text-anchor="middle" class="sml">""" + esc("Neo4j 查询得到图谱上下文") + r"""</text>
   <rect class="node-r" x="260" y="262" width="200" height="76"/>
   <text x="360" y="288" text-anchor="middle" class="lbl">""" + esc("向量检索分支") + r"""</text>
   <text x="360" y="308" text-anchor="middle" class="sml">_build_rag_section</text>
   <text x="360" y="326" text-anchor="middle" class="sml">""" + esc("余弦 Top-K 得到参考资料") + r"""</text>
-  <rect class="node" x="500" y="262" width="140" height="76"/>
-  <text x="570" y="296" text-anchor="middle" class="lbl">""" + esc("配置开关") + r"""</text>
-  <text x="570" y="314" text-anchor="middle" class="sml">KG_CONTEXT</text>
-  <text x="570" y="330" text-anchor="middle" class="sml">RAG_ENABLED</text>
-  <path class="arrow" d="M 200 338 L 200 368 L 360 368"/>
-  <path class="arrow" d="M 360 338 L 360 368"/>
-  <rect class="node" x="180" y="370" width="360" height="64"/>
+  <rect class="node" x="480" y="262" width="200" height="76"/>
+  <text x="580" y="296" text-anchor="middle" class="lbl">""" + esc("配置开关") + r"""</text>
+  <text x="580" y="314" text-anchor="middle" class="sml">KG_CONTEXT</text>
+  <text x="580" y="330" text-anchor="middle" class="sml">RAG_ENABLED</text>
+  <path class="arrow" d="M 140 338 L 140 380 L 360 380"/>
+  <path class="arrow" d="M 360 338 L 360 380"/>
+  <path class="arrow" d="M 580 338 L 580 380 L 360 380"/>
+  <rect class="node" x="180" y="382" width="360" height="64"/>
   <text x="360" y="396" text-anchor="middle" class="lbl">""" + esc("拼装 user 提示") + r"""</text>
   <text x="360" y="414" text-anchor="middle" class="sml">""" + esc(
         "【知识图谱】【参考资料】+ 规则 + 【问题】（问题在末尾）"

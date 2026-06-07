@@ -28,8 +28,8 @@ defineProps({
 
     <div class="card-dark">
       <div class="card-h text-white">
-        <i class="fas fa-bolt text-warning"></i>
-        震级分级与震源深度
+        <i class="fas fa-chart-column text-warning"></i>
+        知识图谱震情洞察
       </div>
       <div class="card-b">
         <p class="insight-hint">

@@ -30,6 +30,7 @@ from core.multimodal_output import MultimodalOutput
 from services.context_builder import QueryContextBuilder, QueryContextDeps
 from core.amap_client import AmapClient
 from services.output_enricher import OutputEnricher, merge_media_resources
+from services.response_guard import guard_response, strip_eval_prefix
 
 app = Flask(__name__)
 config = Config()
@@ -234,6 +235,7 @@ _FORBIDDEN_OPENERS = [
     "Assistant:", "assistant:", "Assistant：", "assistant：",
     "用户：", "用户:", "助手：", "助手:",
     "User:", "user:", "User：", "user：",
+    "参考答案", "参考答案：", "参考答案:",
 ]
 
 _CONVERSATION_DELIMITERS = [
@@ -287,6 +289,7 @@ def _sanitize_response(text: str, input_text: str) -> str:
             clean_lines.append(line)
 
     text = "\n".join(clean_lines).strip()
+    text = strip_eval_prefix(text)
 
     for topic in _UNRELATED_TOPICS:
         pos = text.find(topic)
@@ -344,7 +347,70 @@ def _finalize_media_resources(debug_meta: dict, input_text: str, phase_tag: str)
     )
 
 
+def _fallback_on_model_error(
+    debug_meta: Optional[dict],
+    input_text: str,
+    phase_tag: str,
+    error: Exception,
+    history=None,
+) -> tuple:
+    """模型推理失败时降级为 RAG 摘要，仍返回 debug 与多模态资源。"""
+    meta = debug_meta or {}
+    if not meta.get("rag_fallback_text"):
+        try:
+            _, meta, phase_tag = context_builder.prepare(
+                input_text, for_vision=False, history=history
+            )
+        except Exception:
+            return "模型推理暂时失败，请稍后重试。", None
+
+    fallback = (meta.get("rag_fallback_text") or "").strip()
+    if fallback:
+        meta["response_fallback"] = "rag"
+        meta["response_quality"] = "model_error"
+        meta["model_error"] = type(error).__name__
+        _finalize_media_resources(meta, input_text, phase_tag)
+        return fallback, meta
+
+    return "模型推理暂时失败，请稍后重试。", meta or None
+
+
+def _run_llm_generate(input_ids, attention_mask):
+    """执行生成；采样出现 inf/nan 时自动降级为贪婪解码。"""
+    max_new = int(getattr(config, "LLM_MAX_NEW_TOKENS", 384))
+    sample = bool(getattr(config, "LLM_DO_SAMPLE", True))
+    common = dict(
+        input_ids=input_ids,
+        attention_mask=attention_mask,
+        max_new_tokens=max_new,
+        pad_token_id=tokenizer.pad_token_id,
+    )
+    with torch.no_grad():
+        if sample:
+            try:
+                return model.generate(
+                    **common,
+                    do_sample=True,
+                    temperature=float(getattr(config, "LLM_TEMPERATURE", 0.55)),
+                    top_p=float(getattr(config, "LLM_TOP_P", 0.88)),
+                    repetition_penalty=float(getattr(config, "LLM_REPETITION_PENALTY", 1.15)),
+                    no_repeat_ngram_size=int(getattr(config, "LLM_NO_REPEAT_NGRAM_SIZE", 4)),
+                )
+            except RuntimeError as e:
+                msg = str(e).lower()
+                if "inf" not in msg and "nan" not in msg:
+                    raise
+                logging.warning("采样生成失败(%s)，降级为贪婪解码", e)
+        return model.generate(
+            **common,
+            do_sample=False,
+            repetition_penalty=float(getattr(config, "LLM_REPETITION_PENALTY", 1.15)),
+        )
+
+
 def generate_response(instruction, input_text, history=None):
+    debug_meta = None
+    phase_tag = ""
     try:
         prompt, debug_meta, phase_tag = context_builder.prepare(
             input_text, for_vision=False, history=history
@@ -383,16 +449,7 @@ def generate_response(instruction, input_text, history=None):
             tokenizer.pad_token_id = tokenizer.eos_token_id
 
         with torch.no_grad():
-            outputs = model.generate(
-                input_ids=input_ids,
-                attention_mask=attention_mask,
-                max_new_tokens=int(getattr(config, "LLM_MAX_NEW_TOKENS", 384)),
-                temperature=float(getattr(config, "LLM_TEMPERATURE", 0.55)),
-                do_sample=bool(getattr(config, "LLM_DO_SAMPLE", True)),
-                top_p=float(getattr(config, "LLM_TOP_P", 0.88)),
-                repetition_penalty=float(getattr(config, "LLM_REPETITION_PENALTY", 1.15)),
-                no_repeat_ngram_size=int(getattr(config, "LLM_NO_REPEAT_NGRAM_SIZE", 4)),
-            )
+            outputs = _run_llm_generate(input_ids, attention_mask)
 
         generated = outputs[0][input_ids.shape[-1]:]
         text = tokenizer.decode(generated, skip_special_tokens=True).strip()
@@ -401,13 +458,14 @@ def generate_response(instruction, input_text, history=None):
         text = text.strip()
 
         text = _sanitize_response(text, input_text)
+        text = guard_response(text, debug_meta)
 
         _finalize_media_resources(debug_meta, input_text, phase_tag)
 
         return text, debug_meta
     except Exception as e:
         print(f"模型推理错误: {e}")
-        return "模型推理暂时失败，请稍后重试。", None
+        return _fallback_on_model_error(debug_meta, input_text, phase_tag, e, history=history)
 
 
 @app.route("/api/query", methods=["POST"])
@@ -552,6 +610,7 @@ def multimodal_query():
         )
         response = qwen_vl_handler.generate(image, context_prompt)
         response = _sanitize_response(response, input_text)
+        response = guard_response(response, debug_meta)
 
         _finalize_media_resources(debug_meta, input_text, phase_tag)
 

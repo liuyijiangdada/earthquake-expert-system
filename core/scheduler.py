@@ -125,6 +125,8 @@ class Scheduler:
         elif sc < 0.35 and da < self._dynamic_confidence_threshold:
             d.rag_priority = "high"
             d.reliability_hint = "本地匹配较弱，已提高向量检索权重。"
+        elif sc < self._static_confidence_threshold and not d.reliability_hint:
+            d.reliability_hint = "本地知识匹配度一般，回答供参考，建议结合下方示意图阅读。"
 
         if d.use_dynamic and da < self._dynamic_confidence_threshold:
             d.use_dynamic = False

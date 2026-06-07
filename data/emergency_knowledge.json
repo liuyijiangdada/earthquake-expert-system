@@ -137,6 +137,49 @@
         {"order": 2, "text": "下载官方地震预警APP，开启实时推送通知。"},
         {"order": 3, "text": "收听当地广播电台或关注应急管理部官方社交媒体账号获取权威信息。"}
       ]
+    },
+    {
+      "id": "em_drill",
+      "title": "家庭与社区防震演练",
+      "category": "震前准备",
+      "source": "综编自《防震减灾知识问答》及社区演练常见要求",
+      "phase_tag": "震前",
+      "temporal_validity": "长期",
+      "action_template": "每年至少演练{次数}，熟悉{伏地遮挡手抓牢}与{疏散路线}",
+      "action_placeholders": {"次数": ["1次", "2次"], "伏地遮挡手抓牢": ["伏地、遮挡、手抓牢"], "疏散路线": ["疏散路线", "安全出口"]},
+      "steps": [
+        {"order": 1, "text": "每年至少组织一次家庭或社区防震演练，明确各成员职责与联络方式。"},
+        {"order": 2, "text": "演练内容包括：伏地、遮挡、手抓牢，以及主震暂停后的有序疏散与室外集合。"},
+        {"order": 3, "text": "检查并熟悉家中、楼道与社区疏散路线，确保通道无杂物遮挡。"}
+      ]
+    },
+    {
+      "id": "em_power_gas",
+      "title": "震中断电、断气与火情处置",
+      "category": "震中响应",
+      "source": "综编自应急管理部及燃气公司公开安全提示",
+      "phase_tag": "震中",
+      "temporal_validity": "永久",
+      "action_template": "主震暂停后关闭{燃气阀门}和{电闸}，发现{明火}立即处置并远离",
+      "action_placeholders": {"燃气阀门": ["燃气总阀", "燃气灶阀门"], "电闸": ["电闸", "配电箱"], "明火": ["明火", "燃气泄漏"]},
+      "steps": [
+        {"order": 1, "text": "振动停止后，若闻到燃气味或看到明火，切勿开关电器和使用明火，迅速关闭燃气阀门。"},
+        {"order": 2, "text": "在确认自身安全的前提下关闭室内电闸，防止短路引发次生火灾。"},
+        {"order": 3, "text": "无法自行处置时立即撤离至室外开阔地，拨打119、燃气抢修电话，并告知邻居远离。"}
+      ]
+    },
+    {
+      "id": "em_psychology",
+      "title": "震后心理调适与互助",
+      "category": "震后恢复",
+      "source": "综编自灾后心理援助公开科普资料",
+      "phase_tag": "震后",
+      "temporal_validity": "长期",
+      "steps": [
+        {"order": 1, "text": "震后出现恐惧、失眠、易惊等反应属常见应激表现，多数会随时间逐渐缓解。"},
+        {"order": 2, "text": "保持规律作息，与亲友倾诉，避免长时间独处或反复观看灾难性画面。"},
+        {"order": 3, "text": "若持续两周以上严重影响生活，可联系社区、学校或心理援助热线寻求专业支持。"}
+      ]
     }
   ],
   "topic_relations": [
@@ -147,6 +190,11 @@
     {"from_id": "em_earthquake_basics", "to_id": "em_kit", "relation_type": "知识促进准备"},
     {"from_id": "em_aftershock", "to_id": "em_post_safety", "relation_type": "震后延续"},
     {"from_id": "em_post_safety", "to_id": "em_post_aid", "relation_type": "安全评估后申请救助"},
-    {"from_id": "em_realtime_info", "to_id": "em_indoor", "relation_type": "获取信息后避险"}
+    {"from_id": "em_realtime_info", "to_id": "em_indoor", "relation_type": "获取信息后避险"},
+    {"from_id": "em_kit", "to_id": "em_drill", "relation_type": "物资支撑演练"},
+    {"from_id": "em_drill", "to_id": "em_indoor", "relation_type": "演练有助于"},
+    {"from_id": "em_indoor", "to_id": "em_power_gas", "relation_type": "震中延续处置"},
+    {"from_id": "em_power_gas", "to_id": "em_aftershock", "relation_type": "震后需关注"},
+    {"from_id": "em_post_aid", "to_id": "em_psychology", "relation_type": "救助后心理支持"}
   ]
 }

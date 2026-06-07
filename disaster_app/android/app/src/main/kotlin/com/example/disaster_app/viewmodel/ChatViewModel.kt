@@ -24,7 +24,9 @@ class ChatViewModel : ViewModel() {
     val uiState: StateFlow<ChatUiState> = _uiState.asStateFlow()
 
     init {
-        addSystemMessage("您好！我是地震应急助手，请问有什么可以帮助您的？")
+        addSystemMessage(
+            "你好，我是地震应急智能助手。可咨询震前准备、震中避险、震后恢复；支持文字与图片问答。请确保手机已连接后端服务（模拟器默认 10.0.2.2:8000）。"
+        )
     }
 
     private fun addSystemMessage(content: String) {
@@ -39,13 +41,12 @@ class ChatViewModel : ViewModel() {
             currentMessages.add(ChatMessage(role = "user", content = userInput))
             _uiState.value = _uiState.value.copy(messages = currentMessages, isLoading = true, error = null)
 
-            repository.sendMessage(currentMessages, userInput)
+            val history = currentMessages.filter { it.role != "system" }
+            repository.sendMessage(history, userInput)
                 .onSuccess { response ->
-                    currentMessages.add(ChatMessage(role = "assistant", content = response.response))
-                    _uiState.value = _uiState.value.copy(
-                        messages = currentMessages,
-                        isLoading = false
-                    )
+                    val assistant = buildAssistantMessage(response.response!!, response.debug)
+                    currentMessages.add(assistant)
+                    _uiState.value = _uiState.value.copy(messages = currentMessages, isLoading = false)
                 }
                 .onFailure { exception ->
                     _uiState.value = _uiState.value.copy(
@@ -59,22 +60,18 @@ class ChatViewModel : ViewModel() {
     fun sendMultimodalMessage(context: Context, imageUri: Uri, userInput: String) {
         viewModelScope.launch {
             val currentMessages = _uiState.value.messages.toMutableList()
+            val text = userInput.ifBlank { "请分析这张与地震应急相关的图片" }
             currentMessages.add(
-                ChatMessage(
-                    role = "user",
-                    content = userInput.ifBlank { "请分析这张图片" },
-                    imageUri = imageUri
-                )
+                ChatMessage(role = "user", content = text, imageUri = imageUri)
             )
             _uiState.value = _uiState.value.copy(messages = currentMessages, isLoading = true, error = null)
 
-            repository.sendMultimodalMessage(context, imageUri, userInput)
+            val history = currentMessages.filter { it.role != "system" }
+            repository.sendMultimodalMessage(context, imageUri, text, history)
                 .onSuccess { response ->
-                    currentMessages.add(ChatMessage(role = "assistant", content = response.response))
-                    _uiState.value = _uiState.value.copy(
-                        messages = currentMessages,
-                        isLoading = false
-                    )
+                    val assistant = buildAssistantMessage(response.response!!, response.debug)
+                    currentMessages.add(assistant)
+                    _uiState.value = _uiState.value.copy(messages = currentMessages, isLoading = false)
                 }
                 .onFailure { exception ->
                     _uiState.value = _uiState.value.copy(
@@ -85,8 +82,18 @@ class ChatViewModel : ViewModel() {
         }
     }
 
-    fun clearChat() {
-        _uiState.value = ChatUiState()
-        addSystemMessage("您好！我是地震应急助手，请问有什么可以帮助您的？")
+    fun clearError() {
+        _uiState.value = _uiState.value.copy(error = null)
+    }
+
+    private fun buildAssistantMessage(text: String, debug: com.example.disaster_app.data.model.DebugInfo?): ChatMessage {
+        val captions = debug?.mediaResources?.mapNotNull { it.caption } ?: emptyList()
+        return ChatMessage(
+            role = "assistant",
+            content = text,
+            phase = debug?.phase,
+            urgency = debug?.urgency ?: 0f,
+            mediaCaptions = captions
+        )
     }
 }
