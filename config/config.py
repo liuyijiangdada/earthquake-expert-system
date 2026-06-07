@@ -88,7 +88,17 @@ class Config:
     DYNAMIC_API_TIMEOUT = 15
     DYNAMIC_MIN_MAGNITUDE = 4.5
     DYNAMIC_MAX_ITEMS = 10
-    # USGS 结果限制在中国范围（API  bbox + 客户端二次过滤）
+    DYNAMIC_HOURS_WINDOW = 48
+    # 动态源优先级：ceic=中国地震台网，usgs=USGS FDSN（CEIC 不可达时自动降级 USGS）
+    DYNAMIC_FEED_PROVIDERS = ("ceic", "usgs")
+    DYNAMIC_PREFER_CEIC_FOR_CHINA = True
+    CEIC_ENABLED = True
+    CEIC_BASE_URL = "http://www.ceic.ac.cn"
+    # 1=近24h 2=近48h 5=近一年M3+；0 表示按 DYNAMIC_HOURS_WINDOW 自动选择
+    CEIC_SPEEDSEARCH_NUM = 0
+    USGS_ENABLED = True
+    USGS_EVENT_API_URL = "https://earthquake.usgs.gov/fdsnws/event/1/query"
+    # USGS 结果限制在中国范围（API bbox + 客户端二次过滤）
     DYNAMIC_CHINA_FILTER_ENABLED = True
     DYNAMIC_CHINA_MIN_LAT = 18.0
     DYNAMIC_CHINA_MAX_LAT = 54.0

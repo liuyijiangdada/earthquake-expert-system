@@ -725,7 +725,7 @@ def update_data():
         logging.error("更新数据错误: %s", e)
         return jsonify({
             "status": "error",
-            "message": f"更新数据失败：{type(e).__name__}，请确认 USGS API 是否可达"
+            "message": f"更新数据失败：{type(e).__name__}，请确认 CEIC / USGS 接口是否可达"
         }), 500
 
 
