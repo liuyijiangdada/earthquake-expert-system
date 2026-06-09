@@ -108,8 +108,8 @@ class EarthquakeCrawler:
         """保存数据"""
         if format == 'csv':
             df = pd.DataFrame(data)
-            df.to_csv(self.config.EARTHQUAKE_DATA_FILE, index=False, encoding='utf-8-sig')
-            print(f"数据已保存到 {self.config.EARTHQUAKE_DATA_FILE}")
+            df.to_csv("data/earthquake_data.csv", index=False, encoding='utf-8-sig')
+            print("数据已保存到 data/earthquake_data.csv")
         elif format == 'json':
             with open(self.config.KG_DATA_FILE, 'w', encoding='utf-8') as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)

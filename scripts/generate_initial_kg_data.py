@@ -1,19 +1,12 @@
 #!/usr/bin/env python3
 """
-【可选】向 data/earthquake_data.csv 追加合成记录。当前项目优先使用
-data/real_earthquakes_catalog.json + data/emergency_knowledge.json（真实简录 + 应急知识），
-本脚本仅作压力测试或兼容旧 CSV 流程。
+【可选】向 data/earthquake_data.csv 追加合成记录（微调/测试用）。
+主项目 Neo4j 知识图谱使用 data/real_earthquakes_catalog.json + data/emergency_knowledge.json。
 
 用法:
   python scripts/generate_initial_kg_data.py              # 默认追加 400 条
   python scripts/generate_initial_kg_data.py --extra 200  # 指定条数
   python scripts/generate_initial_kg_data.py --dry-run  # 只打印统计不写文件
-
-说明: Neo4j 仅在「库中无 Earthquake 节点」时从 CSV 全量导入。
-若图库已有数据，需先清空 Neo4j 数据后再启动应用以重新导入，例如:
-  docker compose exec neo4j cypher-shell -u neo4j -p password \\
-    \"MATCH (n) DETACH DELETE n\"
-然后重启 app.py。
 """
 
 import argparse
@@ -25,8 +18,6 @@ from datetime import datetime, timedelta
 import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from config.config import Config
-
 # 区域名 + 大致经纬度范围（中国及周边活动带）
 _REGION_BOXES = [
     ("四川", 27.0, 34.0, 97.0, 108.0),
@@ -123,8 +114,7 @@ def main():
     parser.add_argument("--dry-run", action="store_true", help="不写文件")
     args = parser.parse_args()
 
-    cfg = Config()
-    path = cfg.EARTHQUAKE_DATA_FILE
+    path = "data/earthquake_data.csv"
     if not os.path.isfile(path):
         print(f"错误: 找不到 {path}")
         sys.exit(1)

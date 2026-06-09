@@ -7,7 +7,6 @@ import os
 import sys
 from typing import Optional
 
-import pandas as pd
 from neo4j import GraphDatabase
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -198,55 +197,8 @@ class Neo4jKG:
                 )
         print("真实地震目录与关联导入完成。")
 
-    def _import_csv(self, session):
-        path = self.config.EARTHQUAKE_DATA_FILE
-        if not os.path.isfile(path):
-            print(f"警告: 数据文件不存在 {path}，跳过 CSV 导入。")
-            return
-        df = pd.read_csv(path)
-        print(f"向 Neo4j 导入 {len(df)} 条地震数据（CSV，兼容旧版）...")
-        for _, row in df.iterrows():
-            eid = str(row["id"])
-            loc = str(row.get("location", ""))
-            region = _infer_region_from_location(loc)
-            session.run(
-                """
-                MERGE (e:Earthquake {id: $id})
-                SET e.name = $name,
-                    e.time = $time,
-                    e.magnitude = toFloat($magnitude),
-                    e.depth = toFloat($depth),
-                    e.location = $location,
-                    e.latitude = toFloat($latitude),
-                    e.longitude = toFloat($longitude),
-                    e.intensity = $intensity,
-                    e.description = $description
-                """,
-                id=eid,
-                name=str(row["name"]),
-                time=str(row["time"]),
-                magnitude=float(row["magnitude"]),
-                depth=float(row["depth"]),
-                location=loc,
-                latitude=float(row["latitude"]),
-                longitude=float(row["longitude"]),
-                intensity=str(row["intensity"]),
-                description=str(row["description"]),
-            )
-            if region:
-                session.run(
-                    """
-                    MATCH (e:Earthquake {id: $eid})
-                    MERGE (r:Region {name: $rname})
-                    MERGE (e)-[:OCCURRED_IN]->(r)
-                    """,
-                    eid=eid,
-                    rname=region,
-                )
-        print("Neo4j CSV 导入完成。")
-
     def run(self):
-        """空库时优先加载「真实目录 + 应急知识」JSON；否则回退仅 CSV。"""
+        """空库时加载「真实目录 + 应急知识」JSON。"""
         driver = self._connect()
         try:
             with driver.session() as session:
@@ -261,10 +213,11 @@ class Neo4jKG:
                     if os.path.isfile(cat) and os.path.isfile(emg):
                         self._import_emergency_knowledge(session, emg)
                         self._import_real_earthquake_catalog(session, cat)
-                    elif os.path.isfile(self.config.EARTHQUAKE_DATA_FILE):
-                        self._import_csv(session)
                     else:
-                        print("警告: 未找到 real_earthquakes_catalog.json / emergency_knowledge.json 或 earthquake_data.csv")
+                        print(
+                            "警告: 未找到 real_earthquakes_catalog.json 或 emergency_knowledge.json，"
+                            "请确认 data/ 目录下文件齐全"
+                        )
                 print("Neo4j 知识图谱就绪。")
         except Exception as e:
             print(f"Neo4j 连接或初始化失败: {e}")

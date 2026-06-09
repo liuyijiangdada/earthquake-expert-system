@@ -1,19 +1,26 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { formatBotHtml } from '@/utils/format.js'
 import { PHASE_META } from '@/constants.js'
 
 const brokenMediaIds = ref(new Set())
 const showDebugMetrics = import.meta.env.DEV && import.meta.env.VITE_SHOW_DEBUG === 'true'
 
-function onMediaImageError(resId) {
-  brokenMediaIds.value = new Set([...brokenMediaIds.value, resId])
-}
-
-defineProps({
+const props = defineProps({
   messages: { type: Array, default: () => [] },
   showTyping: { type: Boolean, default: false },
 })
+
+watch(
+  () => props.messages.length,
+  () => {
+    brokenMediaIds.value = new Set()
+  },
+)
+
+function onMediaImageError(resId) {
+  brokenMediaIds.value = new Set([...brokenMediaIds.value, resId])
+}
 
 const emit = defineEmits(['feedback'])
 

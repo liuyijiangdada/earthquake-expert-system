@@ -16,7 +16,7 @@ class FinetuneDataPreparer:
     
     def load_earthquake_data(self):
         """加载地震数据"""
-        df = pd.read_csv(self.config.EARTHQUAKE_DATA_FILE)
+        df = pd.read_csv("data/earthquake_data.csv")
         return df
     
     def generate_finetune_data(self, df):

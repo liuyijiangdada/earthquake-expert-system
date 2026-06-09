@@ -5,7 +5,7 @@
       "keywords": ["室内避险", "室内", "躲避", "桌子", "伏地遮挡", "避震"],
       "phase": "震中",
       "type": "image",
-      "url": "/emergency-media/indoor_shelter.svg",
+      "url": "/emergency-media/indoor_shelter.png",
       "caption": "室内避险「伏地、遮挡、手抓牢」示意图",
       "source": "本地示意图"
     },
@@ -14,7 +14,7 @@
       "keywords": ["室外避险", "室外", "户外", "空旷", "远离建筑"],
       "phase": "震中",
       "type": "image",
-      "url": "/emergency-media/outdoor_safety.svg",
+      "url": "/emergency-media/outdoor_safety.png",
       "caption": "室外避险要点示意图",
       "source": "本地示意图"
     },
@@ -23,7 +23,7 @@
       "keywords": ["应急包", "物资", "准备", "储备", "应急物资"],
       "phase": "震前",
       "type": "image",
-      "url": "/emergency-media/emergency_kit.svg",
+      "url": "/emergency-media/emergency_kit.png",
       "caption": "家庭应急包物资清单示意图",
       "source": "本地示意图"
     },
@@ -32,7 +32,7 @@
       "keywords": ["房屋", "鉴定", "安全评估", "裂缝", "损伤", "危房"],
       "phase": "震后",
       "type": "image",
-      "url": "/emergency-media/building_damage.svg",
+      "url": "/emergency-media/building_damage.png",
       "caption": "震后房屋安全评估要点示意图",
       "source": "本地示意图"
     },
@@ -41,7 +41,7 @@
       "keywords": ["余震", "次生灾害", "滑坡", "泥石流", "堰塞湖"],
       "phase": "震后",
       "type": "image",
-      "url": "/emergency-media/aftershock.svg",
+      "url": "/emergency-media/aftershock.png",
       "caption": "余震与次生灾害防范示意图",
       "source": "本地示意图"
     },
@@ -50,7 +50,7 @@
       "keywords": ["演练", "学校", "疏散", "演习"],
       "phase": "震前",
       "type": "image",
-      "url": "/emergency-media/earthquake_drill.svg",
+      "url": "/emergency-media/earthquake_drill.png",
       "caption": "学校地震演练疏散示意图",
       "source": "本地示意图"
     },
@@ -86,7 +86,7 @@
       "keywords": ["高层", "高楼", "电梯", "跳楼"],
       "phase": "震中",
       "type": "image",
-      "url": "/emergency-media/highrise_escape.svg",
+      "url": "/emergency-media/highrise_escape.png",
       "caption": "高层建筑地震避险要点示意图",
       "source": "本地示意图"
     }

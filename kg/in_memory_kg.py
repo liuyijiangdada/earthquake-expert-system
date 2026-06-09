@@ -212,7 +212,7 @@ class InMemoryKG:
         # 检查是否已经导入数据
         if not self.earthquakes:
             print("初始化内存知识图谱...")
-            self.import_data(self.config.EARTHQUAKE_DATA_FILE)
+            self.import_data("data/earthquake_data.csv")
             print("知识图谱构建完成！")
         else:
             print("知识图谱已初始化，跳过数据导入")

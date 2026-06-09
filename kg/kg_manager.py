@@ -186,7 +186,7 @@ class KGManager:
         """运行知识图谱管理流程"""
         print("初始化知识图谱...")
         self.clear_graph()
-        self.import_data(self.config.EARTHQUAKE_DATA_FILE)
+        self.import_data("data/earthquake_data.csv")
         print("知识图谱构建完成！")
 
 if __name__ == "__main__":
