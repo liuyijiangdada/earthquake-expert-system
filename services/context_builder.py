@@ -23,6 +23,16 @@ class QueryContextDeps:
     multimodal_output: Any = None
 
 
+@dataclass
+class ContextSections:
+    kg_section: str
+    rag_section: str
+    rag_hits: list
+    dynamic_section: str
+    phase_instruction: str
+    validity_hint: str
+
+
 class QueryContextBuilder:
     def __init__(self, deps: QueryContextDeps):
         self._deps = deps
@@ -139,19 +149,9 @@ class QueryContextBuilder:
 
         return kg_context
 
-    def prepare(
-        self,
-        input_text: str,
-        *,
-        for_vision: bool = False,
-        history: Optional[List] = None,
-    ) -> Tuple[str, dict, str]:
-        """返回 (prompt, debug_meta, phase_tag)。"""
+    def init_debug_meta(self, *, for_vision: bool, normalized_history: list) -> dict:
         cfg = self.config
-        deps = self._deps
-        kg_context = ""
-        normalized_history = self.normalize_history(history)
-        debug_meta = {
+        return {
             "kg_enabled": bool(getattr(cfg, "KG_CONTEXT_ENABLED", True)),
             "rag_enabled": bool(getattr(cfg, "RAG_ENABLED", True)),
             "rag_topic_ids": [],
@@ -165,57 +165,78 @@ class QueryContextBuilder:
             "history_messages": len(normalized_history),
         }
 
+    def step_classify(self, input_text: str, debug_meta: dict):
+        """阶段分类，更新 debug_meta，返回 (phase_result, phase_tag)。"""
+        deps = self._deps
         phase_result = None
-        schedule_decision = None
-        knowledge_signals = None
         if deps.phase_classifier:
             phase_result = deps.phase_classifier.classify(input_text)
             debug_meta["phase"] = phase_result.phase.value
             debug_meta["phase_confidence"] = round(phase_result.confidence, 2)
             debug_meta["urgency"] = round(phase_result.urgency, 2)
             debug_meta["need_dynamic"] = phase_result.need_dynamic
-
         phase_tag = phase_result.phase.value if phase_result else ""
+        return phase_result, phase_tag
 
-        if phase_result:
-            knowledge_signals = compute_knowledge_signals(
-                input_text,
-                phase_tag,
-                phase_result,
-                config=cfg,
-                kg=deps.kg,
-                emergency_rag=deps.emergency_rag,
-                dynamic_retriever=deps.dynamic_retriever,
-            )
-            debug_meta["static_confidence"] = round(
-                knowledge_signals.static_confidence, 2
-            )
-            debug_meta["dynamic_availability"] = round(
-                knowledge_signals.dynamic_availability, 2
-            )
-            if knowledge_signals.temporal_validity:
-                debug_meta["temporal_validity"] = knowledge_signals.temporal_validity
+    def step_compute_signals(
+        self,
+        input_text: str,
+        phase_tag: str,
+        phase_result,
+        debug_meta: dict,
+    ):
+        if not phase_result:
+            return None
+        deps = self._deps
+        knowledge_signals = compute_knowledge_signals(
+            input_text,
+            phase_tag,
+            phase_result,
+            config=self.config,
+            kg=deps.kg,
+            emergency_rag=deps.emergency_rag,
+            dynamic_retriever=deps.dynamic_retriever,
+        )
+        debug_meta["static_confidence"] = round(knowledge_signals.static_confidence, 2)
+        debug_meta["dynamic_availability"] = round(
+            knowledge_signals.dynamic_availability, 2
+        )
+        if knowledge_signals.temporal_validity:
+            debug_meta["temporal_validity"] = knowledge_signals.temporal_validity
+        return knowledge_signals
 
-        if deps.scheduler and phase_result:
-            schedule_decision = deps.scheduler.decide(phase_result, knowledge_signals)
-            debug_meta["schedule_reasoning"] = schedule_decision.reasoning
-            if schedule_decision.reliability_hint:
-                debug_meta["reliability_hint"] = schedule_decision.reliability_hint
+    def step_schedule(self, phase_result, knowledge_signals, debug_meta: dict):
+        deps = self._deps
+        if not deps.scheduler or not phase_result:
+            return None
+        schedule_decision = deps.scheduler.decide(phase_result, knowledge_signals)
+        debug_meta["schedule_reasoning"] = schedule_decision.reasoning
+        if schedule_decision.reliability_hint:
+            debug_meta["reliability_hint"] = schedule_decision.reliability_hint
+        return schedule_decision
+
+    def step_retrieve_sections(
+        self,
+        input_text: str,
+        phase_tag: str,
+        schedule_decision,
+        knowledge_signals,
+        debug_meta: dict,
+    ) -> ContextSections:
+        cfg = self.config
+        deps = self._deps
 
         use_kg = schedule_decision.use_kg if schedule_decision else True
         kg_context = self._build_kg_context(
             input_text, phase_tag, use_kg, knowledge_signals
         )
-
         if getattr(cfg, "KG_CONTEXT_ENABLED", True):
             kg_section = kg_context.strip() if kg_context.strip() else "（无）"
         else:
             kg_section = "（本路径已关闭）"
 
         use_rag = schedule_decision.use_rag if schedule_decision else True
-        pre_rag_hits = (
-            knowledge_signals.rag_hits if knowledge_signals else None
-        )
+        pre_rag_hits = knowledge_signals.rag_hits if knowledge_signals else None
         if use_rag:
             rag_section, rag_hits = self.build_rag_section(
                 input_text, precomputed_hits=pre_rag_hits
@@ -235,9 +256,7 @@ class QueryContextBuilder:
             if knowledge_signals and knowledge_signals.dynamic_result is not None:
                 dynamic_result = knowledge_signals.dynamic_result
             else:
-                dynamic_result = dynamic_retriever.fetch_for_phase(
-                    phase_tag, input_text
-                )
+                dynamic_result = dynamic_retriever.fetch_for_phase(phase_tag, input_text)
             dynamic_section = dynamic_result.to_context_text()
             debug_meta["dynamic_source"] = dynamic_result.source
             debug_meta["dynamic_items_count"] = len(dynamic_result.items)
@@ -260,16 +279,36 @@ class QueryContextBuilder:
                 refresh_minutes=10,
             )
 
+        return ContextSections(
+            kg_section=kg_section,
+            rag_section=rag_section,
+            rag_hits=rag_hits,
+            dynamic_section=dynamic_section,
+            phase_instruction=phase_instruction,
+            validity_hint=validity_hint,
+        )
+
+    def step_build_prompt(
+        self,
+        input_text: str,
+        *,
+        for_vision: bool,
+        normalized_history: list,
+        phase_tag: str,
+        sections: ContextSections,
+    ) -> str:
+        deps = self._deps
+        cfg = self.config
         prompt = "你是一个地震知识专家。请结合【知识图谱】与【参考资料】回答问题。\n\n"
 
         if phase_tag and phase_tag != "通用":
             prompt += f"当前判定为【{phase_tag}阶段】的问题。\n\n"
 
-        prompt += f"【知识图谱】\n{kg_section}\n\n"
-        prompt += f"【参考资料】\n{rag_section}\n\n"
+        prompt += f"【知识图谱】\n{sections.kg_section}\n\n"
+        prompt += f"【参考资料】\n{sections.rag_section}\n\n"
 
-        if dynamic_section:
-            prompt += f"{dynamic_section}\n\n"
+        if sections.dynamic_section:
+            prompt += f"{sections.dynamic_section}\n\n"
 
         if getattr(cfg, "MULTIMODAL_INJECT_PROMPT", False) and deps.multimodal_output:
             media_section = deps.multimodal_output.build_media_section(input_text, phase_tag)
@@ -282,8 +321,8 @@ class QueryContextBuilder:
             "若三者均未提供有效条目，可基于常识回答，并简要说明未命中本地知识库。\n"
         )
 
-        if phase_instruction:
-            prompt += f"{phase_instruction}\n"
+        if sections.phase_instruction:
+            prompt += f"{sections.phase_instruction}\n"
 
         if for_vision:
             prompt += (
@@ -303,8 +342,8 @@ class QueryContextBuilder:
                 "5. 如果知识图谱与参考资料均未提供相关信息，请基于你的知识提供合理回答，并说明未命中本地知识库\n"
             )
 
-        if validity_hint:
-            prompt += f"6. 在回答末尾附上时效提示：{validity_hint}\n"
+        if sections.validity_hint:
+            prompt += f"6. 在回答末尾附上时效提示：{sections.validity_hint}\n"
 
         history_section = self._format_history_section(normalized_history)
         if history_section:
@@ -318,4 +357,47 @@ class QueryContextBuilder:
         else:
             prompt += f"【问题】\n{input_text}\n"
 
+        return prompt
+
+    def prepare_context_pipeline(
+        self,
+        input_text: str,
+        *,
+        for_vision: bool = False,
+        history: Optional[List] = None,
+    ) -> Tuple[str, dict, str]:
+        """分步组装上下文，供 LangGraph 与 prepare 共用。返回 (prompt, debug_meta, phase_tag)。"""
+        normalized_history = self.normalize_history(history)
+        debug_meta = self.init_debug_meta(
+            for_vision=for_vision, normalized_history=normalized_history
+        )
+        phase_result, phase_tag = self.step_classify(input_text, debug_meta)
+        knowledge_signals = self.step_compute_signals(
+            input_text, phase_tag, phase_result, debug_meta
+        )
+        schedule_decision = self.step_schedule(
+            phase_result, knowledge_signals, debug_meta
+        )
+        sections = self.step_retrieve_sections(
+            input_text, phase_tag, schedule_decision, knowledge_signals, debug_meta
+        )
+        prompt = self.step_build_prompt(
+            input_text,
+            for_vision=for_vision,
+            normalized_history=normalized_history,
+            phase_tag=phase_tag,
+            sections=sections,
+        )
         return prompt, debug_meta, phase_tag
+
+    def prepare(
+        self,
+        input_text: str,
+        *,
+        for_vision: bool = False,
+        history: Optional[List] = None,
+    ) -> Tuple[str, dict, str]:
+        """返回 (prompt, debug_meta, phase_tag)。"""
+        return self.prepare_context_pipeline(
+            input_text, for_vision=for_vision, history=history
+        )

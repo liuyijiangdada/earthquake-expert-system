@@ -37,3 +37,6 @@ matplotlib>=3.7.0
 sentence-transformers>=2.7.0
 pymilvus>=2.3.0,<2.5.0
 pytest>=7.0.0
+
+# 编排层（LangGraph 工作流）
+langgraph>=0.2.0,<2.0.0

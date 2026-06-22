@@ -31,6 +31,7 @@ from services.context_builder import QueryContextBuilder, QueryContextDeps
 from core.amap_client import AmapClient
 from services.output_enricher import OutputEnricher, merge_media_resources
 from services.response_guard import guard_response, strip_eval_prefix
+from workflows.query_graph import QueryWorkflowDeps, run_context_workflow, run_text_query_workflow
 
 app = Flask(__name__)
 config = Config()
@@ -142,6 +143,24 @@ try:
         trust_remote_code=False,
         local_files_only=True,
     )
+
+    # 注入 ChatML chat_template：Qwen1.5 系列训练时使用 ChatML 格式，
+    # 但部分本地 tokenizer_config.json 未带 chat_template 字段，导致
+    # apply_chat_template 不可用。优先读取微调目录里的 chat_template.jinja，
+    # 缺失时回退到内置 ChatML 模板，保证 prompt 拼接与训练时一致。
+    if not getattr(tokenizer, "chat_template", None):
+        _tmpl_path = os.path.join(MODEL_DIR, "chat_template.jinja")
+        if os.path.isfile(_tmpl_path):
+            with open(_tmpl_path, encoding="utf-8") as _f:
+                tokenizer.chat_template = _f.read()
+        else:
+            tokenizer.chat_template = (
+                "{% for message in messages %}"
+                "{{'<|im_start|>' + message['role'] + '\\n' + message['content'] + '<|im_end|>' + '\\n'}}"
+                "{% endfor %}"
+                "{% if add_generation_prompt %}{{ '<|im_start|>assistant\\n' }}{% endif %}"
+            )
+        print("已注入 ChatML chat_template")
 
     print(f"加载微调模型: {MODEL_DIR}", flush=True)
     if not os.path.isfile(os.path.join(MODEL_DIR, "adapter_config.json")):
@@ -358,7 +377,7 @@ def _fallback_on_model_error(
     meta = debug_meta or {}
     if not meta.get("rag_fallback_text"):
         try:
-            _, meta, phase_tag = context_builder.prepare(
+            _, meta, phase_tag = _prepare_query_context(
                 input_text, for_vision=False, history=history
             )
         except Exception:
@@ -408,60 +427,81 @@ def _run_llm_generate(input_ids, attention_mask):
         )
 
 
+def _run_llm_on_prompt(prompt: str) -> str:
+    """将组装好的 user prompt 送入本地 LoRA 模型生成。"""
+    messages = [
+        {"role": "system", "content": "你是一个地震专家，专注于回答地震相关问题。"},
+        {"role": "user", "content": prompt},
+    ]
+    text = tokenizer.apply_chat_template(
+        messages,
+        tokenize=False,
+        add_generation_prompt=True,
+    )
+    inputs = tokenizer(
+        text,
+        return_tensors="pt",
+        padding=True,
+        truncation=True,
+        max_length=_llm_input_max,
+    )
+    input_ids = inputs.input_ids.to(device)
+    attention_mask = inputs.attention_mask.to(device)
+
+    if tokenizer.pad_token_id is None:
+        tokenizer.pad_token_id = tokenizer.eos_token_id
+
+    with torch.no_grad():
+        outputs = _run_llm_generate(input_ids, attention_mask)
+
+    generated = outputs[0][input_ids.shape[-1]:]
+    text = tokenizer.decode(generated, skip_special_tokens=True).strip()
+    text = text.replace("</s>", "").replace("<|im_start|>", "").replace("<|im_end|>", "")
+    return text.strip()
+
+
+query_workflow_deps = QueryWorkflowDeps(
+    context_builder=context_builder,
+    apply_layer3=_apply_layer3_prompt,
+    run_llm=_run_llm_on_prompt,
+    sanitize=_sanitize_response,
+    guard=guard_response,
+    finalize_media=_finalize_media_resources,
+)
+
+
+def _prepare_query_context(input_text, *, for_vision=False, history=None):
+    """上下文编排：默认走 LangGraph，可通过 config 关闭。"""
+    if getattr(config, "QUERY_WORKFLOW_LANGGRAPH_ENABLED", True):
+        return run_context_workflow(
+            query_workflow_deps,
+            input_text,
+            history=history,
+            for_vision=for_vision,
+        )
+    return context_builder.prepare(
+        input_text, for_vision=for_vision, history=history
+    )
+
+
 def generate_response(instruction, input_text, history=None):
     debug_meta = None
     phase_tag = ""
     try:
+        if getattr(config, "QUERY_WORKFLOW_LANGGRAPH_ENABLED", True):
+            response, debug_meta = run_text_query_workflow(
+                query_workflow_deps, input_text, history=history
+            )
+            return response, debug_meta
+
         prompt, debug_meta, phase_tag = context_builder.prepare(
             input_text, for_vision=False, history=history
         )
         prompt = _apply_layer3_prompt(prompt, input_text, phase_tag, debug_meta)
-
-        messages = [
-            {"role": "system", "content": "你是一个地震专家，专注于回答地震相关问题。"},
-            {"role": "user", "content": prompt}
-        ]
-
-        text = ""
-        for m in messages:
-            role = m["role"]
-            content = m["content"]
-            if role == "system":
-                text += f"<|im_start|>{content}</s>"
-            elif role == "user":
-                text += f"<|im_start|>user\n{content}</s>"
-            elif role == "assistant":
-                text += f"<|im_start|>assistant\n{content}</s>"
-
-        text += "<|im_start|>assistant\n"
-
-        inputs = tokenizer(
-            text,
-            return_tensors="pt",
-            padding=True,
-            truncation=True,
-            max_length=_llm_input_max,
-        )
-        input_ids = inputs.input_ids.to(device)
-        attention_mask = inputs.attention_mask.to(device)
-
-        if tokenizer.pad_token_id is None:
-            tokenizer.pad_token_id = tokenizer.eos_token_id
-
-        with torch.no_grad():
-            outputs = _run_llm_generate(input_ids, attention_mask)
-
-        generated = outputs[0][input_ids.shape[-1]:]
-        text = tokenizer.decode(generated, skip_special_tokens=True).strip()
-
-        text = text.replace("</s>", "").replace("<|im_start|>", "").replace("<|im_end|>", "")
-        text = text.strip()
-
+        text = _run_llm_on_prompt(prompt)
         text = _sanitize_response(text, input_text)
         text = guard_response(text, debug_meta)
-
         _finalize_media_resources(debug_meta, input_text, phase_tag)
-
         return text, debug_meta
     except Exception as e:
         print(f"模型推理错误: {e}")
@@ -602,7 +642,7 @@ def multimodal_query():
 
     try:
         chat_history = _parse_history_form_field()
-        context_prompt, debug_meta, phase_tag = context_builder.prepare(
+        context_prompt, debug_meta, phase_tag = _prepare_query_context(
             input_text, for_vision=True, history=chat_history
         )
         context_prompt = _apply_layer3_prompt(

@@ -80,6 +80,9 @@ class Config:
     # True：每次启动删表重建（慢）；开发建议 False；无 Docker 时用 RAG_USE_MEMORY_RAG=True
     RAG_MILVUS_REBUILD_ON_START = True
 
+    # True：文本/多模态问答走 LangGraph 编排层（见 workflows/query_graph.py）
+    QUERY_WORKFLOW_LANGGRAPH_ENABLED = True
+
     # 三阶段协同配置
     PHASE_CLASSIFIER_ENABLED = True
     DYNAMIC_RETRIEVAL_ENABLED = True

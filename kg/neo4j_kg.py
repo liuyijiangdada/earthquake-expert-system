@@ -15,6 +15,10 @@ from config.constants import CHINA_REGION_NAMES as _REGION_NAMES
 
 logger = logging.getLogger(__name__)
 
+# 查询默认上限，避免库增大后全表返回导致接口超时/内存暴涨。
+# 各查询方法可被 limit 参数覆盖，但默认不会超过该值。
+DEFAULT_QUERY_LIMIT = 500
+
 
 def _node_to_dict(node) -> dict:
     d = dict(node)
@@ -96,51 +100,72 @@ class Neo4jKG:
             data = json.load(f)
         topics = data.get("topics", [])
         print(f"导入应急知识主题 {len(topics)} 个…")
+
+        # 批量 UNWIND 写入：把「主题 / 步骤 / 关系」分别压平成行列表，
+        # 每类只发起一次 session.run，避免逐条往返（N 次 → 3 次）。
+        topic_rows = []
+        step_rows = []
         for topic in topics:
             tid = topic["id"]
-            phase_tag = topic.get("phase_tag", "通用")
-            temporal_validity = topic.get("temporal_validity", "永久")
-            action_template = topic.get("action_template", "")
-            session.run(
-                """
-                MERGE (t:EmergencyTopic {id: $id})
-                SET t.title = $title, t.category = $category, t.source = $source,
-                    t.phase_tag = $phase_tag, t.temporal_validity = $temporal_validity,
-                    t.action_template = $action_template
-                """,
-                id=tid,
-                title=topic.get("title", ""),
-                category=topic.get("category", ""),
-                source=topic.get("source", ""),
-                phase_tag=phase_tag,
-                temporal_validity=temporal_validity,
-                action_template=action_template,
-            )
+            topic_rows.append({
+                "id": tid,
+                "title": topic.get("title", ""),
+                "category": topic.get("category", ""),
+                "source": topic.get("source", ""),
+                "phase_tag": topic.get("phase_tag", "通用"),
+                "temporal_validity": topic.get("temporal_validity", "永久"),
+                "action_template": topic.get("action_template", ""),
+            })
             for step in topic.get("steps", []):
                 oid = int(step["order"])
-                sid = f"{tid}_step_{oid}"
-                session.run(
-                    """
-                    MATCH (t:EmergencyTopic {id: $tid})
-                    MERGE (s:GuidanceStep {id: $sid})
-                    SET s.text = $text, s.order = $ord
-                    MERGE (t)-[hs:HAS_STEP {order: $ord}]->(s)
-                    """,
-                    tid=tid,
-                    sid=sid,
-                    text=step.get("text", ""),
-                    ord=oid,
-                )
-        for rel in data.get("topic_relations", []):
+                step_rows.append({
+                    "tid": tid,
+                    "sid": f"{tid}_step_{oid}",
+                    "text": step.get("text", ""),
+                    "order": oid,
+                })
+
+        if topic_rows:
             session.run(
                 """
-                MATCH (a:EmergencyTopic {id: $fid}), (b:EmergencyTopic {id: $tid})
-                MERGE (a)-[r:RELATES_TO]->(b)
-                SET r.relation_type = $rtype
+                UNWIND $rows AS row
+                MERGE (t:EmergencyTopic {id: row.id})
+                SET t.title = row.title, t.category = row.category, t.source = row.source,
+                    t.phase_tag = row.phase_tag, t.temporal_validity = row.temporal_validity,
+                    t.action_template = row.action_template
                 """,
-                fid=rel["from_id"],
-                tid=rel["to_id"],
-                rtype=rel.get("relation_type", ""),
+                rows=topic_rows,
+            )
+
+        if step_rows:
+            session.run(
+                """
+                UNWIND $rows AS row
+                MATCH (t:EmergencyTopic {id: row.tid})
+                MERGE (s:GuidanceStep {id: row.sid})
+                SET s.text = row.text, s.order = row.order
+                MERGE (t)-[hs:HAS_STEP {order: row.order}]->(s)
+                """,
+                rows=step_rows,
+            )
+
+        rel_rows = [
+            {
+                "fid": rel["from_id"],
+                "tid": rel["to_id"],
+                "rtype": rel.get("relation_type", ""),
+            }
+            for rel in data.get("topic_relations", [])
+        ]
+        if rel_rows:
+            session.run(
+                """
+                UNWIND $rows AS row
+                MATCH (a:EmergencyTopic {id: row.fid}), (b:EmergencyTopic {id: row.tid})
+                MERGE (a)-[r:RELATES_TO]->(b)
+                SET r.relation_type = row.rtype
+                """,
+                rows=rel_rows,
             )
         print("应急知识关系导入完成。")
 
@@ -149,52 +174,70 @@ class Neo4jKG:
             data = json.load(f)
         rows = data.get("earthquakes", [])
         print(f"导入真实地震目录 {len(rows)} 条…")
+
+        # 批量 UNWIND：把「地震 / 区域关系 / 主题关联」分别压平成行列表，
+        # 每类只发起一次 session.run。
+        eq_rows = []
+        region_rows = []
+        topic_link_rows = []
         for row in rows:
             eid = str(row["id"])
             region = row.get("region") or _infer_region_from_location(row.get("location", ""))
+            eq_rows.append({
+                "id": eid,
+                "name": str(row.get("name", "")),
+                "time": str(row.get("time", "")),
+                "magnitude": float(row.get("magnitude", 0)),
+                "depth": float(row.get("depth", 0)),
+                "location": str(row.get("location", "")),
+                "latitude": float(row.get("latitude", 0)),
+                "longitude": float(row.get("longitude", 0)),
+                "intensity": str(row.get("intensity", "")),
+                "description": str(row.get("description", "")),
+            })
+            if region:
+                region_rows.append({"eid": eid, "rname": region})
+            for tid in row.get("links_to_topics", []) or []:
+                topic_link_rows.append({"eid": eid, "tid": tid})
+
+        if eq_rows:
             session.run(
                 """
-                MERGE (e:Earthquake {id: $id})
-                SET e.name = $name,
-                    e.time = $time,
-                    e.magnitude = toFloat($magnitude),
-                    e.depth = toFloat($depth),
-                    e.location = $location,
-                    e.latitude = toFloat($latitude),
-                    e.longitude = toFloat($longitude),
-                    e.intensity = $intensity,
-                    e.description = $description
+                UNWIND $rows AS row
+                MERGE (e:Earthquake {id: row.id})
+                SET e.name = row.name,
+                    e.time = row.time,
+                    e.magnitude = toFloat(row.magnitude),
+                    e.depth = toFloat(row.depth),
+                    e.location = row.location,
+                    e.latitude = toFloat(row.latitude),
+                    e.longitude = toFloat(row.longitude),
+                    e.intensity = row.intensity,
+                    e.description = row.description
                 """,
-                id=eid,
-                name=str(row.get("name", "")),
-                time=str(row.get("time", "")),
-                magnitude=float(row.get("magnitude", 0)),
-                depth=float(row.get("depth", 0)),
-                location=str(row.get("location", "")),
-                latitude=float(row.get("latitude", 0)),
-                longitude=float(row.get("longitude", 0)),
-                intensity=str(row.get("intensity", "")),
-                description=str(row.get("description", "")),
+                rows=eq_rows,
             )
-            if region:
-                session.run(
-                    """
-                    MATCH (e:Earthquake {id: $eid})
-                    MERGE (r:Region {name: $rname})
-                    MERGE (e)-[:OCCURRED_IN]->(r)
-                    """,
-                    eid=eid,
-                    rname=region,
-                )
-            for tid in row.get("links_to_topics", []) or []:
-                session.run(
-                    """
-                    MATCH (e:Earthquake {id: $eid}), (t:EmergencyTopic {id: $tid})
-                    MERGE (e)-[:SUGGESTS_TOPIC]->(t)
-                    """,
-                    eid=eid,
-                    tid=tid,
-                )
+
+        if region_rows:
+            session.run(
+                """
+                UNWIND $rows AS row
+                MATCH (e:Earthquake {id: row.eid})
+                MERGE (r:Region {name: row.rname})
+                MERGE (e)-[:OCCURRED_IN]->(r)
+                """,
+                rows=region_rows,
+            )
+
+        if topic_link_rows:
+            session.run(
+                """
+                UNWIND $rows AS row
+                MATCH (e:Earthquake {id: row.eid}), (t:EmergencyTopic {id: row.tid})
+                MERGE (e)-[:SUGGESTS_TOPIC]->(t)
+                """,
+                rows=topic_link_rows,
+            )
         print("真实地震目录与关联导入完成。")
 
     def run(self):
@@ -234,19 +277,24 @@ class Neo4jKG:
                 "MATCH (e:Earthquake) RETURN count(e) AS c"
             ).single()["c"]
 
-    def query_all_earthquakes(self):
+    def query_all_earthquakes(self, limit: int = DEFAULT_QUERY_LIMIT):
         try:
             driver = self._connect()
             with driver.session() as session:
                 result = session.run(
-                    "MATCH (e:Earthquake) RETURN e ORDER BY e.time DESC"
+                    """
+                    MATCH (e:Earthquake)
+                    RETURN e ORDER BY e.time DESC
+                    LIMIT $limit
+                    """,
+                    limit=int(limit),
                 )
                 return [_row_to_eq(r) for r in result]
         except Exception as e:
             logger.error("查询全部地震失败: %s", e)
             return []
 
-    def query_earthquakes_by_region(self, region):
+    def query_earthquakes_by_region(self, region, limit: int = DEFAULT_QUERY_LIMIT):
         try:
             driver = self._connect()
             with driver.session() as session:
@@ -255,15 +303,18 @@ class Neo4jKG:
                     MATCH (e:Earthquake)
                     WHERE e.location CONTAINS $region
                     RETURN e ORDER BY e.time DESC
+                    LIMIT $limit
                     """,
                     region=region,
+                    limit=int(limit),
                 )
                 return [_row_to_eq(r) for r in result]
         except Exception as e:
             logger.error("按地区查询地震失败(region=%s): %s", region, e)
             return []
 
-    def query_earthquakes_by_magnitude(self, min_magnitude, max_magnitude=10.0):
+    def query_earthquakes_by_magnitude(self, min_magnitude, max_magnitude=10.0,
+                                       limit: int = DEFAULT_QUERY_LIMIT):
         try:
             driver = self._connect()
             with driver.session() as session:
@@ -272,16 +323,19 @@ class Neo4jKG:
                     MATCH (e:Earthquake)
                     WHERE toFloat(e.magnitude) >= $min_m AND toFloat(e.magnitude) <= $max_m
                     RETURN e ORDER BY e.magnitude DESC
+                    LIMIT $limit
                     """,
                     min_m=float(min_magnitude),
                     max_m=float(max_magnitude),
+                    limit=int(limit),
                 )
                 return [_row_to_eq(r) for r in result]
         except Exception as e:
             logger.error("按震级查询地震失败: %s", e)
             return []
 
-    def query_earthquakes_by_depth(self, min_depth, max_depth):
+    def query_earthquakes_by_depth(self, min_depth, max_depth,
+                                   limit: int = DEFAULT_QUERY_LIMIT):
         try:
             driver = self._connect()
             with driver.session() as session:
@@ -290,48 +344,63 @@ class Neo4jKG:
                     MATCH (e:Earthquake)
                     WHERE toFloat(e.depth) >= $min_d AND toFloat(e.depth) <= $max_d
                     RETURN e ORDER BY e.depth
+                    LIMIT $limit
                     """,
                     min_d=float(min_depth),
                     max_d=float(max_depth),
+                    limit=int(limit),
                 )
                 return [_row_to_eq(r) for r in result]
         except Exception as e:
             logger.error("按深度查询地震失败: %s", e)
             return []
 
-    def query_earthquakes_by_time_range(self, start_time, end_time):
-        driver = self._connect()
-        with driver.session() as session:
-            result = session.run(
-                """
-                MATCH (e:Earthquake)
-                WHERE e.time >= $start_t AND e.time <= $end_t
-                RETURN e ORDER BY e.time
-                """,
-                start_t=start_time,
-                end_t=end_time,
-            )
-            return [_row_to_eq(r) for r in result]
+    def query_earthquakes_by_time_range(self, start_time, end_time,
+                                        limit: int = DEFAULT_QUERY_LIMIT):
+        try:
+            driver = self._connect()
+            with driver.session() as session:
+                result = session.run(
+                    """
+                    MATCH (e:Earthquake)
+                    WHERE e.time >= $start_t AND e.time <= $end_t
+                    RETURN e ORDER BY e.time
+                    LIMIT $limit
+                    """,
+                    start_t=start_time,
+                    end_t=end_time,
+                    limit=int(limit),
+                )
+                return [_row_to_eq(r) for r in result]
+        except Exception as e:
+            logger.error("按时间范围查询地震失败: %s", e)
+            return []
 
-    def query_related_earthquakes(self, earthquake_id):
-        driver = self._connect()
-        with driver.session() as session:
-            loc = session.run(
-                "MATCH (e:Earthquake {id: $id}) RETURN e.location AS loc",
-                id=earthquake_id,
-            ).single()
-            if not loc or loc["loc"] is None:
-                return []
-            result = session.run(
-                """
-                MATCH (e:Earthquake)
-                WHERE e.location = $loc AND e.id <> $id
-                RETURN e
-                """,
-                loc=loc["loc"],
-                id=earthquake_id,
-            )
-            return [_row_to_eq(r) for r in result]
+    def query_related_earthquakes(self, earthquake_id, limit: int = DEFAULT_QUERY_LIMIT):
+        try:
+            driver = self._connect()
+            with driver.session() as session:
+                loc = session.run(
+                    "MATCH (e:Earthquake {id: $id}) RETURN e.location AS loc",
+                    id=earthquake_id,
+                ).single()
+                if not loc or loc["loc"] is None:
+                    return []
+                result = session.run(
+                    """
+                    MATCH (e:Earthquake)
+                    WHERE e.location = $loc AND e.id <> $id
+                    RETURN e
+                    LIMIT $limit
+                    """,
+                    loc=loc["loc"],
+                    id=earthquake_id,
+                    limit=int(limit),
+                )
+                return [_row_to_eq(r) for r in result]
+        except Exception as e:
+            logger.error("查询相关地震失败(id=%s): %s", earthquake_id, e)
+            return []
 
     def query_earthquake_details(self, earthquake_id):
         eq = None
