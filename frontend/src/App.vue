@@ -40,15 +40,15 @@ function pushMessage(partial) {
   })
 }
 
-function mapDebugToMessage(debug) {
-  if (!debug) return {}
+function mapMetaToMessage(meta) {
+  if (!meta) return {}
   return {
-    phase: debug.phase || '通用',
-    urgency: debug.urgency || 0,
-    staticConfidence: debug.static_confidence,
-    dynamicAvailability: debug.dynamic_availability,
-    reliabilityHint: debug.reliability_hint,
-    mediaResources: debug.media_resources?.length ? debug.media_resources : undefined,
+    phase: meta.phase || '通用',
+    urgency: meta.urgency || 0,
+    staticConfidence: meta.static_confidence,
+    dynamicAvailability: meta.dynamic_availability,
+    reliabilityHint: meta.reliability_hint,
+    mediaResources: meta.media_resources?.length ? meta.media_resources : undefined,
   }
 }
 
@@ -148,7 +148,7 @@ async function sendMessage() {
       pushMessage({ role: 'bot', text: '未收到有效回答，请换种问法或稍后重试。' })
       return
     }
-    const msgExtra = mapDebugToMessage(data.debug)
+    const msgExtra = mapMetaToMessage(data.meta ?? data.debug)
     pushMessage({ role: 'bot', text: data.response, ...msgExtra })
   } catch (err) {
     showTyping.value = false
@@ -232,7 +232,7 @@ async function sendImageMessage({ dataUrl, name, text }) {
       return
     }
 
-    const msgExtra = mapDebugToMessage(data.debug)
+    const msgExtra = mapMetaToMessage(data.meta ?? data.debug)
     pushMessage({ role: 'bot', text: data.response, ...msgExtra })
   } catch (err) {
     showTyping.value = false

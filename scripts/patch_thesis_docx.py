@@ -99,7 +99,7 @@ REPLACEMENTS: dict[int, str] = {
     ),
     87: (
         "（2）可解释的三信号调度与上下文统一组装。通过 static_confidence、dynamic_availability、urgency "
-        "量化路由决策，QueryContextBuilder 避免重复检索并输出 debug 元信息，便于实验分析与论文案例复现。"
+        "量化路由决策，QueryContextBuilder 避免重复检索并输出 meta 元信息，便于实验分析与论文案例复现。"
     ),
     88: (
         "（3）可消融、可分阶段的实验框架。配置项 KG_CONTEXT_ENABLED、RAG_ENABLED、"
@@ -118,7 +118,7 @@ REPLACEMENTS: dict[int, str] = {
     ),
     97: (
         "展示层包括 Vue 3 SPA（frontend/，构建产物 static/spa/）与 Android 客户端（disaster_app/android/）。"
-        "Web 端提供三阶段快捷提问胶囊、阶段标签、多模态资源卡片与 debug 调度信息展示；"
+        "Web 端提供三阶段快捷提问胶囊、阶段标签、多模态资源卡片与 meta 元信息展示；"
         "Android 端通过 Retrofit 调用同一 Flask API（模拟器默认 http://10.0.2.2:8000/）。"
     ),
     98: (
@@ -141,7 +141,7 @@ REPLACEMENTS: dict[int, str] = {
         "（1）文本问答流（query_type: llm）：前端提交 params.input 与可选 history（最近 3 轮）。"
         "服务端先经 PhaseClassifier 判定震前/震中/震后，Scheduler 结合三信号决定 KG/RAG/动态源优先级；"
         "QueryContextBuilder 并行探测知识信号并组装【知识图谱】【参考资料】【动态信息】【阶段提示】等块，"
-        "再套入 Qwen 对话模板，左侧截断保尾后由 LoRA 模型生成；响应可含 debug（phase、schedule_reasoning、"
+        "再套入 Qwen 对话模板，左侧截断保尾后由 LoRA 模型生成；响应可含元信息 meta（phase、schedule_reasoning、"
         "static_confidence、media_resources 等）及第三层地图/图表链接。"
     ),
     105: (
@@ -219,16 +219,16 @@ REPLACEMENTS: dict[int, str] = {
     ),
     234: (
         "Flask 启动时完成 Neo4j 初始化、RAG 索引、阶段分类器、调度器、动态检索与第三层增强模块加载。"
-        "GET / 返回 SPA；llm 分支返回 response、debug、media_resources；"
+        "GET / 返回 SPA；llm 分支返回 response、meta、media_resources；"
         "multimodal-query 走 Qwen2-VL 懒加载路径。"
     ),
     236: (
         "Web 前端（Vue 3 + Vite）采用应急深色主题。AppHeader 展示系统能力标签；"
         "QuickPanel 按震前/震中/震后分组快捷问句；ChatMessages 渲染 Markdown 与多模态卡片；"
-        "Composer 支持文本发送。debug 模式展示 phase、static_confidence、reliability_hint 等字段。"
+        "Composer 支持文本发送。开发模式下可展示 phase、static_confidence、reliability_hint 等字段。"
     ),
     237: (
-        "App.vue 管理对话状态、history 拼装与 debug 展示；api.js 封装 queryLlm、queryKg、updateData 等接口。"
+        "App.vue 管理对话状态、history 拼装与 meta 展示；api.js 封装 queryLlm、queryKg、updateData 等接口。"
     ),
     238: "ChatMessages.vue 负责消息列表、多模态资源展示与自动滚动。",
     239: "Composer.vue 提供输入框、发送状态与快捷键。",
@@ -241,7 +241,7 @@ REPLACEMENTS: dict[int, str] = {
     ),
     247: (
         "config/config.py 管理全部开关：KG_CONTEXT_ENABLED、RAG_ENABLED、PHASE_CLASSIFIER_ENABLED、"
-        "DYNAMIC_RETRIEVAL_ENABLED、SCHEDULER_ENABLED、LAYER3_*、DEBUG_PAYLOAD_ENABLED 等。"
+        "DYNAMIC_RETRIEVAL_ENABLED、SCHEDULER_ENABLED、LAYER3_*、META_PAYLOAD_ENABLED 等。"
         "启动命令：docker compose up -d neo4j && python app.py，默认监听 0.0.0.0:8000。"
     ),
     252: (
@@ -265,7 +265,7 @@ REPLACEMENTS: dict[int, str] = {
     ),
     264: (
         "评测流程：（1）按 B0～B3 切换配置并重启服务；（2）对 60 条问句批量 POST /api/query；"
-        "（3）保存 response 与 debug；（4）两名标注者按事实一致性（0/0.5/1）、要点完整性（1～5）、"
+        "（3）保存 response 与 meta；（4）两名标注者按事实一致性（0/0.5/1）、要点完整性（1～5）、"
         "格式合规（0/1）打分，并额外记录阶段判定是否正确、动态源是否被合理触发；"
         "（5）按震前/震中/震后汇总均值。表 7-3 数值请在实测后填入。"
     ),
@@ -277,7 +277,7 @@ REPLACEMENTS: dict[int, str] = {
     270: (
         "分阶段观察：震前问句应主要命中 RAG 与静态科普，dynamic_availability 低；"
         "震中问句应触发 USGS 动态段与短句式回答；震后问句侧重政策 RSS 与房屋评估流程图。"
-        "debug 字段可用于核对调度 reasoning 与阶段标签是否一致。"
+        "meta 元信息可用于核对调度 reasoning 与阶段标签是否一致。"
     ),
     271: (
         "协同机制验证：全协同在事实一致性上应显著优于 B0；相对 B1/B2 的增益体现在混合问句，"
@@ -355,13 +355,13 @@ INSERTIONS: list[tuple[int, list[str]]] = [
             "3.4  实验流程与可复现性",
             "3.4.1  服务启动与配置快照",
             "实验前执行 docker compose up -d neo4j，配置 .env 与 config.py 快照，"
-            "记录 RAG_USE_MEMORY_RAG、各 SCHEDULER_* 阈值与 DEBUG_PAYLOAD_ENABLED 状态。",
+            "记录 RAG_USE_MEMORY_RAG、各 SCHEDULER_* 阈值与 META_PAYLOAD_ENABLED 状态。",
             "3.4.2  批量请求与结果归档",
             "从 /api/eval-set 拉取 60 题，按基线循环：修改配置→重启 python app.py→"
-            "脚本批量 POST /api/query（含 history 空列表）→保存 JSON（response、debug.phase、"
+            "脚本批量 POST /api/query（含 history 空列表）→保存 JSON（response、meta.phase、"
             "schedule_reasoning、media_resources）。",
             "3.4.3  人工评测与分阶段汇总",
-            "标注者按第 3.1.2 节规则打分，并按震前/震中/震后聚合表 7-3 与案例截图，保证与实现 debug 字段可交叉验证。",
+            "标注者按第 3.1.2 节规则打分，并按震前/震中/震后聚合表 7-3 与案例截图，保证与实现 meta 字段可交叉验证。",
         ],
     ),
     (

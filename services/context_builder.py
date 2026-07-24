@@ -149,7 +149,7 @@ class QueryContextBuilder:
 
         return kg_context
 
-    def init_debug_meta(self, *, for_vision: bool, normalized_history: list) -> dict:
+    def init_response_meta(self, *, for_vision: bool, normalized_history: list) -> dict:
         cfg = self.config
         return {
             "kg_enabled": bool(getattr(cfg, "KG_CONTEXT_ENABLED", True)),
@@ -165,16 +165,16 @@ class QueryContextBuilder:
             "history_messages": len(normalized_history),
         }
 
-    def step_classify(self, input_text: str, debug_meta: dict):
-        """阶段分类，更新 debug_meta，返回 (phase_result, phase_tag)。"""
+    def step_classify(self, input_text: str, response_meta: dict):
+        """阶段分类，更新 response_meta，返回 (phase_result, phase_tag)。"""
         deps = self._deps
         phase_result = None
         if deps.phase_classifier:
             phase_result = deps.phase_classifier.classify(input_text)
-            debug_meta["phase"] = phase_result.phase.value
-            debug_meta["phase_confidence"] = round(phase_result.confidence, 2)
-            debug_meta["urgency"] = round(phase_result.urgency, 2)
-            debug_meta["need_dynamic"] = phase_result.need_dynamic
+            response_meta["phase"] = phase_result.phase.value
+            response_meta["phase_confidence"] = round(phase_result.confidence, 2)
+            response_meta["urgency"] = round(phase_result.urgency, 2)
+            response_meta["need_dynamic"] = phase_result.need_dynamic
         phase_tag = phase_result.phase.value if phase_result else ""
         return phase_result, phase_tag
 
@@ -183,7 +183,7 @@ class QueryContextBuilder:
         input_text: str,
         phase_tag: str,
         phase_result,
-        debug_meta: dict,
+        response_meta: dict,
     ):
         if not phase_result:
             return None
@@ -197,22 +197,22 @@ class QueryContextBuilder:
             emergency_rag=deps.emergency_rag,
             dynamic_retriever=deps.dynamic_retriever,
         )
-        debug_meta["static_confidence"] = round(knowledge_signals.static_confidence, 2)
-        debug_meta["dynamic_availability"] = round(
+        response_meta["static_confidence"] = round(knowledge_signals.static_confidence, 2)
+        response_meta["dynamic_availability"] = round(
             knowledge_signals.dynamic_availability, 2
         )
         if knowledge_signals.temporal_validity:
-            debug_meta["temporal_validity"] = knowledge_signals.temporal_validity
+            response_meta["temporal_validity"] = knowledge_signals.temporal_validity
         return knowledge_signals
 
-    def step_schedule(self, phase_result, knowledge_signals, debug_meta: dict):
+    def step_schedule(self, phase_result, knowledge_signals, response_meta: dict):
         deps = self._deps
         if not deps.scheduler or not phase_result:
             return None
         schedule_decision = deps.scheduler.decide(phase_result, knowledge_signals)
-        debug_meta["schedule_reasoning"] = schedule_decision.reasoning
+        response_meta["schedule_reasoning"] = schedule_decision.reasoning
         if schedule_decision.reliability_hint:
-            debug_meta["reliability_hint"] = schedule_decision.reliability_hint
+            response_meta["reliability_hint"] = schedule_decision.reliability_hint
         return schedule_decision
 
     def step_retrieve_sections(
@@ -221,7 +221,7 @@ class QueryContextBuilder:
         phase_tag: str,
         schedule_decision,
         knowledge_signals,
-        debug_meta: dict,
+        response_meta: dict,
     ) -> ContextSections:
         cfg = self.config
         deps = self._deps
@@ -244,9 +244,9 @@ class QueryContextBuilder:
         else:
             rag_section = "（调度器判定本路径无需启用）"
             rag_hits = []
-        debug_meta["rag_topic_ids"] = [h.get("topic_id", "") for h in rag_hits]
+        response_meta["rag_topic_ids"] = [h.get("topic_id", "") for h in rag_hits]
         if rag_hits:
-            debug_meta["rag_fallback_text"] = build_rag_fallback_text(rag_hits)
+            response_meta["rag_fallback_text"] = build_rag_fallback_text(rag_hits)
 
         dynamic_section = ""
         use_dynamic = schedule_decision.use_dynamic if schedule_decision else False
@@ -258,8 +258,8 @@ class QueryContextBuilder:
             else:
                 dynamic_result = dynamic_retriever.fetch_for_phase(phase_tag, input_text)
             dynamic_section = dynamic_result.to_context_text()
-            debug_meta["dynamic_source"] = dynamic_result.source
-            debug_meta["dynamic_items_count"] = len(dynamic_result.items)
+            response_meta["dynamic_source"] = dynamic_result.source
+            response_meta["dynamic_items_count"] = len(dynamic_result.items)
 
         phase_instruction = ""
         if schedule_decision and schedule_decision.prompt_suffix:
@@ -366,20 +366,20 @@ class QueryContextBuilder:
         for_vision: bool = False,
         history: Optional[List] = None,
     ) -> Tuple[str, dict, str]:
-        """分步组装上下文，供 LangGraph 与 prepare 共用。返回 (prompt, debug_meta, phase_tag)。"""
+        """分步组装上下文，供 LangGraph 与 prepare 共用。返回 (prompt, response_meta, phase_tag)。"""
         normalized_history = self.normalize_history(history)
-        debug_meta = self.init_debug_meta(
+        response_meta = self.init_response_meta(
             for_vision=for_vision, normalized_history=normalized_history
         )
-        phase_result, phase_tag = self.step_classify(input_text, debug_meta)
+        phase_result, phase_tag = self.step_classify(input_text, response_meta)
         knowledge_signals = self.step_compute_signals(
-            input_text, phase_tag, phase_result, debug_meta
+            input_text, phase_tag, phase_result, response_meta
         )
         schedule_decision = self.step_schedule(
-            phase_result, knowledge_signals, debug_meta
+            phase_result, knowledge_signals, response_meta
         )
         sections = self.step_retrieve_sections(
-            input_text, phase_tag, schedule_decision, knowledge_signals, debug_meta
+            input_text, phase_tag, schedule_decision, knowledge_signals, response_meta
         )
         prompt = self.step_build_prompt(
             input_text,
@@ -388,7 +388,7 @@ class QueryContextBuilder:
             phase_tag=phase_tag,
             sections=sections,
         )
-        return prompt, debug_meta, phase_tag
+        return prompt, response_meta, phase_tag
 
     def prepare(
         self,
@@ -397,7 +397,7 @@ class QueryContextBuilder:
         for_vision: bool = False,
         history: Optional[List] = None,
     ) -> Tuple[str, dict, str]:
-        """返回 (prompt, debug_meta, phase_tag)。"""
+        """返回 (prompt, response_meta, phase_tag)。"""
         return self.prepare_context_pipeline(
             input_text, for_vision=for_vision, history=history
         )

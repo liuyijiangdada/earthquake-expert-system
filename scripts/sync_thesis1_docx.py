@@ -72,7 +72,7 @@ REPLACEMENTS: dict[int, str] = {
     97: (
         "展示层包括 Vue 3 SPA（frontend/，构建产物 static/spa/）与 Android 客户端（disaster_app/android/）。"
         "Web 端提供三阶段快捷提问胶囊、阶段标签、多模态资源卡片与用户可见的 reliability_hint 可靠性提示条，"
-        "调试指标（phase、static_confidence 等）默认不对普通用户展示；"
+        "元信息字段（phase、static_confidence 等）默认不对普通用户展示；"
         "Android 端通过 Retrofit 调用同一 Flask API（模拟器默认 http://10.0.2.2:8000）。"
     ),
     99: (
@@ -88,7 +88,7 @@ REPLACEMENTS: dict[int, str] = {
         "QueryContextBuilder 并行探测知识信号并组装【知识图谱】【参考资料】【动态信息】【阶段提示】等块，"
         "再套入 Qwen 对话模板，左侧截断保尾后由 LoRA 模型生成；"
         "guard_response 检测乱码/低置信度并在必要时降级为 RAG 摘要；"
-        "响应可含 debug（phase、schedule_reasoning、reliability_hint、media_resources 等）"
+        "响应可含元信息 meta（phase、schedule_reasoning、reliability_hint、media_resources 等）"
         "及第三层地图/图表链接。"
     ),
     106: (
@@ -147,7 +147,7 @@ REPLACEMENTS: dict[int, str] = {
         "Web 前端（Vue 3 + Vite）采用应急深色主题。AppHeader 展示系统能力标签；"
         "QuickPanel 按震前/震中/震后分组快捷问句；ChatMessages 渲染 Markdown、多模态卡片"
         "与 reliability_hint 可靠性提示条；Composer 支持文本发送。"
-        "调试指标（phase、static_confidence 等）仅在后端 debug 载荷中保留，默认不向用户展示。"
+        "元信息字段（phase、static_confidence 等）仅在后端 meta 载荷中保留，默认不向用户展示。"
     ),
     258: (
         "图谱规模：Earthquake/Region/EmergencyTopic/GuidanceStep 节点及 OCCURRED_IN、HAS_STEP 等关系"
@@ -158,7 +158,7 @@ REPLACEMENTS: dict[int, str] = {
     271: (
         "分阶段观察：震前问句应主要命中 RAG 与静态科普，dynamic_availability 低；"
         "震中问句应触发 CEIC+USGS 动态段与短句式回答；震后问句侧重政策 RSS 与房屋评估流程图。"
-        "debug 字段可用于核对调度 reasoning、reliability_hint 与阶段标签是否一致。"
+        "meta 元信息可用于核对调度 reasoning、reliability_hint 与阶段标签是否一致。"
     ),
     276: (
         "案例1（震中+动态）：问「刚才地震多大？震中在哪？」B0 易幻觉；B3 应触发震中阶段、"

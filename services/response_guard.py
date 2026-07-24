@@ -79,35 +79,35 @@ def is_garbled_response(text: str) -> bool:
 
 def guard_response(
     text: str,
-    debug_meta: Optional[Dict[str, Any]] = None,
+    response_meta: Optional[Dict[str, Any]] = None,
     *,
     static_confidence: Optional[float] = None,
 ) -> str:
     """检测低质量回答，必要时降级为 RAG 检索摘要。"""
-    debug_meta = debug_meta or {}
+    response_meta = response_meta or {}
     cleaned = strip_eval_prefix(text or "")
-    fallback = (debug_meta.get("rag_fallback_text") or "").strip()
+    fallback = (response_meta.get("rag_fallback_text") or "").strip()
     sc = static_confidence
     if sc is None:
-        sc = debug_meta.get("static_confidence")
+        sc = response_meta.get("static_confidence")
 
     low_conf = sc is not None and float(sc) < 0.7
     garbled = is_garbled_response(cleaned)
 
     if garbled or (low_conf and len(cleaned) < 40):
         if fallback:
-            debug_meta["response_fallback"] = "rag"
+            response_meta["response_fallback"] = "rag"
             if garbled:
-                debug_meta["response_quality"] = "garbled"
+                response_meta["response_quality"] = "garbled"
             elif low_conf:
-                debug_meta["response_quality"] = "low_confidence"
+                response_meta["response_quality"] = "low_confidence"
             return fallback
 
     if garbled and not fallback:
-        debug_meta["response_quality"] = "garbled"
+        response_meta["response_quality"] = "garbled"
         return "抱歉，本次生成内容异常。请换种问法重试，或参考下方相关示意图与知识条目。"
 
     if cleaned != (text or "").strip():
-        debug_meta["response_sanitized"] = True
+        response_meta["response_sanitized"] = True
 
     return cleaned if cleaned else text

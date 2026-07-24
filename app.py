@@ -323,10 +323,10 @@ def _sanitize_response(text: str, input_text: str) -> str:
     return text
 
 
-def _attach_debug(payload: dict, meta: Optional[dict]) -> dict:
-    """按 DEBUG_PAYLOAD_ENABLED 决定是否附带 debug 字段。"""
-    if meta is not None and getattr(config, "DEBUG_PAYLOAD_ENABLED", True):
-        payload["debug"] = meta
+def _attach_meta(payload: dict, meta: Optional[dict]) -> dict:
+    """按 META_PAYLOAD_ENABLED 决定是否附带 meta（元信息）字段。"""
+    if meta is not None and getattr(config, "META_PAYLOAD_ENABLED", True):
+        payload["meta"] = meta
     return payload
 
 
@@ -336,9 +336,9 @@ def _dynamic_items_from_cache() -> list:
     return []
 
 
-def _apply_layer3_prompt(prompt: str, input_text: str, phase_tag: str, debug_meta: dict) -> str:
+def _apply_layer3_prompt(prompt: str, input_text: str, phase_tag: str, response_meta: dict) -> str:
     if not output_enricher or not output_enricher.enabled:
-        debug_meta.setdefault("layer3_media_pending", [])
+        response_meta.setdefault("layer3_media_pending", [])
         return prompt
     enrichment = output_enricher.enrich(
         input_text,
@@ -346,8 +346,8 @@ def _apply_layer3_prompt(prompt: str, input_text: str, phase_tag: str, debug_met
         dynamic_items=_dynamic_items_from_cache(),
     )
     if enrichment.layer3_meta:
-        debug_meta["layer3"] = enrichment.layer3_meta
-    debug_meta["layer3_media_pending"] = enrichment.media_resources
+        response_meta["layer3"] = enrichment.layer3_meta
+    response_meta["layer3_media_pending"] = enrichment.media_resources
     if enrichment.prompt_section:
         for needle in ("【问题】\n", "【用户问题】\n"):
             if needle in prompt:
@@ -355,26 +355,26 @@ def _apply_layer3_prompt(prompt: str, input_text: str, phase_tag: str, debug_met
     return prompt
 
 
-def _finalize_media_resources(debug_meta: dict, input_text: str, phase_tag: str):
-    layer3 = debug_meta.pop("layer3_media_pending", [])
+def _finalize_media_resources(response_meta: dict, input_text: str, phase_tag: str):
+    layer3 = response_meta.pop("layer3_media_pending", [])
     keyword_media = []
     if multimodal_output and multimodal_output.enabled:
         keyword_media = multimodal_output.match_as_dicts(input_text, phase_tag)
     max_total = int(getattr(config, "LAYER3_MEDIA_MAX_TOTAL", 8))
-    debug_meta["media_resources"] = merge_media_resources(
+    response_meta["media_resources"] = merge_media_resources(
         keyword_media, layer3, max_total=max_total
     )
 
 
 def _fallback_on_model_error(
-    debug_meta: Optional[dict],
+    response_meta: Optional[dict],
     input_text: str,
     phase_tag: str,
     error: Exception,
     history=None,
 ) -> tuple:
-    """模型推理失败时降级为 RAG 摘要，仍返回 debug 与多模态资源。"""
-    meta = debug_meta or {}
+    """模型推理失败时降级为 RAG 摘要，仍返回 meta 与多模态资源。"""
+    meta = response_meta or {}
     if not meta.get("rag_fallback_text"):
         try:
             _, meta, phase_tag = _prepare_query_context(
@@ -485,27 +485,27 @@ def _prepare_query_context(input_text, *, for_vision=False, history=None):
 
 
 def generate_response(instruction, input_text, history=None):
-    debug_meta = None
+    response_meta = None
     phase_tag = ""
     try:
         if getattr(config, "QUERY_WORKFLOW_LANGGRAPH_ENABLED", True):
-            response, debug_meta = run_text_query_workflow(
+            response, response_meta = run_text_query_workflow(
                 query_workflow_deps, input_text, history=history
             )
-            return response, debug_meta
+            return response, response_meta
 
-        prompt, debug_meta, phase_tag = context_builder.prepare(
+        prompt, response_meta, phase_tag = context_builder.prepare(
             input_text, for_vision=False, history=history
         )
-        prompt = _apply_layer3_prompt(prompt, input_text, phase_tag, debug_meta)
+        prompt = _apply_layer3_prompt(prompt, input_text, phase_tag, response_meta)
         text = _run_llm_on_prompt(prompt)
         text = _sanitize_response(text, input_text)
-        text = guard_response(text, debug_meta)
-        _finalize_media_resources(debug_meta, input_text, phase_tag)
-        return text, debug_meta
+        text = guard_response(text, response_meta)
+        _finalize_media_resources(response_meta, input_text, phase_tag)
+        return text, response_meta
     except Exception as e:
         print(f"模型推理错误: {e}")
-        return _fallback_on_model_error(debug_meta, input_text, phase_tag, e, history=history)
+        return _fallback_on_model_error(response_meta, input_text, phase_tag, e, history=history)
 
 
 @app.route("/api/query", methods=["POST"])
@@ -580,7 +580,7 @@ def query():
         response, meta = generate_response(
             "回答用户关于地震的问题", input_text, history=history
         )
-        return jsonify(_attach_debug({"response": response}, meta))
+        return jsonify(_attach_meta({"response": response}, meta))
 
     else:
         return jsonify({"error": f"不支持的查询类型：{query_type}，可选值：llm、kg"}), 400
@@ -642,19 +642,19 @@ def multimodal_query():
 
     try:
         chat_history = _parse_history_form_field()
-        context_prompt, debug_meta, phase_tag = _prepare_query_context(
+        context_prompt, response_meta, phase_tag = _prepare_query_context(
             input_text, for_vision=True, history=chat_history
         )
         context_prompt = _apply_layer3_prompt(
-            context_prompt, input_text, phase_tag, debug_meta
+            context_prompt, input_text, phase_tag, response_meta
         )
         response = qwen_vl_handler.generate(image, context_prompt)
         response = _sanitize_response(response, input_text)
-        response = guard_response(response, debug_meta)
+        response = guard_response(response, response_meta)
 
-        _finalize_media_resources(debug_meta, input_text, phase_tag)
+        _finalize_media_resources(response_meta, input_text, phase_tag)
 
-        return jsonify(_attach_debug({"response": response}, debug_meta))
+        return jsonify(_attach_meta({"response": response}, response_meta))
     except Exception as e:
         logging.exception("Qwen-VL 推理失败: %s", e)
         err = str(e)

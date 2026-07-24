@@ -42,7 +42,7 @@
         "completeness": 4.43,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震前",
         "static_confidence": 0.0,
         "rag_topic_ids": []
@@ -59,7 +59,7 @@
         "completeness": 3.93,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "通用",
         "static_confidence": 0.0,
         "rag_topic_ids": []
@@ -76,7 +76,7 @@
         "completeness": 5.0,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震前",
         "static_confidence": 0.0,
         "rag_topic_ids": []
@@ -93,7 +93,7 @@
         "completeness": 4.25,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震前",
         "static_confidence": 0.0,
         "rag_topic_ids": []
@@ -110,7 +110,7 @@
         "completeness": 3.75,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震中",
         "static_confidence": 0.0,
         "rag_topic_ids": []
@@ -127,7 +127,7 @@
         "completeness": 2.98,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震前",
         "static_confidence": 0.0,
         "rag_topic_ids": []
@@ -144,7 +144,7 @@
         "completeness": 2.54,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震中",
         "static_confidence": 0.0,
         "rag_topic_ids": []
@@ -161,7 +161,7 @@
         "completeness": 3.69,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震中",
         "static_confidence": 0.0,
         "rag_topic_ids": []
@@ -178,7 +178,7 @@
         "completeness": 4.61,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震后",
         "static_confidence": 0.0,
         "rag_topic_ids": []
@@ -195,7 +195,7 @@
         "completeness": 4.93,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震后",
         "static_confidence": 0.0,
         "rag_topic_ids": []
@@ -212,7 +212,7 @@
         "completeness": 3.33,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震后",
         "static_confidence": 0.0,
         "rag_topic_ids": []
@@ -229,7 +229,7 @@
         "completeness": 2.98,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震后",
         "static_confidence": 0.0,
         "rag_topic_ids": []
@@ -246,7 +246,7 @@
         "completeness": 1.0,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震前",
         "static_confidence": 0.28,
         "rag_topic_ids": []
@@ -263,7 +263,7 @@
         "completeness": 4.43,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "通用",
         "static_confidence": 0.0,
         "rag_topic_ids": []
@@ -280,7 +280,7 @@
         "completeness": 5.0,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震前",
         "static_confidence": 0.28,
         "rag_topic_ids": []
@@ -297,7 +297,7 @@
         "completeness": 1.0,
         "format_ok": 0
       },
-      "debug": {
+      "meta": {
         "phase": "震前",
         "static_confidence": 0.28,
         "rag_topic_ids": []
@@ -314,7 +314,7 @@
         "completeness": 2.35,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震中",
         "static_confidence": 0.0,
         "rag_topic_ids": []
@@ -331,7 +331,7 @@
         "completeness": 2.98,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震前",
         "static_confidence": 0.0,
         "rag_topic_ids": []
@@ -348,7 +348,7 @@
         "completeness": 2.36,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震中",
         "static_confidence": 0.28,
         "rag_topic_ids": []
@@ -365,7 +365,7 @@
         "completeness": 2.18,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震中",
         "static_confidence": 0.28,
         "rag_topic_ids": []
@@ -382,7 +382,7 @@
         "completeness": 4.11,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震后",
         "static_confidence": 0.0,
         "rag_topic_ids": []
@@ -399,7 +399,7 @@
         "completeness": 4.93,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震后",
         "static_confidence": 0.0,
         "rag_topic_ids": []
@@ -416,7 +416,7 @@
         "completeness": 4.11,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震后",
         "static_confidence": 0.0,
         "rag_topic_ids": []
@@ -433,7 +433,7 @@
         "completeness": 2.8,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震后",
         "static_confidence": 0.28,
         "rag_topic_ids": []
@@ -450,7 +450,7 @@
         "completeness": 3.58,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震前",
         "static_confidence": 0.25,
         "rag_topic_ids": [
@@ -473,7 +473,7 @@
         "completeness": 4.43,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "通用",
         "static_confidence": 0.24,
         "rag_topic_ids": [
@@ -496,7 +496,7 @@
         "completeness": 5.0,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震前",
         "static_confidence": 0.23,
         "rag_topic_ids": [
@@ -519,7 +519,7 @@
         "completeness": 4.93,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震前",
         "static_confidence": 0.23,
         "rag_topic_ids": [
@@ -542,7 +542,7 @@
         "completeness": 1.0,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震中",
         "static_confidence": 0.23,
         "rag_topic_ids": [
@@ -565,7 +565,7 @@
         "completeness": 3.33,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震前",
         "static_confidence": 0.17,
         "rag_topic_ids": [
@@ -588,7 +588,7 @@
         "completeness": 3.34,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震中",
         "static_confidence": 0.22,
         "rag_topic_ids": [
@@ -611,7 +611,7 @@
         "completeness": 4.29,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震中",
         "static_confidence": 0.25,
         "rag_topic_ids": [
@@ -634,7 +634,7 @@
         "completeness": 1.0,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震后",
         "static_confidence": 0.27,
         "rag_topic_ids": [
@@ -657,7 +657,7 @@
         "completeness": 5.0,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震后",
         "static_confidence": 0.27,
         "rag_topic_ids": [
@@ -680,7 +680,7 @@
         "completeness": 1.18,
         "format_ok": 0
       },
-      "debug": {
+      "meta": {
         "phase": "震后",
         "static_confidence": 0.2,
         "rag_topic_ids": [
@@ -703,7 +703,7 @@
         "completeness": 2.98,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震后",
         "static_confidence": 0.15,
         "rag_topic_ids": [
@@ -726,7 +726,7 @@
         "completeness": 3.15,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震前",
         "static_confidence": 0.53,
         "rag_topic_ids": [
@@ -749,7 +749,7 @@
         "completeness": 2.0,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "通用",
         "static_confidence": 0.24,
         "rag_topic_ids": [
@@ -772,7 +772,7 @@
         "completeness": 3.93,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震前",
         "static_confidence": 0.51,
         "rag_topic_ids": [
@@ -795,7 +795,7 @@
         "completeness": 3.33,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震前",
         "static_confidence": 0.51,
         "rag_topic_ids": [
@@ -818,7 +818,7 @@
         "completeness": 1.0,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震中",
         "static_confidence": 0.23,
         "rag_topic_ids": [
@@ -841,7 +841,7 @@
         "completeness": 3.33,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震前",
         "static_confidence": 0.17,
         "rag_topic_ids": [
@@ -864,7 +864,7 @@
         "completeness": 2.8,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震中",
         "static_confidence": 0.5,
         "rag_topic_ids": [
@@ -887,7 +887,7 @@
         "completeness": 1.0,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震中",
         "static_confidence": 0.53,
         "rag_topic_ids": [
@@ -910,7 +910,7 @@
         "completeness": 4.29,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震后",
         "static_confidence": 0.27,
         "rag_topic_ids": [
@@ -933,7 +933,7 @@
         "completeness": 5.0,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震后",
         "static_confidence": 0.27,
         "rag_topic_ids": [
@@ -956,7 +956,7 @@
         "completeness": 1.18,
         "format_ok": 0
       },
-      "debug": {
+      "meta": {
         "phase": "震后",
         "static_confidence": 0.2,
         "rag_topic_ids": [
@@ -979,7 +979,7 @@
         "completeness": 1.25,
         "format_ok": 1
       },
-      "debug": {
+      "meta": {
         "phase": "震后",
         "static_confidence": 0.43,
         "rag_topic_ids": [

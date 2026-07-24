@@ -19,7 +19,7 @@ class QueryWorkflowState(TypedDict, total=False):
     history: Optional[List]
     for_vision: bool
     normalized_history: List
-    debug_meta: dict
+    response_meta: dict
     phase_result: Any
     phase_tag: str
     knowledge_signals: Any
@@ -48,53 +48,53 @@ def _normalize_node(state: QueryWorkflowState, builder: QueryContextBuilder) -> 
     for_vision = bool(state.get("for_vision", False))
     return {
         "normalized_history": normalized,
-        "debug_meta": builder.init_debug_meta(
+        "response_meta": builder.init_response_meta(
             for_vision=for_vision, normalized_history=normalized
         ),
     }
 
 
 def _classify_node(state: QueryWorkflowState, builder: QueryContextBuilder) -> dict:
-    debug_meta = dict(state["debug_meta"])
-    phase_result, phase_tag = builder.step_classify(state["input_text"], debug_meta)
+    response_meta = dict(state["response_meta"])
+    phase_result, phase_tag = builder.step_classify(state["input_text"], response_meta)
     return {
-        "debug_meta": debug_meta,
+        "response_meta": response_meta,
         "phase_result": phase_result,
         "phase_tag": phase_tag,
     }
 
 
 def _signals_node(state: QueryWorkflowState, builder: QueryContextBuilder) -> dict:
-    debug_meta = dict(state["debug_meta"])
+    response_meta = dict(state["response_meta"])
     knowledge_signals = builder.step_compute_signals(
         state["input_text"],
         state.get("phase_tag", ""),
         state.get("phase_result"),
-        debug_meta,
+        response_meta,
     )
-    return {"debug_meta": debug_meta, "knowledge_signals": knowledge_signals}
+    return {"response_meta": response_meta, "knowledge_signals": knowledge_signals}
 
 
 def _schedule_node(state: QueryWorkflowState, builder: QueryContextBuilder) -> dict:
-    debug_meta = dict(state["debug_meta"])
+    response_meta = dict(state["response_meta"])
     schedule_decision = builder.step_schedule(
         state.get("phase_result"),
         state.get("knowledge_signals"),
-        debug_meta,
+        response_meta,
     )
-    return {"debug_meta": debug_meta, "schedule_decision": schedule_decision}
+    return {"response_meta": response_meta, "schedule_decision": schedule_decision}
 
 
 def _retrieve_node(state: QueryWorkflowState, builder: QueryContextBuilder) -> dict:
-    debug_meta = dict(state["debug_meta"])
+    response_meta = dict(state["response_meta"])
     sections = builder.step_retrieve_sections(
         state["input_text"],
         state.get("phase_tag", ""),
         state.get("schedule_decision"),
         state.get("knowledge_signals"),
-        debug_meta,
+        response_meta,
     )
-    return {"debug_meta": debug_meta, "sections": sections}
+    return {"response_meta": response_meta, "sections": sections}
 
 
 def _build_prompt_node(state: QueryWorkflowState, builder: QueryContextBuilder) -> dict:
@@ -109,14 +109,14 @@ def _build_prompt_node(state: QueryWorkflowState, builder: QueryContextBuilder) 
 
 
 def _apply_layer3_node(state: QueryWorkflowState, deps: QueryWorkflowDeps) -> dict:
-    debug_meta = dict(state["debug_meta"])
+    response_meta = dict(state["response_meta"])
     prompt = deps.apply_layer3(
         state["prompt"],
         state["input_text"],
         state.get("phase_tag", ""),
-        debug_meta,
+        response_meta,
     )
-    return {"prompt": prompt, "debug_meta": debug_meta}
+    return {"prompt": prompt, "response_meta": response_meta}
 
 
 def _generate_node(state: QueryWorkflowState, deps: QueryWorkflowDeps) -> dict:
@@ -134,17 +134,17 @@ def _postprocess_node(state: QueryWorkflowState, deps: QueryWorkflowDeps) -> dic
     if state.get("skip_generate"):
         return {"response": state.get("prompt", "")}
 
-    debug_meta = dict(state["debug_meta"])
+    response_meta = dict(state["response_meta"])
     text = state.get("raw_response") or ""
     text = deps.sanitize(text, state["input_text"])
-    text = deps.guard(text, debug_meta)
-    return {"response": text, "debug_meta": debug_meta}
+    text = deps.guard(text, response_meta)
+    return {"response": text, "response_meta": response_meta}
 
 
 def _enrich_node(state: QueryWorkflowState, deps: QueryWorkflowDeps) -> dict:
-    debug_meta = dict(state["debug_meta"])
-    deps.finalize_media(debug_meta, state["input_text"], state.get("phase_tag", ""))
-    return {"debug_meta": debug_meta}
+    response_meta = dict(state["response_meta"])
+    deps.finalize_media(response_meta, state["input_text"], state.get("phase_tag", ""))
+    return {"response_meta": response_meta}
 
 
 def build_query_workflow(deps: QueryWorkflowDeps, *, include_generate: bool = True):
@@ -189,7 +189,7 @@ def run_context_workflow(
     history: Optional[List] = None,
     for_vision: bool = False,
 ) -> tuple[str, dict, str]:
-    """仅上下文编排：返回 (prompt, debug_meta, phase_tag)。"""
+    """仅上下文编排：返回 (prompt, response_meta, phase_tag)。"""
     workflow = build_query_workflow(deps, include_generate=False)
     result = workflow.invoke(
         {
@@ -199,7 +199,7 @@ def run_context_workflow(
             "skip_generate": True,
         }
     )
-    return result["prompt"], result["debug_meta"], result.get("phase_tag", "")
+    return result["prompt"], result["response_meta"], result.get("phase_tag", "")
 
 
 def run_text_query_workflow(
@@ -208,7 +208,7 @@ def run_text_query_workflow(
     *,
     history: Optional[List] = None,
 ) -> tuple[str, dict]:
-    """完整文本问答编排：返回 (response, debug_meta)。"""
+    """完整文本问答编排：返回 (response, response_meta)。"""
     workflow = build_query_workflow(deps, include_generate=True)
     result = workflow.invoke(
         {
@@ -220,4 +220,4 @@ def run_text_query_workflow(
     )
     if result.get("error") and not (result.get("response") or "").strip():
         raise RuntimeError(result["error"])
-    return result.get("response", ""), result.get("debug_meta") or {}
+    return result.get("response", ""), result.get("response_meta") or {}

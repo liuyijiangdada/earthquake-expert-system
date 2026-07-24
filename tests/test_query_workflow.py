@@ -67,7 +67,7 @@ class TestQueryWorkflow(unittest.TestCase):
             }
         )
         self.assertIn("室内应就地避险", result["response"])
-        self.assertIn("media_resources", result["debug_meta"])
+        self.assertIn("media_resources", result["response_meta"])
 
     def test_graph_node_order(self):
         workflow = build_query_workflow(self.deps, include_generate=False)
@@ -80,7 +80,7 @@ class TestQueryWorkflow(unittest.TestCase):
             }
         )
         self.assertTrue(result["prompt"])
-        self.assertEqual(result["debug_meta"]["phase"], "震后")
+        self.assertEqual(result["response_meta"]["phase"], "震后")
 
 
 if __name__ == "__main__":

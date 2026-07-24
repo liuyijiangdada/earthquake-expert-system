@@ -4,7 +4,7 @@ import { formatBotHtml } from '@/utils/format.js'
 import { PHASE_META } from '@/constants.js'
 
 const brokenMediaIds = ref(new Set())
-const showDebugMetrics = import.meta.env.DEV && import.meta.env.VITE_SHOW_DEBUG === 'true'
+const showMetaMetrics = import.meta.env.DEV && import.meta.env.VITE_SHOW_META === 'true'
 
 const props = defineProps({
   messages: { type: Array, default: () => [] },
@@ -22,6 +22,11 @@ function onMediaImageError(resId) {
   brokenMediaIds.value = new Set([...brokenMediaIds.value, resId])
 }
 
+function hasVisibleMedia(resources) {
+  if (!resources?.length) return false
+  return resources.some((res) => res.type !== 'image' || !brokenMediaIds.value.has(res.id))
+}
+
 const emit = defineEmits(['feedback'])
 
 function onFeedback(msgId, type) {
@@ -32,8 +37,8 @@ function phaseMeta(phase) {
   return PHASE_META[phase] || PHASE_META['通用']
 }
 
-function formatDebug(m) {
-  if (!showDebugMetrics) return ''
+function formatMetaMetrics(m) {
+  if (!showMetaMetrics) return ''
   const parts = []
   if (m.staticConfidence != null) parts.push(`静态置信 ${m.staticConfidence}`)
   if (m.dynamicAvailability != null) parts.push(`动态可用 ${m.dynamicAvailability}`)
@@ -95,31 +100,28 @@ function reliabilityNotice(m) {
                   <i class="fas fa-info-circle me-1"></i>{{ reliabilityNotice(m) }}
                 </p>
 
-                <p v-if="formatDebug(m)" class="debug-strip mb-0">{{ formatDebug(m) }}</p>
+                <p v-if="formatMetaMetrics(m)" class="meta-strip mb-0">{{ formatMetaMetrics(m) }}</p>
 
-                <div v-if="m.mediaResources && m.mediaResources.length" class="media-section">
+                <div v-if="hasVisibleMedia(m.mediaResources)" class="media-section">
                   <p class="media-section-title">
                     <i class="fas fa-layer-group me-1"></i>相关资源（图谱 / 示意图 / 地图链接）
                   </p>
-                  <div v-for="res in m.mediaResources" :key="res.id" class="media-item">
-                    <template v-if="res.type === 'image'">
-                      <div class="media-image-card">
-                        <img
-                          v-if="!brokenMediaIds.has(res.id)"
-                          :src="res.url"
-                          :alt="res.caption"
-                          class="img-fluid rounded"
-                          loading="lazy"
-                          @error="onMediaImageError(res.id)"
-                        />
-                        <p v-else class="media-fallback text-muted small mb-2">
-                          图片加载失败，
-                          <a :href="res.url" target="_blank" rel="noopener noreferrer">点击此处查看</a>。
-                        </p>
-                        <p class="media-caption mb-0">{{ res.caption }}</p>
-                        <span v-if="res.source" class="media-source">{{ res.source }}</span>
-                      </div>
-                    </template>
+                  <template v-for="res in m.mediaResources" :key="res.id">
+                    <div
+                      v-if="res.type !== 'image' || !brokenMediaIds.has(res.id)"
+                      class="media-item"
+                    >
+                      <template v-if="res.type === 'image'">
+                        <div class="media-image-card">
+                          <img
+                            :src="res.url"
+                            :alt="res.caption || '示意图'"
+                            class="img-fluid rounded"
+                            loading="lazy"
+                            @error="onMediaImageError(res.id)"
+                          />
+                        </div>
+                      </template>
                     <template v-else-if="res.type === 'link'">
                       <a
                         :href="res.url"
@@ -142,6 +144,7 @@ function reliabilityNotice(m) {
                       </a>
                     </template>
                   </div>
+                  </template>
                 </div>
 
                 <div v-if="m.feedback !== false" class="feedback-row">

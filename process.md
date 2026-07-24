@@ -76,7 +76,7 @@
 
 前端若 `response` 非字符串或 `trim` 后为空 → 展示「未收到有效回答，请换种问法或稍后重试。」
 
-**调试**：`config.API_DEBUG_RAG = True` 时可在响应中带 `debug`（如 `rag_topic_ids`）。
+**调试**：`config.API_DEBUG_RAG = True` 时可在响应中带 `meta`（元信息）（如 `rag_topic_ids`）。
 
 ---
 

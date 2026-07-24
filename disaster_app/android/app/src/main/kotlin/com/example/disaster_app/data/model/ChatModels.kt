@@ -30,10 +30,14 @@ data class HistoryTurn(
 data class ChatResponse(
     val response: String? = null,
     val error: String? = null,
-    val debug: DebugInfo? = null
-)
+    @SerializedName("meta") val meta: ResponseMeta? = null,
+    /** 兼容旧接口字段名 debug */
+    @SerializedName("debug") val debug: ResponseMeta? = null
+) {
+    fun responseMeta(): ResponseMeta? = meta ?: debug
+}
 
-data class DebugInfo(
+data class ResponseMeta(
     val phase: String? = null,
     val urgency: Float? = null,
     @SerializedName("static_confidence") val staticConfidence: Float? = null,

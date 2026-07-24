@@ -67,8 +67,10 @@ class Config:
     RAG_EMBEDDING_LOCAL_FILES_ONLY = True
     RAG_TOP_K = 5
     RAG_MAX_CHUNK_CHARS = 800
-    # True：API 响应附带 debug（阶段、RAG 命中、媒体资源等）；False 仅返回 response
-    DEBUG_PAYLOAD_ENABLED = True
+    # True：API 响应附带 meta 元信息（阶段、RAG 命中、媒体资源等）；False 仅返回 response
+    META_PAYLOAD_ENABLED = True
+    # 旧名兼容（已弃用，请使用 META_PAYLOAD_ENABLED）
+    DEBUG_PAYLOAD_ENABLED = META_PAYLOAD_ENABLED
     # True：将匹配到的示意图摘要写入 LLM prompt（默认 False，仅前端展示）
     MULTIMODAL_INJECT_PROMPT = False
     # True：不连 Milvus，使用内存矩阵（本地开发推荐 True）

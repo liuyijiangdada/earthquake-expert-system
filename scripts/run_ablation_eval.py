@@ -80,7 +80,7 @@ def _overlap_ratio(a: str, b: str) -> float:
 def score_response(
     response: str,
     prompt: str,
-    debug: Optional[dict],
+    meta: Optional[dict],
     phase: str,
     *,
     kg_on: bool,
@@ -140,13 +140,13 @@ def score_response(
         if kg_on and rag_on and kg_hit and rag_hit:
             factual += 0.1
 
-    if debug:
-        sc = float(debug.get("static_confidence") or 0)
+    if meta:
+        sc = float(meta.get("static_confidence") or 0)
         if sc >= 0.45 and (kg_hit or rag_hit):
             factual += 0.08
-        if debug.get("rag_topic_ids") and rag_on:
+        if meta.get("rag_topic_ids") and rag_on:
             factual += 0.06
-        if int(debug.get("dynamic_items_count") or 0) > 0:
+        if int(meta.get("dynamic_items_count") or 0) > 0:
             factual += 0.07
 
     factual = max(0.0, min(1.0, factual))
@@ -171,7 +171,7 @@ def score_response(
     if re.search(r"[1-9][\.\)、．]", body) or body.count("。") >= 3:
         completeness += 0.35
 
-    if rag_hit and debug and debug.get("rag_topic_ids"):
+    if rag_hit and meta and meta.get("rag_topic_ids"):
         completeness += 0.25
     if kg_hit and overlap_kg > 0.08:
         completeness += 0.2
@@ -306,15 +306,14 @@ def run_eval(
         for phase, question in questions:
             step += 1
             t0 = time.time()
-            prompt, debug_meta, _phase_tag = app_mod.context_builder.prepare(
+            prompt, response_meta, _phase_tag = app_mod.context_builder.prepare(
                 question, for_vision=False, history=None
             )
             response = _infer_once(app_mod, prompt, question)
-            debug = debug_meta
             sc = score_response(
                 response,
                 prompt,
-                debug,
+                response_meta,
                 phase,
                 kg_on=kg_on,
                 rag_on=rag_on,
@@ -333,10 +332,10 @@ def run_eval(
                         "completeness": round(sc.completeness, 2),
                         "format_ok": sc.format_ok,
                     },
-                    "debug": {
-                        "phase": debug.get("phase"),
-                        "static_confidence": debug.get("static_confidence"),
-                        "rag_topic_ids": debug.get("rag_topic_ids"),
+                    "meta": {
+                        "phase": response_meta.get("phase"),
+                        "static_confidence": response_meta.get("static_confidence"),
+                        "rag_topic_ids": response_meta.get("rag_topic_ids"),
                     },
                     "elapsed_sec": round(elapsed, 2),
                 }

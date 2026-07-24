@@ -25,7 +25,7 @@ class ChatViewModel : ViewModel() {
 
     init {
         addSystemMessage(
-            "你好，我是地震应急智能助手。可咨询震前准备、震中避险、震后恢复；支持文字与图片问答。请确保手机已连接后端服务（模拟器默认 10.0.2.2:8000）。"
+            "你好，我是地震应急智能助手。可咨询震前准备、震中避险、震后恢复；支持文字与图片问答。"
         )
     }
 
@@ -44,7 +44,7 @@ class ChatViewModel : ViewModel() {
             val history = currentMessages.filter { it.role != "system" }
             repository.sendMessage(history, userInput)
                 .onSuccess { response ->
-                    val assistant = buildAssistantMessage(response.response!!, response.debug)
+                    val assistant = buildAssistantMessage(response.response!!, response.responseMeta())
                     currentMessages.add(assistant)
                     _uiState.value = _uiState.value.copy(messages = currentMessages, isLoading = false)
                 }
@@ -69,7 +69,7 @@ class ChatViewModel : ViewModel() {
             val history = currentMessages.filter { it.role != "system" }
             repository.sendMultimodalMessage(context, imageUri, text, history)
                 .onSuccess { response ->
-                    val assistant = buildAssistantMessage(response.response!!, response.debug)
+                    val assistant = buildAssistantMessage(response.response!!, response.responseMeta())
                     currentMessages.add(assistant)
                     _uiState.value = _uiState.value.copy(messages = currentMessages, isLoading = false)
                 }
@@ -86,13 +86,13 @@ class ChatViewModel : ViewModel() {
         _uiState.value = _uiState.value.copy(error = null)
     }
 
-    private fun buildAssistantMessage(text: String, debug: com.example.disaster_app.data.model.DebugInfo?): ChatMessage {
-        val captions = debug?.mediaResources?.mapNotNull { it.caption } ?: emptyList()
+    private fun buildAssistantMessage(text: String, meta: com.example.disaster_app.data.model.ResponseMeta?): ChatMessage {
+        val captions = meta?.mediaResources?.mapNotNull { it.caption } ?: emptyList()
         return ChatMessage(
             role = "assistant",
             content = text,
-            phase = debug?.phase,
-            urgency = debug?.urgency ?: 0f,
+            phase = meta?.phase,
+            urgency = meta?.urgency ?: 0f,
             mediaCaptions = captions
         )
     }

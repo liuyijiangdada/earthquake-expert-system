@@ -22,9 +22,9 @@ BACKUP_SRC = ROOT / "华东师范大学硕士论文.backup.20260606_183810.docx"
 OUT = ROOT / "华东师范大学硕士论文.docx"
 EVAL_SUMMARY = ROOT / "data/eval/table_7_3_summary.json"
 
-CN_TITLE = "基于动态-静态知识协同的地震灾害问答系统"
-EN_L1 = "An Earthquake Disaster Question Answering System"
-EN_L2 = "Based on Dynamic-Static Knowledge Collaboration"
+CN_TITLE = "基于动态—静态知识协同的地震应急问答方法研究"
+EN_L1 = "Research on Earthquake Emergency Question Answering"
+EN_L2 = "via Dynamic–Static Knowledge Collaboration"
 
 
 def set_para_text(para, text: str) -> None:
@@ -234,7 +234,7 @@ CHAPTER_FIXES: dict[int, str] = {
         "地震应急问答通常不存在唯一标准答案，宜从以下维度综合评价：（1）事实一致性——"
         "可验证字段是否与图谱、检索片段或动态源一致；（2）要点完整性——"
         "预设检查项或 Likert 1～5 分；（3）格式合规性——是否满足系统提示中的输出约束；"
-        "（4）阶段与调度一致性——debug 中阶段标签与数据源触发是否合理；"
+        "（4）阶段与调度一致性——meta 元信息中阶段标签与数据源触发是否合理；"
         "（5）消融对比——在同一问集上切换 KG/RAG 开关比较指标变化。"
     ),
     158: "",  # 清除混入 3.1.2 的 3.2 内容
@@ -264,7 +264,7 @@ CHAPTER_FIXES: dict[int, str] = {
     ),
     177: (
         "从评测问集中按震前/震中/震后分层各抽取 4 题（共 16 题）进行快速消融；"
-        "按 B0～B3 切换配置后批量推理，保存 response 与 debug 字段，"
+        "按 B0～B3 切换配置后批量推理，保存 response 与 meta 元信息字段，"
         "采用 grounding 自动评分并汇总表 7-3（完整 60 题评测可作为后续工作）。"
     ),
 }
