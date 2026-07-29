@@ -91,3 +91,14 @@ def test_ch3_kg_pipeline_and_rag():
         assert kw in ch3, kw
     assert "应急主题" in ch3 or "主题库" in ch3
     assert "震例" in ch3 or "地震事件" in ch3
+
+
+def test_ch4_collaboration_subjects_and_scheduler():
+    ch4 = _chapter_blob("第四章")
+    assert "静态知识" in ch4 and "动态知识" in ch4
+    assert "震前" in ch4 and "震中" in ch4 and "震后" in ch4
+    assert "阈值" in ch4 or "调度" in ch4
+    assert "伪代码" in ch4 or "算法" in ch4 or "procedure" in ch4.lower() or "输入：" in ch4
+    assert "CEIC" in ch4 or "台网" in ch4
+    assert "USGS" in ch4
+    assert "冲突" in ch4 or "降级" in ch4
