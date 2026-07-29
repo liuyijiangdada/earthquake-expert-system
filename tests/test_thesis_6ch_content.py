@@ -102,3 +102,17 @@ def test_ch4_collaboration_subjects_and_scheduler():
     assert "CEIC" in ch4 or "台网" in ch4
     assert "USGS" in ch4
     assert "冲突" in ch4 or "降级" in ch4
+
+
+def test_ch5_eval_protocol_and_comparisons():
+    ch5 = _chapter_blob("第五章")
+    assert "60" in ch5
+    assert "B0" in ch5 and "B3" in ch5
+    assert "自动" in ch5 and ("grounding" in ch5.lower() or "proxy" in ch5.lower() or "评分" in ch5)
+    assert "GraphRAG" in ch5
+    assert "未" in ch5 and ("复现" in ch5 or "同设定" in ch5 or "数值对比实验" in ch5)
+    assert "B2" in ch5
+    assert "分块" in ch5 or "嵌入" in ch5 or "Top-K" in ch5 or "可核对" in ch5
+    assert "待开展" in ch5 or "可用性" in ch5
+    # 禁止把关闭动态的消融写成含动态主结论的含糊句——至少要有路径分离说明
+    assert "离线" in ch5 or "关闭动态" in ch5 or "消融" in ch5
