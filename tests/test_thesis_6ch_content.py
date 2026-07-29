@@ -30,3 +30,43 @@ def test_references_include_domestic_journals():
     joined = "\n".join(REFERENCES)
     assert "自然灾害学报" in joined or "地震研究" in joined
     assert len(REFERENCES) >= 30
+
+
+def test_abstract_mentions_60_and_honesty():
+    from scripts.thesis_rewrite_content_6ch import ABSTRACT_CN
+    assert "60" in ABSTRACT_CN
+    assert "事实" in ABSTRACT_CN
+    assert "完整" in ABSTRACT_CN  # 承认完整性未必全面领先
+
+
+def test_ch1_defines_static_dynamic():
+    texts = []
+    in_ch1 = False
+    for lvl, t in BODY_BLOCKS:
+        if lvl == "h1" and "第一章" in t:
+            in_ch1 = True
+        elif lvl == "h1" and "第二章" in t:
+            break
+        elif in_ch1:
+            texts.append(t)
+    ch1 = "\n".join(texts)
+    assert "静态知识" in ch1 and "动态知识" in ch1
+    assert "自然灾害学报" in ch1 or "地震研究" in ch1
+    assert "GraphRAG" in ch1
+    assert "KnowledGPT" in ch1 or "知识增强" in ch1
+    assert "1.2.1" in ch1 or "国内地震应急" in ch1
+
+
+def test_ch2_is_tech_foundation_not_system_manual():
+    texts = []
+    in_ch2 = False
+    for lvl, t in BODY_BLOCKS:
+        if lvl == "h1" and "第二章" in t:
+            in_ch2 = True
+        elif lvl == "h1" and in_ch2:
+            break
+        elif in_ch2:
+            texts.append(t)
+    ch2 = "\n".join(texts)
+    assert "评价指标" in ch2 or "事实一致性" in ch2
+    assert "系统总体逻辑架构" not in ch2  # 架构迁出第2章
