@@ -23,6 +23,7 @@ def test_generate_and_validate_docx():
         str(OUT),
         "--fill-eval",
         str(SUMMARY),
+        "--no-backup",
     ]
     subprocess.check_call(cmd, cwd=str(ROOT))
     assert OUT.exists()
@@ -33,6 +34,11 @@ def test_generate_and_validate_docx():
     blob = "\n".join(texts)
     assert "第一章" in blob and "第六章" in blob
     assert "第七章" not in blob
+    toc_i = next(i for i, t in enumerate(texts) if t == "目录")
+    toc_end = next(
+        i for i, t in enumerate(texts) if t.startswith("第一章") or t in {"图目录", "表目录"}
+    )
+    assert "第七章" not in "\n".join(texts[toc_i:toc_end])
     assert "82.5" in blob  # FACT_B3 filled
     assert "{{FACT_B3}}" not in blob
     # 致谢存在且其后不应再塞章节
