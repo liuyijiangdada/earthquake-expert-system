@@ -1,5 +1,10 @@
 # tests/test_thesis_6ch_content.py
-from scripts.thesis_rewrite_content_6ch import BODY_BLOCKS, TOC_LINES, REFERENCES
+from scripts.thesis_rewrite_content_6ch import (
+    BODY_BLOCKS,
+    TOC_LINES,
+    REFERENCES,
+    APPENDIX_BLOCKS,
+)
 
 H1 = [t for lvl, t in BODY_BLOCKS if lvl == "h1"]
 
@@ -116,3 +121,28 @@ def test_ch5_eval_protocol_and_comparisons():
     assert "待开展" in ch5 or "可用性" in ch5
     # 禁止把关闭动态的消融写成含动态主结论的含糊句——至少要有路径分离说明
     assert "离线" in ch5 or "关闭动态" in ch5 or "消融" in ch5
+
+
+def test_ch6_aligned_with_eval_placeholders():
+    ch6 = _chapter_blob("第六章")
+    assert "{{FACT_B3}}" in ch6 or "事实一致性" in ch6
+    assert "展望" in ch6 or "未来" in ch6
+    assert "全文共六章" in ch6
+
+
+def test_appendix_has_questions_or_cypher():
+    blob = "\n".join(t for _, t in APPENDIX_BLOCKS)
+    assert "附录" in blob
+    # 实质内容：问集条目 / Cypher / 配置参数（禁止 `or True` 恒真）
+    has_questions = ("家庭应急包" in blob) or ("问集" in blob and "震前" in blob)
+    has_cypher = ("MATCH" in blob) or ("Cypher" in blob and "MERGE" in blob)
+    has_config = ("配置" in blob) and (
+        ("Top-K" in blob) or ("B0" in blob) or ("阈值" in blob)
+    )
+    assert has_questions or has_cypher or has_config
+    assert "占位" not in blob
+
+
+def test_references_real_count():
+    assert len(REFERENCES) >= 30
+    assert not any("占位文献" in r for r in REFERENCES)
