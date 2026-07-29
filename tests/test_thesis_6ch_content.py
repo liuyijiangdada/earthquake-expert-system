@@ -70,3 +70,24 @@ def test_ch2_is_tech_foundation_not_system_manual():
     ch2 = "\n".join(texts)
     assert "评价指标" in ch2 or "事实一致性" in ch2
     assert "系统总体逻辑架构" not in ch2  # 架构迁出第2章
+
+
+def _chapter_blob(n_prefix: str) -> str:
+    texts, active = [], False
+    for lvl, t in BODY_BLOCKS:
+        if lvl == "h1" and n_prefix in t:
+            active = True
+            continue
+        if lvl == "h1" and active:
+            break
+        if active:
+            texts.append(t)
+    return "\n".join(texts)
+
+
+def test_ch3_kg_pipeline_and_rag():
+    ch3 = _chapter_blob("第三章")
+    for kw in ("数据来源", "特征抽取", "模式", "Neo4j", "Cypher", "分块", "向量", "互补"):
+        assert kw in ch3, kw
+    assert "应急主题" in ch3 or "主题库" in ch3
+    assert "震例" in ch3 or "地震事件" in ch3
