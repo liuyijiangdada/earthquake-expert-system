@@ -324,7 +324,11 @@ def apply_content(
             line_red = mark_red and line.strip() != "致谢"
             _format_para(toc_paras[i], "body", mark_red=line_red)
         else:
-            break
+            # 底稿目录行不足时，在末条后插入，保证六章+参考文献/附录/致谢齐全
+            anchor = toc_paras[-1] if toc_paras else doc.paragraphs[toc_i]
+            line_red = mark_red and line.strip() != "致谢"
+            new_p = _insert_para_after(anchor, line, "body", mark_red=line_red)
+            toc_paras.append(new_p)
     for j in range(len(new_toc), len(toc_paras)):
         set_para_text(toc_paras[j], "")
 

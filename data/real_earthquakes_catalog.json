@@ -16,7 +16,10 @@
       "longitude": 103.367,
       "intensity": "XI度（极震区参考）",
       "description": "2008年5月12日汶川Ms8.0级地震，浅源强震，造成重大人员伤亡与次生灾害，举国抗震救灾。",
-      "links_to_topics": ["em_aftershock", "em_kit"]
+      "links_to_topics": [
+        "em_aftershock",
+        "em_kit"
+      ]
     },
     {
       "id": "real_yushu_20100414",
@@ -30,7 +33,9 @@
       "longitude": 96.6,
       "intensity": "IX度区参考",
       "description": "2010年玉树7.1级地震，高原城镇，救援与防疫并重。",
-      "links_to_topics": ["em_aftershock"]
+      "links_to_topics": [
+        "em_aftershock"
+      ]
     },
     {
       "id": "real_lushan_20130420",
@@ -44,7 +49,10 @@
       "longitude": 103.0,
       "intensity": "IX度区参考",
       "description": "2013年芦山7.0级地震，雅安片区再次面临恢复重建。",
-      "links_to_topics": ["em_indoor", "em_aftershock"]
+      "links_to_topics": [
+        "em_indoor",
+        "em_aftershock"
+      ]
     },
     {
       "id": "real_ludian_20140803",
@@ -58,7 +66,9 @@
       "longitude": 103.3,
       "intensity": "Ⅸ度区参考",
       "description": "2014年鲁甸6.5级地震，山区地形放大滑坡与房屋倒塌风险。",
-      "links_to_topics": ["em_aftershock"]
+      "links_to_topics": [
+        "em_aftershock"
+      ]
     },
     {
       "id": "real_jiuzhaigou_20170808",
@@ -72,7 +82,10 @@
       "longitude": 103.82,
       "intensity": "Ⅸ度区参考",
       "description": "2017年九寨沟7.0级地震，景区与交通一度受阻，余震较多。",
-      "links_to_topics": ["em_outdoor", "em_aftershock"]
+      "links_to_topics": [
+        "em_outdoor",
+        "em_aftershock"
+      ]
     },
     {
       "id": "real_changning_20190617",
@@ -86,7 +99,9 @@
       "longitude": 104.9,
       "intensity": "Ⅷ度区参考",
       "description": "2019年长宁6.0级地震，川南页岩气区社会关注度高。",
-      "links_to_topics": ["em_indoor"]
+      "links_to_topics": [
+        "em_indoor"
+      ]
     },
     {
       "id": "real_yangbi_20210521",
@@ -100,7 +115,9 @@
       "longitude": 99.87,
       "intensity": "Ⅷ度区参考",
       "description": "2021年漾濞6.4级地震，序列型余震明显。",
-      "links_to_topics": ["em_aftershock"]
+      "links_to_topics": [
+        "em_aftershock"
+      ]
     },
     {
       "id": "real_maduo_20210522",
@@ -114,7 +131,9 @@
       "longitude": 98.34,
       "intensity": "Ⅹ度区参考",
       "description": "2021年玛多7.4级地震，巴颜喀拉块体边界强震，高原公路桥梁受损受关注。",
-      "links_to_topics": ["em_aftershock"]
+      "links_to_topics": [
+        "em_aftershock"
+      ]
     },
     {
       "id": "real_luding_20220905",
@@ -128,7 +147,10 @@
       "longitude": 102.08,
       "intensity": "Ⅸ度区参考",
       "description": "2022年泸定6.8级地震，高山峡谷区滑坡与道路抢通难度大。",
-      "links_to_topics": ["em_outdoor", "em_aftershock"]
+      "links_to_topics": [
+        "em_outdoor",
+        "em_aftershock"
+      ]
     },
     {
       "id": "real_jishi_20231218",
@@ -142,7 +164,10 @@
       "longitude": 102.83,
       "intensity": "Ⅷ度区参考",
       "description": "2023年积石山6.2级地震，冬季低温下安置与保暖需求突出。",
-      "links_to_topics": ["em_indoor", "em_aftershock"]
+      "links_to_topics": [
+        "em_indoor",
+        "em_aftershock"
+      ]
     },
     {
       "id": "real_taiwan921_19990921",
@@ -156,7 +181,10 @@
       "longitude": 120.82,
       "intensity": "震度参考极大",
       "description": "1999年台湾921大地震，断层地表破裂与土壤液化案例经典。",
-      "links_to_topics": ["em_highrise", "em_aftershock"]
+      "links_to_topics": [
+        "em_highrise",
+        "em_aftershock"
+      ]
     },
     {
       "id": "real_tangshan_19760728",
@@ -170,7 +198,9 @@
       "longitude": 118.2,
       "intensity": "XI度区参考",
       "description": "1976年唐山7.8级地震，城市直下型地震典型案例。",
-      "links_to_topics": ["em_aftershock"]
+      "links_to_topics": [
+        "em_aftershock"
+      ]
     },
     {
       "id": "real_tohoku_20110311",
@@ -184,7 +214,10 @@
       "longitude": 142.86,
       "intensity": "日本震度7（参考）",
       "description": "2011年Mw9.1巨震引发海啸与福岛核事故，凸显沿海海啸防范。",
-      "links_to_topics": ["em_outdoor", "em_aftershock"]
+      "links_to_topics": [
+        "em_outdoor",
+        "em_aftershock"
+      ]
     },
     {
       "id": "real_nepal_20150425",
@@ -198,7 +231,451 @@
       "longitude": 84.73,
       "intensity": "参考烈度高",
       "description": "2015年尼泊尔7.8级地震，山区古建筑与道路损毁严重。",
-      "links_to_topics": ["em_aftershock"]
+      "links_to_topics": [
+        "em_aftershock"
+      ]
+    },
+    {
+      "id": "real_haicheng_19750204",
+      "name": "辽宁海城地震",
+      "time": "1975-02-04 19:36:06",
+      "magnitude": 7.3,
+      "depth": 12.0,
+      "location": "辽宁省鞍山市海城县",
+      "region": "辽宁",
+      "latitude": 40.66,
+      "longitude": 122.8,
+      "intensity": "IX度区参考",
+      "description": "1975年海城7.3级地震，成功预报与疏散案例常被引用。",
+      "links_to_topics": [
+        "em_warning",
+        "em_drill"
+      ]
+    },
+    {
+      "id": "real_xingtai_19660308",
+      "name": "河北邢台地震",
+      "time": "1966-03-08 05:29:14",
+      "magnitude": 6.8,
+      "depth": 10.0,
+      "location": "河北省邢台地区",
+      "region": "河北",
+      "latitude": 37.35,
+      "longitude": 114.92,
+      "intensity": "IX度区参考",
+      "description": "1966年邢台地震，新中国成立后较早的破坏性地震之一。",
+      "links_to_topics": [
+        "em_aftershock",
+        "em_rebuild"
+      ]
+    },
+    {
+      "id": "real_tonghai_19700105",
+      "name": "云南通海地震",
+      "time": "1970-01-05 01:00:34",
+      "magnitude": 7.7,
+      "depth": 13.0,
+      "location": "云南省通海县",
+      "region": "云南",
+      "latitude": 24.06,
+      "longitude": 102.61,
+      "intensity": "X度区参考",
+      "description": "1970年通海7.7级地震，人员伤亡惨重，推动防震减灾体系建设。",
+      "links_to_topics": [
+        "em_aftershock",
+        "em_psychology"
+      ]
+    },
+    {
+      "id": "real_lijiang_19960203",
+      "name": "云南丽江地震",
+      "time": "1996-02-03 19:14:18",
+      "magnitude": 7.0,
+      "depth": 10.0,
+      "location": "云南省丽江市",
+      "region": "云南",
+      "latitude": 27.18,
+      "longitude": 100.13,
+      "intensity": "IX度区参考",
+      "description": "1996年丽江7.0级地震，古城建筑与旅游设施受损受关注。",
+      "links_to_topics": [
+        "em_outdoor",
+        "em_aftershock"
+      ]
+    },
+    {
+      "id": "real_zhangbei_19980110",
+      "name": "河北张家口张北地震",
+      "time": "1998-01-10 11:50:39",
+      "magnitude": 6.2,
+      "depth": 10.0,
+      "location": "河北省张家口市张北县",
+      "region": "河北",
+      "latitude": 41.15,
+      "longitude": 114.5,
+      "intensity": "Ⅷ度区参考",
+      "description": "1998年张北6.2级地震，冬季抗震救灾与临时安置经验突出。",
+      "links_to_topics": [
+        "em_shelter",
+        "em_elderly_child"
+      ]
+    },
+    {
+      "id": "real_yingjiang_20110310",
+      "name": "云南盈江地震",
+      "time": "2011-03-10 12:58:14",
+      "magnitude": 5.8,
+      "depth": 10.0,
+      "location": "云南省德宏州盈江县",
+      "region": "云南",
+      "latitude": 24.69,
+      "longitude": 97.95,
+      "intensity": "Ⅷ度区参考",
+      "description": "2011年盈江5.8级地震，中缅边境地区救援协同受关注。",
+      "links_to_topics": [
+        "em_aftershock",
+        "em_comms"
+      ]
+    },
+    {
+      "id": "real_yiliang_20120907",
+      "name": "云南彝良地震",
+      "time": "2012-09-07 11:19:41",
+      "magnitude": 5.7,
+      "depth": 14.0,
+      "location": "云南省昭通市彝良县",
+      "region": "云南",
+      "latitude": 27.55,
+      "longitude": 104.02,
+      "intensity": "Ⅷ度区参考",
+      "description": "2012年彝良地震，山区房屋倒塌与滑坡风险叠加。",
+      "links_to_topics": [
+        "em_landslide",
+        "em_aftershock"
+      ]
+    },
+    {
+      "id": "real_minxian_20130722",
+      "name": "甘肃岷县漳县地震",
+      "time": "2013-07-22 07:45:56",
+      "magnitude": 6.6,
+      "depth": 20.0,
+      "location": "甘肃省定西市岷县—漳县交界",
+      "region": "甘肃",
+      "latitude": 34.5,
+      "longitude": 104.21,
+      "intensity": "Ⅷ度区参考",
+      "description": "2013年岷县漳县6.6级地震，黄土区民居损毁明显。",
+      "links_to_topics": [
+        "em_rebuild",
+        "em_post_safety"
+      ]
+    },
+    {
+      "id": "real_jinggu_20141007",
+      "name": "云南景谷地震",
+      "time": "2014-10-07 21:49:39",
+      "magnitude": 6.6,
+      "depth": 5.0,
+      "location": "云南省普洱市景谷县",
+      "region": "云南",
+      "latitude": 23.39,
+      "longitude": 100.47,
+      "intensity": "Ⅷ度区参考",
+      "description": "2014年景谷6.6级地震，浅源地震特征明显。",
+      "links_to_topics": [
+        "em_indoor",
+        "em_aftershock"
+      ]
+    },
+    {
+      "id": "real_qiaojia_20200518",
+      "name": "云南昭通巧家地震",
+      "time": "2020-05-18 21:47:21",
+      "magnitude": 5.0,
+      "depth": 8.0,
+      "location": "云南省昭通市巧家县",
+      "region": "云南",
+      "latitude": 27.18,
+      "longitude": 103.16,
+      "intensity": "Ⅵ—Ⅶ度参考",
+      "description": "2020年巧家5.0级地震，夜间震动引发公众关注。",
+      "links_to_topics": [
+        "em_realtime_info",
+        "em_indoor"
+      ]
+    },
+    {
+      "id": "real_menyuan_20220108",
+      "name": "青海门源地震",
+      "time": "2022-01-08 01:45:27",
+      "magnitude": 6.9,
+      "depth": 10.0,
+      "location": "青海省海北州门源县",
+      "region": "青海",
+      "latitude": 37.77,
+      "longitude": 101.26,
+      "intensity": "Ⅸ度区参考",
+      "description": "2022年门源6.9级地震，兰新高铁等交通设施抢修受关注。",
+      "links_to_topics": [
+        "em_outdoor",
+        "em_aftershock"
+      ]
+    },
+    {
+      "id": "real_lushan_20220601",
+      "name": "四川雅安芦山（2022）地震",
+      "time": "2022-06-01 17:00:12",
+      "magnitude": 6.1,
+      "depth": 10.0,
+      "location": "四川省雅安市芦山县",
+      "region": "四川",
+      "latitude": 30.37,
+      "longitude": 102.94,
+      "intensity": "Ⅷ度区参考",
+      "description": "2022年芦山6.1级地震，与2013年芦山地震同区再次发生。",
+      "links_to_topics": [
+        "em_aftershock",
+        "em_post_safety"
+      ]
+    },
+    {
+      "id": "real_markang_20220610",
+      "name": "四川阿坝马尔康地震",
+      "time": "2022-06-10 01:28:02",
+      "magnitude": 5.8,
+      "depth": 10.0,
+      "location": "四川省阿坝州马尔康市",
+      "region": "四川",
+      "latitude": 31.93,
+      "longitude": 100.91,
+      "intensity": "Ⅶ度区参考",
+      "description": "2022年马尔康地震，高原山区夜间应急响应。",
+      "links_to_topics": [
+        "em_comms",
+        "em_shelter"
+      ]
+    },
+    {
+      "id": "real_hualien_20180206",
+      "name": "台湾花莲地震（2018）",
+      "time": "2018-02-06 23:50:42",
+      "magnitude": 6.4,
+      "depth": 10.0,
+      "location": "台湾花莲近海",
+      "region": "台湾",
+      "latitude": 24.13,
+      "longitude": 121.69,
+      "intensity": "震度参考高",
+      "description": "2018年花莲地震，部分楼宇倾斜倒塌案例典型。",
+      "links_to_topics": [
+        "em_highrise",
+        "em_aftershock"
+      ]
+    },
+    {
+      "id": "real_hualien_20240403",
+      "name": "台湾花莲地震（2024）",
+      "time": "2024-04-03 07:58:09",
+      "magnitude": 7.3,
+      "depth": 15.6,
+      "location": "台湾花莲县近海",
+      "region": "台湾",
+      "latitude": 23.82,
+      "longitude": 121.74,
+      "intensity": "震度参考高",
+      "description": "2024年花莲7.3级地震，预警与余震序列引发广泛关注。",
+      "links_to_topics": [
+        "em_warning",
+        "em_aftershock"
+      ]
+    },
+    {
+      "id": "real_jiashi_20030224",
+      "name": "新疆伽师地震（2003）",
+      "time": "2003-02-24 10:03:47",
+      "magnitude": 6.8,
+      "depth": 20.0,
+      "location": "新疆喀什地区伽师县",
+      "region": "新疆",
+      "latitude": 39.57,
+      "longitude": 77.2,
+      "intensity": "Ⅷ度区参考",
+      "description": "2003年伽师6.8级地震，南疆强震活动受关注。",
+      "links_to_topics": [
+        "em_aftershock",
+        "em_rebuild"
+      ]
+    },
+    {
+      "id": "real_yutian_20140212",
+      "name": "新疆于田地震",
+      "time": "2014-02-12 17:19:49",
+      "magnitude": 7.3,
+      "depth": 12.0,
+      "location": "新疆和田地区于田县",
+      "region": "新疆",
+      "latitude": 36.14,
+      "longitude": 82.52,
+      "intensity": "Ⅸ度区参考",
+      "description": "2014年于田7.3级地震，人烟稀少区仍造成显著地表破坏。",
+      "links_to_topics": [
+        "em_landslide",
+        "em_outdoor"
+      ]
+    },
+    {
+      "id": "real_hanshin_19950117",
+      "name": "日本阪神淡路大地震",
+      "time": "1995-01-17 05:46:52",
+      "magnitude": 6.9,
+      "depth": 16.0,
+      "location": "日本兵库县南部",
+      "region": "国际参考",
+      "latitude": 34.6,
+      "longitude": 135.0,
+      "intensity": "日本震度7（参考）",
+      "description": "1995年阪神地震，城市直下型地震与高速公路垮塌案例经典。",
+      "links_to_topics": [
+        "em_highrise",
+        "em_fire_secondary"
+      ]
+    },
+    {
+      "id": "real_sumatra_20041226",
+      "name": "印尼苏门答腊—安达曼地震",
+      "time": "2004-12-26 08:58:53",
+      "magnitude": 9.1,
+      "depth": 30.0,
+      "location": "印尼苏门答腊近海",
+      "region": "国际参考",
+      "latitude": 3.3,
+      "longitude": 95.98,
+      "intensity": "海啸重灾",
+      "description": "2004年Mw9.1巨震引发印度洋海啸，凸显海啸预警重要性。",
+      "links_to_topics": [
+        "em_tsunami",
+        "em_outdoor"
+      ]
+    },
+    {
+      "id": "real_chile_20100227",
+      "name": "智利马乌莱大地震",
+      "time": "2010-02-27 03:34:14",
+      "magnitude": 8.8,
+      "depth": 35.0,
+      "location": "智利马乌莱附近",
+      "region": "国际参考",
+      "latitude": -36.12,
+      "longitude": -72.9,
+      "intensity": "海啸风险高",
+      "description": "2010年智利Mw8.8地震，海啸与建筑抗震表现对照案例。",
+      "links_to_topics": [
+        "em_tsunami",
+        "em_highrise"
+      ]
+    },
+    {
+      "id": "real_mexico_19850919",
+      "name": "墨西哥城地震",
+      "time": "1985-09-19 07:17:49",
+      "magnitude": 8.0,
+      "depth": 20.0,
+      "location": "墨西哥米却肯近海",
+      "region": "国际参考",
+      "latitude": 18.19,
+      "longitude": -102.53,
+      "intensity": "远场高烈度",
+      "description": "1985年墨西哥地震，远场软土场地放大效应著名。",
+      "links_to_topics": [
+        "em_highrise",
+        "em_rebuild"
+      ]
+    },
+    {
+      "id": "real_sichuan_kangding_20141122",
+      "name": "四川康定地震",
+      "time": "2014-11-22 16:55:27",
+      "magnitude": 6.3,
+      "depth": 18.0,
+      "location": "四川省甘孜州康定市",
+      "region": "四川",
+      "latitude": 30.26,
+      "longitude": 101.73,
+      "intensity": "Ⅷ度区参考",
+      "description": "2014年康定6.3级地震，鲜水河断裂带活动受关注。",
+      "links_to_topics": [
+        "em_aftershock",
+        "em_outdoor"
+      ]
+    },
+    {
+      "id": "real_yunnan_mangshi_20210521",
+      "name": "云南芒市地震",
+      "time": "2021-05-21 22:48:00",
+      "magnitude": 5.0,
+      "depth": 10.0,
+      "location": "云南省德宏州芒市",
+      "region": "云南",
+      "latitude": 24.4,
+      "longitude": 98.55,
+      "intensity": "Ⅵ度参考",
+      "description": "2021年芒市附近地震，与漾濞地震同日引发关注。",
+      "links_to_topics": [
+        "em_realtime_info",
+        "em_indoor"
+      ]
+    },
+    {
+      "id": "real_sichuan_muli_20210610",
+      "name": "四川木里地震",
+      "time": "2021-06-10 01:46:00",
+      "magnitude": 5.0,
+      "depth": 10.0,
+      "location": "四川省凉山州木里县",
+      "region": "四川",
+      "latitude": 28.0,
+      "longitude": 101.0,
+      "intensity": "Ⅵ度参考",
+      "description": "2021年木里附近地震序列，山区应急通信受考验。",
+      "links_to_topics": [
+        "em_comms",
+        "em_landslide"
+      ]
+    },
+    {
+      "id": "real_hebei_tangshan_after_19760728",
+      "name": "唐山余震（典型序列参考）",
+      "time": "1976-07-28 18:45:00",
+      "magnitude": 7.1,
+      "depth": 10.0,
+      "location": "河北省唐山市附近",
+      "region": "河北",
+      "latitude": 39.5,
+      "longitude": 118.1,
+      "intensity": "高烈度参考",
+      "description": "唐山主震后强余震显著，强调余震期勿返危楼。",
+      "links_to_topics": [
+        "em_aftershock",
+        "em_post_safety"
+      ]
+    },
+    {
+      "id": "real_sichuan_beichuan_ref_2008",
+      "name": "汶川地震北川极震区参考",
+      "time": "2008-05-12 14:28:04",
+      "magnitude": 8.0,
+      "depth": 14.0,
+      "location": "四川省绵阳市北川羌族自治县",
+      "region": "四川",
+      "latitude": 31.83,
+      "longitude": 104.45,
+      "intensity": "XI度区参考",
+      "description": "汶川地震北川极震区城镇几乎被毁，次生滑坡严重。",
+      "links_to_topics": [
+        "em_landslide",
+        "em_rebuild"
+      ]
     }
   ]
 }
