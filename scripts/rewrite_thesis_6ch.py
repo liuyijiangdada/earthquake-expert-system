@@ -320,11 +320,70 @@ def apply_content(
     for i, line in enumerate(new_toc):
         if i < len(toc_paras):
             set_para_text(toc_paras[i], line)
-            _format_para(toc_paras[i], "body", mark_red=mark_red)
+            # 正文致谢不改；目录「致谢」条目也不标红，避免与「致谢非红」口径冲突
+            line_red = mark_red and line.strip() != "致谢"
+            _format_para(toc_paras[i], "body", mark_red=line_red)
         else:
             break
     for j in range(len(new_toc), len(toc_paras)):
         set_para_text(toc_paras[j], "")
+
+    _refresh_figure_table_toc(doc, mark_red=mark_red)
+
+
+def _refresh_figure_table_toc(doc: Document, *, mark_red: bool = True) -> None:
+    """清空旧八章遗留的图/表目录条目，写入六章制图题表题清单。"""
+    fig_lines = [
+        "图3-1  地震应急知识图谱模式示意（正文预留）",
+        "图4-1  端到端推理流程",
+        "图5-1  四基线事实一致性对比（60题离线消融）",
+        "图5-2  四基线要点完整性与格式合规对比（60题离线消融）",
+    ]
+    table_lines = [
+        "表5-1  离线消融实验配置快照",
+        "表5-2  四基线60题自动评分汇总",
+        "表5-3  与 GraphRAG / KnowledGPT 的设计对比（文字表）",
+    ]
+
+    def _rewrite_list_section(title: str, lines: list[str]) -> None:
+        try:
+            start = _find_para_index(doc, lambda t: t == title)
+        except KeyError:
+            return
+        # Collect until next major title; do not stop on blank lines mid-list
+        stop_exact = {"目录", "图目录", "表目录", "摘要", "ABSTRACT"}
+        entries: list = []
+        end_idx = start + 1
+        for i in range(start + 1, len(doc.paragraphs)):
+            t = doc.paragraphs[i].text.strip()
+            if t in stop_exact:
+                break
+            if t.startswith("第") and "章" in t[:8]:
+                break
+            if t.startswith(("1.", "1．")) and "研究" in t:
+                break
+            end_idx = i + 1
+            if t:
+                entries.append(doc.paragraphs[i])
+        # Also collect any leftover 图/表 lines that look like old TOC numbering
+        # (already included above if contiguous)
+
+        for i, line in enumerate(lines):
+            if i < len(entries):
+                set_para_text(entries[i], line)
+                _format_para(entries[i], "body", mark_red=mark_red)
+            else:
+                anchor = entries[-1] if entries else doc.paragraphs[start]
+                new_p = _insert_para_after(anchor, line, "body", mark_red=mark_red)
+                entries.append(new_p)
+        for j in range(len(lines), len(entries)):
+            set_para_text(entries[j], "")
+            # strip runs so empty paras don't resurface as ghost TOC
+            for r in entries[j].runs:
+                r.text = ""
+
+    _rewrite_list_section("图目录", fig_lines)
+    _rewrite_list_section("表目录", table_lines)
 
 
 def main() -> None:
