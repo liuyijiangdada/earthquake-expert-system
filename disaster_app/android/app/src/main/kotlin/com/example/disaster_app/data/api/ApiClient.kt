@@ -10,7 +10,8 @@ import java.util.concurrent.TimeUnit
 
 object ApiClient {
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY
+        // HEADERS only — BODY would log login credentials in Logcat
+        level = HttpLoggingInterceptor.Level.HEADERS
     }
 
     private val okHttpClient = OkHttpClient.Builder()
