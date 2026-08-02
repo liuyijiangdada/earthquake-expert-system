@@ -15,7 +15,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
 
 class ChatRepository {
-    private val apiService = ApiClient.apiService
+    private fun api() = ApiClient.apiService
 
     private fun buildHistory(messages: List<ChatMessage>): List<HistoryTurn> {
         return messages
@@ -33,7 +33,7 @@ class ChatRepository {
             val request = LlmQueryRequest(
                 params = LlmQueryParams(input = userInput, history = history)
             )
-            val response = apiService.queryLlm(request)
+            val response = api().queryLlm(request)
             if (!response.error.isNullOrBlank()) {
                 Result.failure(Exception(response.error))
             } else if (response.response.isNullOrBlank()) {
@@ -71,9 +71,9 @@ class ChatRepository {
             } else null
 
             val response = if (historyPart != null) {
-                apiService.multimodalQuery(imagePart, inputPart, historyPart)
+                api().multimodalQuery(imagePart, inputPart, historyPart)
             } else {
-                apiService.multimodalQuery(imagePart, inputPart, null)
+                api().multimodalQuery(imagePart, inputPart, null)
             }
             if (!response.error.isNullOrBlank()) {
                 Result.failure(Exception(response.error))
