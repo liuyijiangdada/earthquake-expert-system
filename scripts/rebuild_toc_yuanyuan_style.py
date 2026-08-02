@@ -350,8 +350,14 @@ def main(argv: list[str] | None = None) -> int:
 
     doc.save(str(docx_path))
     print(f"已保存：{docx_path}")
-    print("请在 WPS/Word 中打开文档，右键目录→更新域。")
-    print("提示：全选（Ctrl/Cmd+A）后按 F9，可一并刷新图/表目录页码。")
+    print()
+    print("=== 请在 WPS/Word 中完成以下操作 ===")
+    print(f"1. 打开：{docx_path.name}")
+    print("2. 在主目录灰色域上右键 → 更新域 → 更新整个目录")
+    print("3. 全选（Ctrl/Cmd+A）→ 按 F9 或选「更新域」，刷新图/表目录页码")
+    print("4. 目视对照媛媛论文：主目录应含摘要、ABSTRACT、图目录、表目录入口；")
+    print("   其后为独立的图目录页与表目录页（主目录不含图/表题注条目）。")
+    print("   （摘要等入口由大纲级别经 TOC 域自动生成；若缺失可联系维护者。")
     return 0
 
 

@@ -1,6 +1,6 @@
 # 论文目录重建（媛媛样式）Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** 按戚媛媛论文结构，一键重建 `华东师范大学硕士论文.docx` 的主目录、图目录、表目录。
 
@@ -39,7 +39,7 @@
   - `is_caption(text: str, kind: str) -> bool` — `kind` 为 `"图"` 或 `"表"`
   - `parse_label(text: str, kind: str) -> tuple[int, int, str, str] | None` — `(chapter, seq, label, title)`，`label` 无空格如 `图3-1`
 
-- [ ] **Step 1: 写失败单测**
+- [x] **Step 1: 写失败单测**
 
 ```python
 # tests/test_rebuild_toc_yuanyuan_style.py
@@ -70,12 +70,12 @@ def test_parse_label_normalizes():
     assert parse_label("表 5-1  实验环境配置", "表") == (5, 1, "表5-1", "实验环境配置")
 ```
 
-- [ ] **Step 2: 跑单测确认失败**
+- [x] **Step 2: 跑单测确认失败**
 
 Run: `python3 -m pytest tests/test_rebuild_toc_yuanyuan_style.py -v`  
 Expected: FAIL（模块/函数不存在）
 
-- [ ] **Step 3: 实现最小纯函数**
+- [x] **Step 3: 实现最小纯函数**
 
 在 `scripts/rebuild_toc_yuanyuan_style.py` 写入：
 
@@ -125,12 +125,12 @@ def parse_label(text: str, kind: str):
     return int(nums.group(1)), int(nums.group(2)), label, m.group(2).strip()
 ```
 
-- [ ] **Step 4: 跑单测确认通过**
+- [x] **Step 4: 跑单测确认通过**
 
 Run: `python3 -m pytest tests/test_rebuild_toc_yuanyuan_style.py -v`  
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add scripts/rebuild_toc_yuanyuan_style.py tests/test_rebuild_toc_yuanyuan_style.py
@@ -154,7 +154,7 @@ git commit -m "feat(thesis): add caption helpers for yuanyuan-style TOC rebuild"
   - `ensure_bookmark(para, name, bm_id) -> str`
   - `main(docx_path: Path) -> int`（本任务先完成备份/大纲/清空主目录/插 TOC）
 
-- [ ] **Step 1: 实现备份与大纲级别**
+- [x] **Step 1: 实现备份与大纲级别**
 
 ```python
 def backup_docx(path: Path) -> Path:
@@ -234,7 +234,7 @@ def insert_toc_field(after_elem) -> None:
 
 同时为「摘要」「ABSTRACT」「图目录」「表目录」确保书签：`_TocFrontAbstract`、`_TocFrontABSTRACT`、`_TocFrontFigList`、`_TocFrontTblList`。
 
-- [ ] **Step 2: 在 main 中串起：备份 → 大纲 → 定位「目录」「图目录」→ 清空中间 → 插 TOC**
+- [x] **Step 2: 在 main 中串起：备份 → 大纲 → 定位「目录」「图目录」→ 清空中间 → 插 TOC**
 
 ```python
 def main(argv: list[str] | None = None) -> int:
@@ -252,7 +252,7 @@ def main(argv: list[str] | None = None) -> int:
     ...
 ```
 
-- [ ] **Step 3: 干跑验证定位**
+- [x] **Step 3: 干跑验证定位**
 
 Run:
 
@@ -269,7 +269,7 @@ PY
 
 Expected: 依次出现 `目录`、（正文前）`图目录`、`表目录`、正文 `第一章`
 
-- [ ] **Step 4: Commit 脚本进度**
+- [x] **Step 4: Commit 脚本进度**
 
 ```bash
 git add scripts/rebuild_toc_yuanyuan_style.py
@@ -292,7 +292,7 @@ git commit -m "feat(thesis): outline levels and TOC field scaffolding"
   - `rebuild_fig_tbl_tocs(doc) -> tuple[int, int]`
   - 完整 `main()`
 
-- [ ] **Step 1: 实现收集题注、补书签、构造条目（复用现有 `rebuild_all_tocs.py` 的 XML 形态）**
+- [x] **Step 1: 实现收集题注、补书签、构造条目（复用现有 `rebuild_all_tocs.py` 的 XML 形态）**
 
 ```python
 def get_bookmark(para) -> str | None:
@@ -351,7 +351,7 @@ def collect_captions(paras, kind: str, min_idx: int):
     return [(p, label, title, bm) for _, _, _, p, label, title, bm in items]
 ```
 
-- [ ] **Step 2: 完成 `main()`：清空主目录区 → TOC → 清空并插入图/表目录 → 标题居中 → 保存**
+- [x] **Step 2: 完成 `main()`：清空主目录区 → TOC → 清空并插入图/表目录 → 标题居中 → 保存**
 
 关键逻辑顺序：
 
@@ -366,7 +366,7 @@ def collect_captions(paras, kind: str, min_idx: int):
 9. 「目录」「图目录」「表目录」标题 `jc=center`
 10. `doc.save`
 
-- [ ] **Step 3: 运行脚本**
+- [x] **Step 3: 运行脚本**
 
 Run: `python3 scripts/rebuild_toc_yuanyuan_style.py`  
 Expected 控制台类似：
@@ -382,7 +382,7 @@ Expected 控制台类似：
 请在 WPS/Word 中打开文档，右键目录→更新域。
 ```
 
-- [ ] **Step 4: 结构化验收**
+- [x] **Step 4: 结构化验收**
 
 Run:
 
@@ -429,7 +429,7 @@ PY
 
 Expected: `OK`；`main_toc_bad 0`；图 17 / 表 11；存在 TOC 域
 
-- [ ] **Step 5: Commit 脚本（docx 默认不提交，除非用户要求）**
+- [x] **Step 5: Commit 脚本（docx 默认不提交，除非用户要求）**
 
 ```bash
 git add scripts/rebuild_toc_yuanyuan_style.py tests/test_rebuild_toc_yuanyuan_style.py
@@ -443,7 +443,7 @@ git commit -m "feat(thesis): rebuild TOC/figure/table lists in yuanyuan style"
 **Files:**
 - Modify: `docs/superpowers/plans/2026-08-02-thesis-toc-yuanyuan-style.md`（勾选完成项）
 
-- [ ] **Step 1: 在终端打印最终操作说明（脚本已含）**
+- [x] **Step 1: 在终端打印最终操作说明（脚本已含）**
 
 告知用户：
 
@@ -452,11 +452,11 @@ git commit -m "feat(thesis): rebuild TOC/figure/table lists in yuanyuan style"
 3. 全选（Ctrl/Cmd+A）→ F9 或「更新域」，刷新图/表目录页码
 4. 目视对照媛媛：主目录含摘要/ABSTRACT/图目录/表目录入口；其后为独立图目录、表目录
 
-- [ ] **Step 2: 若 TOC 未自动收录摘要等入口**
+- [x] **Step 2: 若 TOC 未自动收录摘要等入口**
 
 在脚本中于 TOC 域前插入 4 条静态 `PAGEREF` 入口（摘要 / ABSTRACT / 图目录 / 表目录），再重跑验收。
 
-- [ ] **Step 3: Commit 计划勾选（如有文档变更）**
+- [x] **Step 3: Commit 计划勾选（如有文档变更）**
 
 ```bash
 git add docs/superpowers/plans/2026-08-02-thesis-toc-yuanyuan-style.md
