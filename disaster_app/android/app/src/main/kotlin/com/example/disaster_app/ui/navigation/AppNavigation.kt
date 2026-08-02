@@ -45,8 +45,12 @@ val bottomNavItems = listOf(
     Screen.Volunteer
 )
 
+@Suppress("UNUSED_PARAMETER")
 @Composable
-fun AppNavigation() {
+fun AppNavigation(
+    username: String = "",
+    onLogout: () -> Unit = {}
+) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
