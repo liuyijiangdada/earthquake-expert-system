@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.disaster_app.ui.family.FamilyPage
 import com.example.disaster_app.ui.help.HelpPage
 import com.example.disaster_app.ui.home.HomePage
+import com.example.disaster_app.ui.more.MorePage
 import com.example.disaster_app.ui.report.ReportPage
 import com.example.disaster_app.ui.safety.SafetyPage
 import com.example.disaster_app.ui.volunteer.VolunteerPage
@@ -30,22 +31,15 @@ sealed class Screen(
 ) {
     data object Home : Screen("home", "问答", Icons.Default.Forum)
     data object Safety : Screen("safety", "指引", Icons.Default.MenuBook)
+    data object More : Screen("more", "更多", Icons.Default.MoreHoriz)
     data object Help : Screen("help", "求助", Icons.Default.Warning)
     data object Family : Screen("family", "家人", Icons.Default.People)
     data object Report : Screen("report", "上报", Icons.Default.Description)
     data object Volunteer : Screen("volunteer", "志愿", Icons.Default.VolunteerActivism)
 }
 
-val bottomNavItems = listOf(
-    Screen.Home,
-    Screen.Safety,
-    Screen.Help,
-    Screen.Family,
-    Screen.Report,
-    Screen.Volunteer
-)
+val bottomNavItems = listOf(Screen.Home, Screen.Safety, Screen.More)
 
-@Suppress("UNUSED_PARAMETER")
 @Composable
 fun AppNavigation(
     username: String = "",
@@ -54,29 +48,34 @@ fun AppNavigation(
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
+    val hideBottomBar = currentDestination?.route in setOf(
+        Screen.Help.route, Screen.Family.route, Screen.Report.route, Screen.Volunteer.route
+    )
 
     Scaffold(
         containerColor = BgDeep,
         bottomBar = {
-            NavigationBar(
-                containerColor = BgCard,
-                tonalElevation = 0.dp
-            ) {
-                bottomNavItems.forEach { screen ->
-                    NavigationBarItem(
-                        icon = { Icon(screen.icon, contentDescription = screen.title) },
-                        label = { Text(screen.title) },
-                        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
-                        onClick = {
-                            navController.navigate(screen.route) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
+            if (!hideBottomBar) {
+                NavigationBar(
+                    containerColor = BgCard,
+                    tonalElevation = 0.dp
+                ) {
+                    bottomNavItems.forEach { screen ->
+                        NavigationBarItem(
+                            icon = { Icon(screen.icon, contentDescription = screen.title) },
+                            label = { Text(screen.title) },
+                            selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
+                            onClick = {
+                                navController.navigate(screen.route) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
-                                launchSingleTop = true
-                                restoreState = true
                             }
-                        }
-                    )
+                        )
+                    }
                 }
             }
         }
@@ -87,10 +86,17 @@ fun AppNavigation(
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(Screen.Home.route) { HomePage() }
-            composable(Screen.Family.route) { FamilyPage() }
-            composable(Screen.Help.route) { HelpPage() }
-            composable(Screen.Report.route) { ReportPage() }
             composable(Screen.Safety.route) { SafetyPage() }
+            composable(Screen.More.route) {
+                MorePage(
+                    username = username,
+                    onOpen = { route -> navController.navigate(route) },
+                    onLogout = onLogout
+                )
+            }
+            composable(Screen.Help.route) { HelpPage() }
+            composable(Screen.Family.route) { FamilyPage() }
+            composable(Screen.Report.route) { ReportPage() }
             composable(Screen.Volunteer.route) { VolunteerPage() }
         }
     }
