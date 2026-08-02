@@ -1,7 +1,7 @@
 # 安卓 App：登录门控 + 导航重组设计
 
 日期：2026-08-02  
-状态：待实现  
+状态：已实现（分支 feature/android-login-nav；设备 UI 冒烟待本地 adb）  
 范围：仅 `disaster_app/android`（方案 2）  
 关联作废：`2026-08-02-mobile-ux-design.md`（Web 窄屏优化，对象选错）
 
