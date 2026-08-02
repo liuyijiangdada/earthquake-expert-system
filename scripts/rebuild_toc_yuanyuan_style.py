@@ -25,6 +25,14 @@ FRONT_BOOKMARKS = (
     ("表目录", "_TocFrontTblList", 8004),
 )
 
+# 主目录静态入口（摘要/ABSTRACT/图目录/表目录），插在 TOC 域前，不依赖更新域即可看见
+FRONT_TOC_ENTRIES = (
+    ("摘要", "_TocFrontAbstract"),
+    ("ABSTRACT", "_TocFrontABSTRACT"),
+    ("图目录", "_TocFrontFigList"),
+    ("表目录", "_TocFrontTblList"),
+)
+
 def is_caption(text: str, kind: str) -> bool:
     t = text.strip()
     if not re.match(rf"^{kind}\s*\d+-\d+\s+\S", t):
@@ -139,18 +147,15 @@ def get_bookmark(para) -> str | None:
 
 
 def add_bookmark(para, name: str, bm_id: int) -> str:
-    para._p.insert(
-        0,
-        parse_xml(f'<w:bookmarkStart {nsdecls("w")} w:id="{bm_id}" w:name="{name}"/>'),
-    )
-    para._p.append(parse_xml(f'<w:bookmarkEnd {nsdecls("w")} w:id="{bm_id}"/>'))
-    return name
+    """兼容旧调用；幂等插入，委托 ensure_bookmark。"""
+    return ensure_bookmark(para, name, bm_id)
 
 
 def make_toc_entry(label: str, title: str, bookmark: str, tab_pos: str = "8295"):
     safe = (
         title.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
     )
+    display = f"{label}  {safe}".strip() if safe else label
     ppr = (
         "<w:pPr>"
         f'<w:tabs><w:tab w:val="right" w:leader="dot" w:pos="{tab_pos}"/></w:tabs>'
@@ -164,7 +169,7 @@ def make_toc_entry(label: str, title: str, bookmark: str, tab_pos: str = "8295")
     return parse_xml(
         f'<w:p {nsdecls("w")}>{ppr}'
         f'<w:hyperlink w:anchor="{bookmark}" w:history="1">'
-        f'<w:r>{rpr}<w:t xml:space="preserve">{label}  {safe}</w:t></w:r>'
+        f'<w:r>{rpr}<w:t xml:space="preserve">{display}</w:t></w:r>'
         f"<w:r><w:tab/></w:r></w:hyperlink>"
         f'<w:r><w:fldChar w:fldCharType="begin"/></w:r>'
         f'<w:r><w:instrText xml:space="preserve"> PAGEREF {bookmark} \\h </w:instrText></w:r>'
@@ -172,6 +177,21 @@ def make_toc_entry(label: str, title: str, bookmark: str, tab_pos: str = "8295")
         f"<w:r>{rpr}<w:t>1</w:t></w:r>"
         f'<w:r><w:fldChar w:fldCharType="end"/></w:r></w:p>'
     )
+
+
+def make_front_toc_entry(title: str, bookmark: str, tab_pos: str = "8295"):
+    """主目录前端静态入口：标题 + 点引导线 + PAGEREF。"""
+    return make_toc_entry(title, "", bookmark, tab_pos)
+
+
+def insert_front_toc_entries(after_elem) -> object:
+    """在 after_elem 后插入 4 条前端入口，返回最后插入的元素。"""
+    prev = after_elem
+    for title, bookmark in FRONT_TOC_ENTRIES:
+        elem = make_front_toc_entry(title, bookmark)
+        prev.addnext(elem)
+        prev = elem
+    return prev
 
 
 def collect_captions(paras, kind: str, min_idx: int):
@@ -336,8 +356,10 @@ def main(argv: list[str] | None = None) -> int:
 
     removed = clear_between(toc_heading._p, lambda t: t == "图目录")
     print(f"清空主目录区: {removed}")
-    # TOC 域依赖大纲级别收录摘要/ABSTRACT/图目录/表目录及章节
-    insert_toc_field(toc_heading._p)
+    # 静态 PAGEREF 入口（不依赖更新域即可看见）+ TOC 域（更新后填充章节）
+    last_front = insert_front_toc_entries(toc_heading._p)
+    print(f"主目录前端入口: {[t for t, _ in FRONT_TOC_ENTRIES]}")
+    insert_toc_field(last_front)
 
     n_fig, n_tbl = rebuild_fig_tbl_tocs(doc)
     print(f"图目录 {n_fig} 条，表目录 {n_tbl} 条。")
@@ -357,7 +379,7 @@ def main(argv: list[str] | None = None) -> int:
     print("3. 全选（Ctrl/Cmd+A）→ 按 F9 或选「更新域」，刷新图/表目录页码")
     print("4. 目视对照媛媛论文：主目录应含摘要、ABSTRACT、图目录、表目录入口；")
     print("   其后为独立的图目录页与表目录页（主目录不含图/表题注条目）。")
-    print("   （摘要等入口由大纲级别经 TOC 域自动生成；若缺失可联系维护者。")
+    print("   （摘要等入口为静态 PAGEREF；章节列表由 TOC 域更新后生成。）")
     return 0
 
 
