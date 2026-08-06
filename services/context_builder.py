@@ -149,7 +149,13 @@ class QueryContextBuilder:
 
         return kg_context
 
-    def init_response_meta(self, *, for_vision: bool, normalized_history: list) -> dict:
+    def init_response_meta(
+        self,
+        *,
+        for_vision: bool,
+        normalized_history: list,
+        user_query: str = "",
+    ) -> dict:
         cfg = self.config
         return {
             "kg_enabled": bool(getattr(cfg, "KG_CONTEXT_ENABLED", True)),
@@ -163,6 +169,7 @@ class QueryContextBuilder:
             "multimodal_backend": "qwen_vl" if for_vision else "text_llm",
             "history_rounds": len(normalized_history) // 2,
             "history_messages": len(normalized_history),
+            "user_query": user_query or "",
         }
 
     def step_classify(self, input_text: str, response_meta: dict):
@@ -260,6 +267,8 @@ class QueryContextBuilder:
             dynamic_section = dynamic_result.to_context_text()
             response_meta["dynamic_source"] = dynamic_result.source
             response_meta["dynamic_items_count"] = len(dynamic_result.items)
+            response_meta["dynamic_items"] = list(dynamic_result.items[:5])
+            response_meta["dynamic_fetched_at"] = dynamic_result.fetched_at or ""
 
         phase_instruction = ""
         if schedule_decision and schedule_decision.prompt_suffix:
@@ -299,7 +308,10 @@ class QueryContextBuilder:
     ) -> str:
         deps = self._deps
         cfg = self.config
-        prompt = "你是一个地震知识专家。请结合【知识图谱】与【参考资料】回答问题。\n\n"
+        prompt = (
+            "你是地震应急问答专家。请结合【知识图谱】【参考资料】与【动态信息】作答；"
+            "语气肯定、结论明确，直接回答用户问题。\n\n"
+        )
 
         if phase_tag and phase_tag != "通用":
             prompt += f"当前判定为【{phase_tag}阶段】的问题。\n\n"
@@ -316,9 +328,11 @@ class QueryContextBuilder:
                 prompt += media_section + "\n"
 
         prompt += (
-            "规则：数值、时间、震级、地点等可验证事实以知识图谱为准；参考资料仅作步骤与表述补充；"
-            "动态信息为实时数据，可能随时更新。"
-            "若三者均未提供有效条目，可基于常识回答，并简要说明未命中本地知识库。\n"
+            "规则：震级、时间、地点等数值事实优先采信【动态信息】速报字段，其次采信【知识图谱】；"
+            "【参考资料】仅补充避险步骤与表述。"
+            "若【动态信息】已给出震级/地点/时间，必须直接、肯定地写出这些参数（可注明来源为台网或国际目录速报），"
+            "禁止使用“无法准确确定”“尚未得到权威确认”“具体震级需等待正式报告”等犹豫句式。"
+            "仅当动态与图谱均无相关条目时，才说明暂无匹配速报，并给出如何查询官方渠道的明确指引。\n"
         )
 
         if sections.phase_instruction:
@@ -336,10 +350,10 @@ class QueryContextBuilder:
             prompt += (
                 "回答要求：\n"
                 "1. 直接回答问题，不要有任何引言或开场白\n"
-                "2. 优先采用知识图谱中的可验证事实，合理利用参考资料与动态信息\n"
-                "3. 回答要简洁明了，避免冗长\n"
+                "2. 有动态速报或图谱事实时，先给出明确结论（如震级、震中），再补一句来源或避险要点\n"
+                "3. 语气肯定、表述干脆，避免冗长与推诿\n"
                 "4. 不要使用任何强调符号如***\n"
-                "5. 如果知识图谱与参考资料均未提供相关信息，请基于你的知识提供合理回答，并说明未命中本地知识库\n"
+                "5. 禁止输出“无法确定”“尚未确认”“仅供参考”等削弱结论的措辞\n"
             )
 
         if sections.validity_hint:
@@ -369,7 +383,9 @@ class QueryContextBuilder:
         """分步组装上下文，供 LangGraph 与 prepare 共用。返回 (prompt, response_meta, phase_tag)。"""
         normalized_history = self.normalize_history(history)
         response_meta = self.init_response_meta(
-            for_vision=for_vision, normalized_history=normalized_history
+            for_vision=for_vision,
+            normalized_history=normalized_history,
+            user_query=input_text,
         )
         phase_result, phase_tag = self.step_classify(input_text, response_meta)
         knowledge_signals = self.step_compute_signals(

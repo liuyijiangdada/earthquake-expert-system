@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
 import AppHeader from '@/components/AppHeader.vue'
+import Login from '@/components/Login.vue'
 import QuickPanel from '@/components/QuickPanel.vue'
 import ChatMessages from '@/components/ChatMessages.vue'
 import Composer from '@/components/Composer.vue'
@@ -8,9 +9,26 @@ import StatsBar from '@/components/StatsBar.vue'
 import InsightChart from '@/components/InsightChart.vue'
 import { WELCOME } from '@/constants.js'
 import { nowTimeStr } from '@/utils/format.js'
-import { queryLlm, queryKgAll, updateEarthquakeData } from '@/api.js'
+import { queryLlm, queryKgAll, updateEarthquakeData, submitFeedback, logout as apiLogout } from '@/api.js'
 import { compressImageDataUrl } from '@/utils/imageCompress.js'
 import { buildChatHistory } from '@/utils/chatHistory.js'
+
+const AUTH_KEY = 'eq_auth_user'
+
+function readAuth() {
+  try {
+    const raw = localStorage.getItem(AUTH_KEY)
+    if (!raw) return null
+    const parsed = JSON.parse(raw)
+    if (parsed?.username) return parsed
+  } catch {
+    /* ignore */
+  }
+  return null
+}
+
+const authUser = ref(readAuth())
+const isAuthenticated = computed(() => !!authUser.value?.username)
 
 const userInput = ref('')
 const messages = ref([])
@@ -97,11 +115,43 @@ async function loadEarthquakeData() {
   }
 }
 
+function onLoginSuccess({ username }) {
+  const payload = { username, loggedInAt: new Date().toISOString() }
+  localStorage.setItem(AUTH_KEY, JSON.stringify(payload))
+  authUser.value = payload
+  if (!messages.value.length) {
+    pushMessage({ role: 'bot', text: WELCOME, feedback: false })
+  }
+  loadEarthquakeData()
+}
+
+async function onLogout() {
+  try {
+    await apiLogout()
+  } catch {
+    /* ignore */
+  }
+  localStorage.removeItem(AUTH_KEY)
+  authUser.value = null
+}
+
 let pollTimer
 onMounted(() => {
+  if (!isAuthenticated.value) return
   pushMessage({ role: 'bot', text: WELCOME, feedback: false })
   loadEarthquakeData()
   pollTimer = setInterval(loadEarthquakeData, 5 * 60 * 1000)
+})
+
+watch(isAuthenticated, (ok) => {
+  if (ok) {
+    if (!pollTimer) {
+      pollTimer = setInterval(loadEarthquakeData, 5 * 60 * 1000)
+    }
+  } else if (pollTimer) {
+    clearInterval(pollTimer)
+    pollTimer = null
+  }
 })
 
 onBeforeUnmount(() => {
@@ -249,11 +299,42 @@ async function sendImageMessage({ dataUrl, name, text }) {
   }
 }
 
-function onFeedback({ id, type }) {
-  const m = messages.value.find((x) => x.id === id)
-  if (!m || m.role !== 'bot') return
+async function onFeedback({ id, type }) {
+  const idx = messages.value.findIndex((x) => x.id === id)
+  const m = idx >= 0 ? messages.value[idx] : null
+  if (!m || m.role !== 'bot' || m.feedbackDone) return
+
+  let question = ''
+  for (let i = idx - 1; i >= 0; i -= 1) {
+    if (messages.value[i].role === 'user') {
+      question = messages.value[i].text || ''
+      break
+    }
+  }
+
   m.feedbackDone = true
-  m.feedbackNote = type === 'satisfied' ? '感谢反馈。' : '感谢反馈，我们会持续优化。'
+  m.feedbackNote = '正在提交反馈…'
+  try {
+    const { ok, data } = await submitFeedback({
+      type,
+      message_id: id,
+      question,
+      answer: m.text || '',
+      phase: m.phase || '',
+      static_confidence: m.staticConfidence,
+      reliability_hint: m.reliabilityHint || '',
+    })
+    if (!ok) {
+      m.feedbackDone = false
+      m.feedbackNote = data.error || '反馈提交失败，请稍后重试。'
+      return
+    }
+    m.feedbackNote =
+      type === 'satisfied' ? '已记录：回答有用，感谢反馈。' : '已记录：需改进，感谢反馈。'
+  } catch {
+    m.feedbackDone = false
+    m.feedbackNote = '反馈提交失败，请检查网络后重试。'
+  }
 }
 
 function onSubmitQuick(q) {
@@ -276,43 +357,52 @@ watch(
 <template>
   <div class="page-bg" aria-hidden="true"></div>
 
-  <AppHeader :badge-html="badgeHtml" :badge-warn="loadingBadge" />
+  <Login v-if="!isAuthenticated" @success="onLoginSuccess" />
 
-  <main class="container py-4">
-    <div class="row g-4">
-      <div class="col-lg-7">
-        <div class="card-dark h-100">
-          <div class="card-h text-white">
-            <i class="fas fa-comments text-info"></i>
-            应急问答对话
-          </div>
-          <div class="card-b" ref="chatRoot">
-            <QuickPanel v-model="userInput" @submit-quick="onSubmitQuick" />
-            <ChatMessages :messages="messages" :show-typing="showTyping" @feedback="onFeedback" />
-            <Composer
-              v-model="userInput"
-              :disabled="sending"
-              @send="sendMessage"
-              @send-image="sendImageMessage"
-              @clear="clearChat"
-              @refresh-data="refreshData"
-            />
+  <template v-else>
+    <AppHeader
+      :badge-html="badgeHtml"
+      :badge-warn="loadingBadge"
+      :username="authUser.username"
+      @logout="onLogout"
+    />
+
+    <main class="container py-4">
+      <div class="row g-4">
+        <div class="col-lg-7">
+          <div class="card-dark h-100">
+            <div class="card-h text-white">
+              <i class="fas fa-comments text-info"></i>
+              应急问答对话
+            </div>
+            <div class="card-b" ref="chatRoot">
+              <QuickPanel v-model="userInput" @submit-quick="onSubmitQuick" />
+              <ChatMessages :messages="messages" :show-typing="showTyping" @feedback="onFeedback" />
+              <Composer
+                v-model="userInput"
+                :disabled="sending"
+                @send="sendMessage"
+                @send-image="sendImageMessage"
+                @clear="clearChat"
+                @refresh-data="refreshData"
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="col-lg-5">
-        <StatsBar
-          :total-earthquakes="totalEarthquakes"
-          :max-magnitude="maxMagnitude"
-          :region-count="regionCount"
-          :depth-shallow="depthShallow"
-          :depth-mid="depthMid"
-          :depth-deep="depthDeep"
-        >
-          <InsightChart :earthquakes="earthquakes" />
-        </StatsBar>
+        <div class="col-lg-5">
+          <StatsBar
+            :total-earthquakes="totalEarthquakes"
+            :max-magnitude="maxMagnitude"
+            :region-count="regionCount"
+            :depth-shallow="depthShallow"
+            :depth-mid="depthMid"
+            :depth-deep="depthDeep"
+          >
+            <InsightChart :earthquakes="earthquakes" />
+          </StatsBar>
+        </div>
       </div>
-    </div>
-  </main>
+    </main>
+  </template>
 </template>

@@ -57,4 +57,4 @@ class TestSchedulerSignals(unittest.TestCase):
         phase = PhaseResult(phase=Phase.DURING, confidence=0.8, urgency=0.3)
         signals = KnowledgeSignals(static_confidence=0.54, dynamic_availability=1.0)
         d = self.scheduler.decide(phase, signals)
-        self.assertIn("匹配度一般", d.reliability_hint)
+        self.assertIn("本地知识库", d.reliability_hint)

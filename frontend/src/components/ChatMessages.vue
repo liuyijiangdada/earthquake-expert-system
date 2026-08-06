@@ -47,9 +47,25 @@ function formatMetaMetrics(m) {
 }
 
 function reliabilityNotice(m) {
-  if (m.reliabilityHint) return m.reliabilityHint
+  const hasImage = (m.mediaResources || []).some((r) => r.type === 'image' && r.url)
+  if (m.reliabilityHint) {
+    if (!hasImage && m.reliabilityHint.includes('示意图')) {
+      return m.reliabilityHint
+        .replace('，可参考下方示意图。', '')
+        .replace('，可参考下方示意图', '')
+        .replace('可参考下方示意图。', '')
+        .replace('可参考下方示意图', '')
+        .replace('，建议结合下方示意图阅读', '')
+        .replace('建议结合下方示意图阅读。', '')
+        .replace('建议结合下方示意图阅读', '')
+        .replace(/[，。]+$/, '。')
+    }
+    return m.reliabilityHint
+  }
   if (m.staticConfidence != null && m.staticConfidence < 0.7) {
-    return '本地知识匹配度一般，以下回答仅供参考，建议结合下方示意图阅读。'
+    return hasImage
+      ? '已依据本地知识库生成回答，可参考下方示意图。'
+      : '已依据本地知识库生成回答。'
   }
   return ''
 }
@@ -166,9 +182,7 @@ function reliabilityNotice(m) {
                   </button>
                   <span v-if="m.feedbackNote" class="text-muted small">{{ m.feedbackNote }}</span>
                 </div>
-                <p v-if="m.feedback !== false" class="disclaimer mb-0">
-                  内容由本地知识库与模型生成，仅供科普与应急参考，请以政府预警与专业部门发布为准。
-                </p>
+ 
               </template>
             </div>
           </div>

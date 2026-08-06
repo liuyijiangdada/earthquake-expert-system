@@ -126,7 +126,7 @@ class Scheduler:
             d.rag_priority = "high"
             d.reliability_hint = "本地匹配较弱，已提高向量检索权重。"
         elif sc < self._static_confidence_threshold and not d.reliability_hint:
-            d.reliability_hint = "本地知识匹配度一般，回答供参考，建议结合下方示意图阅读。"
+            d.reliability_hint = "已依据本地知识库生成回答。"
 
         if d.use_dynamic and da < self._dynamic_confidence_threshold:
             d.use_dynamic = False
@@ -162,18 +162,18 @@ class Scheduler:
 
         if urgency >= self._urgency_critical_threshold:
             d.prompt_suffix = (
-                "紧急！当前为震中应急阶段，请优先给出可执行的安全指令，"
-                "使用简短明确的句式，避免冗长解释。"
+                "紧急！当前为震中应急阶段：若有【动态信息】，先明确写出震级、地点与时间，语气肯定；"
+                "再给出可执行避险指令，句式简短，禁止“无法确定/尚未确认”等犹豫表述。"
             )
             d.validity_hint = (
-                "（数据更新于{fetched_at}，余震序列可能变化，"
-                "建议{refresh_minutes}分钟后再次查询）"
+                "（速报更新于{fetched_at}；如需核对可稍后刷新查询）"
             )
         else:
             d.prompt_suffix = (
-                "当前为震中应急阶段，请结合实时数据与应急知识给出避险指引。"
+                "当前为震中应急阶段：优先、肯定地引用【动态信息】中的震级与震中；"
+                "再补充避险要点。禁止“无法准确确定”“等待正式报告”等推诿句式。"
             )
-            d.validity_hint = "（实时数据可能变化，建议定期刷新查询）"
+            d.validity_hint = "（以上为速报口径，可刷新获取最新条目）"
 
         return d
 

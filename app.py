@@ -31,6 +31,7 @@ from services.context_builder import QueryContextBuilder, QueryContextDeps
 from core.amap_client import AmapClient
 from services.output_enricher import OutputEnricher, merge_media_resources
 from services.response_guard import guard_response, strip_eval_prefix
+from services.auth_db import AuthDB
 from workflows.query_graph import QueryWorkflowDeps, run_context_workflow, run_text_query_workflow
 
 app = Flask(__name__)
@@ -234,6 +235,14 @@ if getattr(config, "LAYER3_ENABLED", True):
     output_enricher = OutputEnricher(config, amap_client=amap_client)
     print(f"第三层输出增强已初始化（启用={output_enricher.enabled}）")
 
+auth_db = AuthDB(config)
+try:
+    auth_db.ensure_ready()
+    print("登录用户库（PostgreSQL）已就绪")
+except Exception as e:
+    logging.warning("登录用户库暂不可用（登录时将重试）：%s", e)
+    print(f"登录用户库暂不可用（登录时将重试）：{type(e).__name__}")
+
 qwen_vl_handler = None
 if getattr(config, "QWEN_VL_ENABLED", True):
     qwen_vl_handler = QwenVLHandler(config)
@@ -355,6 +364,31 @@ def _apply_layer3_prompt(prompt: str, input_text: str, phase_tag: str, response_
     return prompt
 
 
+def _sync_reliability_hint_with_media(response_meta: dict) -> None:
+    """有示意图时才提示「结合下方示意图」；避免文案承诺但资源区为空。"""
+    hint = (response_meta.get("reliability_hint") or "").strip()
+    media = response_meta.get("media_resources") or []
+    has_image = any((m or {}).get("type") == "image" and (m or {}).get("url") for m in media)
+    diagram_suffix = "可参考下方示意图。"
+    if has_image:
+        if "示意图" not in hint:
+            base = hint or "已依据本地知识库生成回答。"
+            response_meta["reliability_hint"] = f"{base.rstrip('。')}，{diagram_suffix}"
+        return
+    if "示意图" in hint:
+        cleaned = (
+            hint.replace("，可参考下方示意图。", "")
+            .replace("，可参考下方示意图", "")
+            .replace("可参考下方示意图。", "")
+            .replace("可参考下方示意图", "")
+            .replace("，建议结合下方示意图阅读", "")
+            .replace("建议结合下方示意图阅读。", "")
+            .replace("建议结合下方示意图阅读", "")
+            .strip("，。 ")
+        )
+        response_meta["reliability_hint"] = cleaned + "。" if cleaned else ""
+
+
 def _finalize_media_resources(response_meta: dict, input_text: str, phase_tag: str):
     layer3 = response_meta.pop("layer3_media_pending", [])
     keyword_media = []
@@ -364,6 +398,7 @@ def _finalize_media_resources(response_meta: dict, input_text: str, phase_tag: s
     response_meta["media_resources"] = merge_media_resources(
         keyword_media, layer3, max_total=max_total
     )
+    _sync_reliability_hint_with_media(response_meta)
 
 
 def _fallback_on_model_error(
@@ -430,7 +465,14 @@ def _run_llm_generate(input_ids, attention_mask):
 def _run_llm_on_prompt(prompt: str) -> str:
     """将组装好的 user prompt 送入本地 LoRA 模型生成。"""
     messages = [
-        {"role": "system", "content": "你是一个地震专家，专注于回答地震相关问题。"},
+        {
+            "role": "system",
+            "content": (
+                "你是地震应急问答专家。回答须简洁、肯定、可执行；"
+                "有知识图谱或动态速报数据时，直接给出震级、地点、时间等结论，"
+                "不要使用“无法确定”“尚未确认”“仅供参考”等犹豫推诿表述。"
+            ),
+        },
         {"role": "user", "content": prompt},
     ]
     text = tokenizer.apply_chat_template(
@@ -801,6 +843,81 @@ def eval_set():
         "phases": {k: len(v) for k, v in phases.items()},
         "questions_by_phase": phases,
     })
+
+
+@app.route("/api/auth/login", methods=["POST"])
+def auth_login():
+    """校验 PostgreSQL 用户表；前端门控用（业务 API 不强制鉴权）。"""
+    data = request.json
+    if not data:
+        return jsonify({"error": "请求体为空，请提供 JSON 格式数据"}), 400
+    username = (data.get("username") or "").strip()
+    password = data.get("password") or ""
+    if not username or not password:
+        return jsonify({"error": "请输入用户名和密码"}), 400
+    ok, err = auth_db.verify_user(username, password)
+    if ok:
+        return jsonify({"ok": True, "username": username})
+    if err == "unavailable":
+        return jsonify({"error": "认证服务暂不可用，请确认 PostgreSQL 已启动"}), 503
+    return jsonify({"error": "用户名或密码错误"}), 401
+
+
+@app.route("/api/auth/logout", methods=["POST"])
+def auth_logout():
+    return jsonify({"ok": True})
+
+
+@app.route("/api/auth/me", methods=["GET"])
+def auth_me():
+    """可选探测接口；前端以 localStorage 为准。"""
+    username = (request.args.get("username") or "").strip()
+    if not username:
+        return jsonify({"ok": False, "authenticated": False}), 200
+    user = auth_db.get_user(username)
+    if not user:
+        return jsonify({"ok": False, "authenticated": False}), 200
+    return jsonify({"ok": True, "authenticated": True, "username": user["username"]})
+
+
+@app.route("/api/feedback", methods=["POST"])
+def submit_feedback():
+    """落库用户对回答的有用/需改进反馈，供后续评测与改进入口。"""
+    data = request.json
+    if not data:
+        return jsonify({"error": "请求体为空，请提供 JSON 格式数据"}), 400
+
+    feedback_type = (data.get("type") or "").strip()
+    if feedback_type not in {"satisfied", "unsatisfied"}:
+        return jsonify({"error": "type 须为 satisfied 或 unsatisfied"}), 400
+
+    question = (data.get("question") or "").strip()
+    answer = (data.get("answer") or "").strip()
+    if not question and not answer:
+        return jsonify({"error": "question 与 answer 至少提供一项"}), 400
+
+    from datetime import datetime, timezone
+
+    record = {
+        "ts": datetime.now(timezone.utc).isoformat(),
+        "type": feedback_type,
+        "question": question[:2000],
+        "answer": answer[:4000],
+        "phase": (data.get("phase") or "").strip()[:32],
+        "message_id": (data.get("message_id") or "").strip()[:128],
+        "static_confidence": data.get("static_confidence"),
+        "reliability_hint": (data.get("reliability_hint") or "").strip()[:200],
+    }
+    out_dir = os.path.join(_APP_ROOT, "data")
+    os.makedirs(out_dir, exist_ok=True)
+    path = os.path.join(out_dir, "feedback.jsonl")
+    try:
+        with open(path, "a", encoding="utf-8") as f:
+            f.write(json.dumps(record, ensure_ascii=False) + "\n")
+    except OSError as e:
+        logging.exception("反馈写入失败")
+        return jsonify({"error": f"反馈保存失败：{type(e).__name__}"}), 500
+    return jsonify({"ok": True, "saved": True})
 
 
 @app.route("/api/phase-classify", methods=["POST"])

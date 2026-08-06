@@ -36,3 +36,32 @@ export async function classifyPhase(text) {
   })
   return r.json().catch(() => ({}))
 }
+
+export async function submitFeedback(payload) {
+  const r = await fetch('/api/feedback', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  })
+  const data = await r.json().catch(() => ({}))
+  return { ok: r.ok, data }
+}
+
+export async function login(username, password) {
+  const r = await fetch('/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password }),
+  })
+  const data = await r.json().catch(() => ({}))
+  return { ok: r.ok, data }
+}
+
+export async function logout() {
+  const r = await fetch('/api/auth/logout', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  })
+  const data = await r.json().catch(() => ({}))
+  return { ok: r.ok, data }
+}

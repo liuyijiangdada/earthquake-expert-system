@@ -28,6 +28,9 @@ pnpm-debug.log*
 logs/
 *.log
 
+# 用户反馈落库（本地运行产生）
+data/feedback.jsonl
+
 # 第三层动态生成的时序图
 static/generated/*.png
 

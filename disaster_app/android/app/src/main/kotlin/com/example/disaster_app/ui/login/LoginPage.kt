@@ -251,13 +251,13 @@ fun LoginPage(
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "模拟器默认地址 10.0.2.2 指向本机后端",
-                style = MaterialTheme.typography.labelSmall,
-                color = TextMuted,
-                textAlign = TextAlign.Center
-            )
+//            Spacer(modifier = Modifier.height(16.dp))
+//            Text(
+//                text = "模拟器默认地址 10.0.2.2 指向本机后端",
+//                style = MaterialTheme.typography.labelSmall,
+//                color = TextMuted,
+//                textAlign = TextAlign.Center
+//            )
         }
     }
 }

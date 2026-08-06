@@ -2,7 +2,9 @@
 defineProps({
   badgeHtml: { type: String, default: '' },
   badgeWarn: { type: Boolean, default: false },
+  username: { type: String, default: '' },
 })
+defineEmits(['logout'])
 </script>
 
 <template>
@@ -28,6 +30,17 @@ defineProps({
             "
             v-html="badgeHtml"
           />
+          <span v-if="username" class="user-chip">
+            <i class="fas fa-user me-1"></i>{{ username }}
+          </span>
+          <button
+            v-if="username"
+            type="button"
+            class="btn-logout"
+            @click="$emit('logout')"
+          >
+            退出
+          </button>
         </div>
       </div>
     </div>

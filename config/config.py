@@ -16,6 +16,14 @@ class Config:
     NEO4J_URI = "bolt://localhost:7687"
     NEO4J_USER = "neo4j"
     NEO4J_PASSWORD = "password"
+
+    # 登录用户库（PostgreSQL）；默认账号仅在 users 表为空时种子写入
+    DATABASE_URL = os.environ.get(
+        "DATABASE_URL",
+        "postgresql://earthquake:earthquake@localhost:5432/earthquake_qa",
+    ).strip()
+    AUTH_DEFAULT_ADMIN_USER = os.environ.get("AUTH_DEFAULT_ADMIN_USER", "admin").strip() or "admin"
+    AUTH_DEFAULT_ADMIN_PASSWORD = os.environ.get("AUTH_DEFAULT_ADMIN_PASSWORD", "admin")
     
     # 数据配置
     DATA_DIR = "data"

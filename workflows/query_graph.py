@@ -49,7 +49,9 @@ def _normalize_node(state: QueryWorkflowState, builder: QueryContextBuilder) -> 
     return {
         "normalized_history": normalized,
         "response_meta": builder.init_response_meta(
-            for_vision=for_vision, normalized_history=normalized
+            for_vision=for_vision,
+            normalized_history=normalized,
+            user_query=state.get("input_text") or "",
         ),
     }
 
@@ -122,6 +124,22 @@ def _apply_layer3_node(state: QueryWorkflowState, deps: QueryWorkflowDeps) -> di
 def _generate_node(state: QueryWorkflowState, deps: QueryWorkflowDeps) -> dict:
     if state.get("skip_generate"):
         return {}
+    # 震级/震中事实问句：有动态速报则直接肯定作答，跳过小模型推诿
+    try:
+        from services.response_guard import maybe_confident_quake_answer
+
+        direct = maybe_confident_quake_answer(
+            state.get("response_meta") or {},
+            user_query=state.get("input_text") or "",
+        )
+        if direct:
+            meta = dict(state.get("response_meta") or {})
+            meta["response_fallback"] = "dynamic_confident"
+            meta["response_quality"] = "direct_dynamic"
+            return {"raw_response": direct, "error": None, "response_meta": meta}
+    except Exception:
+        logger.exception("动态肯定回答短路失败，回退 LLM")
+
     try:
         raw_response = deps.run_llm(state["prompt"])
         return {"raw_response": raw_response, "error": None}

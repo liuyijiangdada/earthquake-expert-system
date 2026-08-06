@@ -2,6 +2,25 @@
 # Milvus：pymilvus 默认连接 localhost:19530；健康检查 http://localhost:9091/healthz
 #   MinIO 控制台（可选排错）: http://localhost:9001  minioadmin / minioadmin
 services:
+  postgres:
+    image: postgres:16
+    container_name: biyelunwen-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: earthquake
+      POSTGRES_PASSWORD: earthquake
+      POSTGRES_DB: earthquake_qa
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U earthquake -d earthquake_qa"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
   neo4j:
     image: neo4j:5-community
     container_name: biyelunwen-neo4j
@@ -82,6 +101,7 @@ services:
     restart: unless-stopped
 
 volumes:
+  postgres_data:
   neo4j_data:
   milvus_etcd:
   milvus_minio:

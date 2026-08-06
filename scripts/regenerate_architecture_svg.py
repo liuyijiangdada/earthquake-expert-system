@@ -37,7 +37,7 @@ def main() -> None:
     </marker>
   </defs>
   <text x="460" y="36" text-anchor="middle" class="title">""" + esc(
-        "图 2-1-1 系统总体逻辑架构"
+        "图 5-1 系统总体逻辑架构"
     ) + r"""</text>
   <rect class="box" x="280" y="60" width="360" height="72"/>
   <text x="460" y="92" text-anchor="middle" class="lbl">""" + esc("展示层：用户浏览器") + r"""</text>
@@ -97,7 +97,7 @@ def main() -> None:
     </marker>
   </defs>
   <text x="360" y="32" text-anchor="middle" class="title">""" + esc(
-        "图 2-1-2 问答数据流（query_type: llm）"
+        "图 5-2 问答请求数据流（query_type: llm）"
     ) + r"""</text>
   <rect class="node" x="230" y="52" width="260" height="44"/>
   <text x="360" y="80" text-anchor="middle" class="lbl">""" + esc("用户输入自然语言问题") + r"""</text>
@@ -179,7 +179,7 @@ def main() -> None:
     ]]></style>
   </defs>
   <text x="440" y="32" text-anchor="middle" class="title">"""
-        + esc("图 2-1-3 技术栈与模块映射")
+        + esc("图 5-3 技术栈与模块映射")
         + "</text>\n"
     ]
     y = y0
