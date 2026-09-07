@@ -58,6 +58,7 @@ class DynamicRetriever:
         self._enabled = True
         self._max_items = 10
 
+        self._snapshot_only = False
         if config:
             self._enabled = getattr(config, "DYNAMIC_RETRIEVAL_ENABLED", True)
             self._cache_ttl = getattr(config, "DYNAMIC_CACHE_TTL_SECONDS", 300)
@@ -67,9 +68,19 @@ class DynamicRetriever:
     def enabled(self) -> bool:
         return self._enabled
 
+    def apply_frozen_snapshot(self, result: DynamicResult) -> None:
+        """评测用：后续 fetch 只返回该快照，不再请求直播目录。"""
+        self._cache = result
+        self._cache_ts = time.time()
+        self._cache_ttl = 10**12
+        self._snapshot_only = True
+
     def fetch_recent_earthquakes(self, force: bool = False) -> DynamicResult:
         if not self._enabled:
             return DynamicResult(error="动态检索已关闭")
+
+        if self._snapshot_only:
+            return self._cache or DynamicResult(error="动态快照为空")
 
         now = time.time()
         if not force and self._cache and (now - self._cache_ts) < self._cache_ttl:

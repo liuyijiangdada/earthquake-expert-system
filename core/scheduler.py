@@ -76,7 +76,7 @@ class Scheduler:
             else:
                 d = self._schedule_general(d, confidence, urgency)
 
-            if need_dynamic and not d.use_dynamic:
+            if need_dynamic and not d.use_dynamic and phase != Phase.PRE:
                 if urgency > self._urgency_high_threshold:
                     d.use_dynamic = True
                     d.dynamic_priority = "high"
@@ -110,14 +110,25 @@ class Scheduler:
             d.dynamic_priority = "high"
             d.reliability_hint = "高紧急度且实时数据可用，优先结合动态信息作答。"
         elif sc >= self._static_confidence_threshold:
-            if urgency < self._urgency_critical_threshold:
-                d.use_dynamic = False
-                d.dynamic_priority = "low"
-            suffix = (
-                "本地知识库匹配度较高；如需最新震情可追问「最新」「刚才」等关键词。"
+            keep_dynamic = (
+                phase_result.phase == Phase.DURING
+                or (
+                    phase_result.need_dynamic
+                    and phase_result.phase != Phase.PRE
+                )
             )
-            d.prompt_suffix = f"{d.prompt_suffix} {suffix}".strip()
-            d.reliability_hint = "静态知识置信度高，回答以本地知识库为主。"
+            if keep_dynamic:
+                if d.use_dynamic and not d.reliability_hint:
+                    d.reliability_hint = "问题需对齐实时震情，已保留动态数据源。"
+            else:
+                if urgency < self._urgency_critical_threshold:
+                    d.use_dynamic = False
+                    d.dynamic_priority = "low"
+                suffix = (
+                    "本地知识库匹配度较高；如需最新震情可追问「最新」「刚才」等关键词。"
+                )
+                d.prompt_suffix = f"{d.prompt_suffix} {suffix}".strip()
+                d.reliability_hint = "静态知识置信度高，回答以本地知识库为主。"
         elif signals.prefers_dynamic and da >= self._dynamic_confidence_threshold:
             d.use_dynamic = True
             d.dynamic_priority = "high"

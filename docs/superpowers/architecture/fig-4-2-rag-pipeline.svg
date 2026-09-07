@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="340" viewBox="0 0 1280 340">
+<defs>
+<marker id="arr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#475569"/></marker>
+</defs>
+<rect x="22" y="22" width="1236" height="296" rx="14" fill="#fff" stroke="#e2e8f0"/>
+<text x="640.0" y="48" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="26" font-weight="700" fill="#0f172a">主题级向量检索流程</text>
+<text x="640.0" y="76" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="14" fill="#64748b">应急知识 JSON · Topic 级分块 · BGE 句向量 · 余弦 Top-K</text>
+<rect x="154.0" y="144.0" width="132" height="132" rx="14" fill="#60a5fa" stroke="#334155" stroke-width="2"/>
+<text x="220.0" y="200.0" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="15" font-weight="700" fill="#fff">JSON</text>
+<text x="220.0" y="220.0" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="15" font-weight="700" fill="#fff">文件</text>
+<rect x="322.0" y="144.0" width="132" height="132" rx="14" fill="#14b8a6" stroke="#334155" stroke-width="2"/>
+<text x="388.0" y="200.0" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="15" font-weight="700" fill="#fff">Topic 级</text>
+<text x="388.0" y="220.0" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="15" font-weight="700" fill="#fff">分块</text>
+<rect x="490.0" y="144.0" width="132" height="132" rx="14" fill="#a855f7" stroke="#334155" stroke-width="2"/>
+<text x="556.0" y="190.0" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="15" font-weight="700" fill="#fff">Sentence-</text>
+<text x="556.0" y="210.0" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="15" font-weight="700" fill="#fff">Transformer</text>
+<text x="556.0" y="230.0" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="15" font-weight="700" fill="#fff">编码</text>
+<rect x="658.0" y="144.0" width="132" height="132" rx="14" fill="#f97316" stroke="#334155" stroke-width="2"/>
+<text x="724.0" y="200.0" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="15" font-weight="700" fill="#fff">向量</text>
+<text x="724.0" y="220.0" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="15" font-weight="700" fill="#fff">矩阵</text>
+<rect x="826.0" y="144.0" width="132" height="132" rx="14" fill="#ea580c" stroke="#334155" stroke-width="2"/>
+<text x="892.0" y="200.0" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="15" font-weight="700" fill="#fff">相似度</text>
+<text x="892.0" y="220.0" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="15" font-weight="700" fill="#fff">计算</text>
+<rect x="994.0" y="144.0" width="132" height="132" rx="14" fill="#22c55e" stroke="#334155" stroke-width="2"/>
+<text x="1060.0" y="200.0" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="15" font-weight="700" fill="#fff">Top-K</text>
+<text x="1060.0" y="220.0" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="15" font-weight="700" fill="#fff">选择</text>
+<path d="M 292.0 210 L 316.0 210" stroke="#475569" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+<path d="M 460.0 210 L 484.0 210" stroke="#475569" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+<path d="M 628.0 210 L 652.0 210" stroke="#475569" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+<path d="M 796.0 210 L 820.0 210" stroke="#475569" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+<path d="M 964.0 210 L 988.0 210" stroke="#475569" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+</svg>

@@ -32,11 +32,12 @@ class Config:
     EMERGENCY_KNOWLEDGE_FILE = "data/emergency_knowledge.json"
     KG_DATA_FILE = "data/kg_data.json"
     
-    # 大模型配置（用于真微调的基础模型）
-    # MODEL_NAME = "Qwen/Qwen1.5-4B"
-    MODEL_NAME = "Qwen/Qwen1.5-1.8B"
+    # 在线演示与离线消融默认同一基座：Qwen2.5-7B-Instruct + LoRA（甜点档，本地 MPS / 单卡可跑）。
+    # 历史：Qwen1.5-1.8B 知识容量不足已回退；Qwen2.5-7B 为重训基座。
+    # 论文/评语引用的基座须与本项一致，并在评测 meta.model 中交叉验证，禁止口头切换口径。
+    MODEL_NAME = "Qwen/Qwen2.5-7B-Instruct"
 
-    FINETUNED_MODEL_PATH = "llm/earthquake_expert_deepseek_r1"
+    FINETUNED_MODEL_PATH = "llm/earthquake_expert_qwen25_7b"
 
     # 推理：与 app.generate 中 getattr 一致，便于调参与文档说明
     LLM_INPUT_MAX_TOKENS = 4096

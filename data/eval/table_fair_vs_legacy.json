@@ -1,0 +1,5344 @@
+{
+  "meta": {
+    "source": "/Users/xiaoxiaoqingnian/Desktop/biyelunwen/data/eval/ablation_results_60.json",
+    "rescored_at": "2026-08-26T17:13:18.489059",
+    "kg_backend": "json",
+    "rag_backend": "embedding",
+    "n_items": 240,
+    "notes": "normalized：注入证据等权 overlap，无 KG+RAG 额外加分、无 B0 长度 cap；与论文旧表并列，不替代、不上调。"
+  },
+  "summary_legacy": {
+    "B0": {
+      "n": 60,
+      "factual_accuracy_pct": 27.1,
+      "completeness_mean": 3.74,
+      "format_compliance_pct": 95.0
+    },
+    "B1": {
+      "n": 60,
+      "factual_accuracy_pct": 11.0,
+      "completeness_mean": 3.14,
+      "format_compliance_pct": 91.7
+    },
+    "B2": {
+      "n": 60,
+      "factual_accuracy_pct": 15.8,
+      "completeness_mean": 3.05,
+      "format_compliance_pct": 81.7
+    },
+    "B3": {
+      "n": 60,
+      "factual_accuracy_pct": 20.2,
+      "completeness_mean": 2.66,
+      "format_compliance_pct": 80.0
+    }
+  },
+  "summary_normalized": {
+    "B0": {
+      "n": 60,
+      "factual_accuracy_pct": 0.0,
+      "completeness_mean": 3.74,
+      "format_compliance_pct": 95.0
+    },
+    "B1": {
+      "n": 60,
+      "factual_accuracy_pct": 0.0,
+      "completeness_mean": 3.14,
+      "format_compliance_pct": 91.7
+    },
+    "B2": {
+      "n": 60,
+      "factual_accuracy_pct": 0.0,
+      "completeness_mean": 3.05,
+      "format_compliance_pct": 81.7
+    },
+    "B3": {
+      "n": 60,
+      "factual_accuracy_pct": 0.1,
+      "completeness_mean": 2.66,
+      "format_compliance_pct": 80.0
+    }
+  },
+  "items": [
+    {
+      "baseline": "B0",
+      "phase": "震前",
+      "question": "家庭应急包该准备什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 4.43,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.43,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震前",
+      "question": "地震预警手机怎么开启？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 3.93,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.93,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震前",
+      "question": "学校如何组织防震演练？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 5.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 5.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震前",
+      "question": "室内家具如何固定防震？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 4.25,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.25,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震前",
+      "question": "高层住宅震前要做哪些检查？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 4.93,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.93,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震前",
+      "question": "社区应急物资如何储备？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 5.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 5.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震前",
+      "question": "地震保险有必要买吗？",
+      "scores": {
+        "legacy": {
+          "factual": 0.0117,
+          "completeness": 1.0,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震前",
+      "question": "断网断电时如何联系家人？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 4.75,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.75,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震前",
+      "question": "婴幼儿家庭应急要注意什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 4.11,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.11,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震前",
+      "question": "老人居家防震有哪些要点？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 4.61,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.61,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震前",
+      "question": "宠物家庭应急包放什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 4.43,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.43,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震前",
+      "question": "防震减灾科普去哪里学？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 2.8,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.8,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震前",
+      "question": "家庭疏散路线怎么画？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 5.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 5.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震前",
+      "question": "燃气阀门震前如何管理？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 5.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 5.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震前",
+      "question": "重要证件应急如何保管？",
+      "scores": {
+        "legacy": {
+          "factual": 0.1817,
+          "completeness": 2.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震前",
+      "question": "车载应急包推荐配置？",
+      "scores": {
+        "legacy": {
+          "factual": 0.02,
+          "completeness": 1.0,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震前",
+      "question": "地下室能否作为避险空间？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 3.93,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.93,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震前",
+      "question": "抗震设防烈度是什么意思？",
+      "scores": {
+        "legacy": {
+          "factual": 0.1533,
+          "completeness": 1.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震前",
+      "question": "地震谣言如何辨别？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 4.93,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.93,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震前",
+      "question": "企业应急预案应包含什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 4.43,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.43,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震中",
+      "question": "刚才地震多大？震中在哪？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 3.75,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.75,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震中",
+      "question": "我现在在成都，最近的避难所在哪？",
+      "scores": {
+        "legacy": {
+          "factual": 0.2733,
+          "completeness": 2.98,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.98,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震中",
+      "question": "室内应该躲哪里？",
+      "scores": {
+        "legacy": {
+          "factual": 0.2217,
+          "completeness": 2.54,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.54,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震中",
+      "question": "室外开阔地如何避险？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 3.69,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.69,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震中",
+      "question": "高楼里能坐电梯吗？",
+      "scores": {
+        "legacy": {
+          "factual": 0.0167,
+          "completeness": 1.18,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.18,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震中",
+      "question": "开车时遇到地震怎么办？",
+      "scores": {
+        "legacy": {
+          "factual": 0.2717,
+          "completeness": 2.8,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.8,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震中",
+      "question": "学校上课地震如何疏散？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 4.61,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.61,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震中",
+      "question": "医院手术室地震如何应对？",
+      "scores": {
+        "legacy": {
+          "factual": 0.2667,
+          "completeness": 3.87,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.87,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震中",
+      "question": "地铁里地震怎么办？",
+      "scores": {
+        "legacy": {
+          "factual": 0.2867,
+          "completeness": 3.51,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.51,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震中",
+      "question": "余震还会来吗？",
+      "scores": {
+        "legacy": {
+          "factual": 0.2483,
+          "completeness": 2.98,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.98,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震中",
+      "question": "震后火情如何处置？",
+      "scores": {
+        "legacy": {
+          "factual": 0.235,
+          "completeness": 2.18,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.18,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震中",
+      "question": "海边地震要防海啸吗？",
+      "scores": {
+        "legacy": {
+          "factual": 0.285,
+          "completeness": 3.15,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.15,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震中",
+      "question": "化工厂附近地震注意什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.2617,
+          "completeness": 3.33,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.33,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震中",
+      "question": "桥梁上地震如何自救？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 4.11,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.11,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震中",
+      "question": "夜间地震如何快速反应？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 4.93,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.93,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震中",
+      "question": "轮椅使用者如何避险？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 4.61,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.61,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震中",
+      "question": "商场里地震往哪跑？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 4.65,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.65,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震中",
+      "question": "最新震情哪里查？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 3.4,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.4,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震中",
+      "question": "震中烈度是什么意思？",
+      "scores": {
+        "legacy": {
+          "factual": 0.2917,
+          "completeness": 3.15,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.15,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震中",
+      "question": "主震和余震区别是什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 4.4,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.4,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震后",
+      "question": "我家房子震后安全吗怎么判断？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 4.61,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.61,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震后",
+      "question": "政府有哪些灾后重建补贴政策？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 4.93,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.93,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震后",
+      "question": "灾区道路恢复了吗？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 3.33,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.33,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震后",
+      "question": "学校什么时候复课？",
+      "scores": {
+        "legacy": {
+          "factual": 0.2617,
+          "completeness": 2.98,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.98,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震后",
+      "question": "震后心理援助去哪找？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 4.43,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.43,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震后",
+      "question": "危房鉴定流程是什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 4.61,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.61,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震后",
+      "question": "保险理赔需要哪些材料？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 4.58,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.58,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震后",
+      "question": "临时安置点生活物资如何领？",
+      "scores": {
+        "legacy": {
+          "factual": 0.2483,
+          "completeness": 2.98,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.98,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震后",
+      "question": "震后防疫要注意什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 5.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 5.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震后",
+      "question": "滑坡泥石流风险如何防范？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 4.75,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.75,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震后",
+      "question": "断水断电如何应急？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 4.43,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.43,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震后",
+      "question": "志愿者如何参与救援？",
+      "scores": {
+        "legacy": {
+          "factual": 0.2517,
+          "completeness": 2.98,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.98,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震后",
+      "question": "企业复工复产检查清单？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 4.43,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.43,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震后",
+      "question": "文物古建筑震后如何评估？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 3.75,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.75,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震后",
+      "question": "农业设施震后如何报损？",
+      "scores": {
+        "legacy": {
+          "factual": 0.2917,
+          "completeness": 2.8,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.8,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震后",
+      "question": "灾后饮用水安全如何保证？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 4.93,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.93,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震后",
+      "question": "余震期是否适合回家取物？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 2.98,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.98,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震后",
+      "question": "地震灾情如何官方申报？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 3.4,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.4,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震后",
+      "question": "灾后法律援助渠道有哪些？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 4.25,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.25,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B0",
+      "phase": "震后",
+      "question": "社区灾后重建谁牵头？",
+      "scores": {
+        "legacy": {
+          "factual": 0.1817,
+          "completeness": 2.18,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.18,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震前",
+      "question": "家庭应急包该准备什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 1.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n【应急主题】\n家庭应急准备（物资与预案）\n- 常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n- 与家人约定震后集合地点与联络方式，熟悉社区疏散路线。\n地震基本知识\n- 地震是地壳快速释放能量产生的振动，震级每增加1级，能量约增加32倍。\n- 震级衡量地震本身大小，烈度衡量地面受影响程度；同一次地震只有一个震级，但不同地点烈度不同。\n- 浅源地震（深度<70km）破坏力通常更大，中源（70-300km）和深源（>300km）影响相对较小。\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震前",
+      "question": "地震预警手机怎么开启？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 4.43,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.43,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震前",
+      "question": "学校如何组织防震演练？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 5.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 5.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n【应急主题】\n家庭与社区防震演练\n- 每年至少组织一次家庭或社区防震演练，明确各成员职责与联络方式。\n- 演练内容包括：伏地、遮挡、手抓牢，以及主震暂停后的有序疏散与室外集合。\n- 检查并熟悉家中、楼道与社区疏散路线，确保通道无杂物遮挡。\n家庭应急准备（物资与预案）\n- 常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n- 与家人约定震后集合地点与联络方式，熟悉社区疏散路线。\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震前",
+      "question": "室内家具如何固定防震？",
+      "scores": {
+        "legacy": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n【应急主题】\n家庭应急准备（物资与预案）\n- 常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n- 与家人约定震后集合地点与联络方式，熟悉社区疏散路线。\n地震基本知识\n- 地震是地壳快速释放能量产生的振动，震级每增加1级，能量约增加32倍。\n- 震级衡量地震本身大小，烈度衡量地面受影响程度；同一次地震只有一个震级，但不同地点烈度不同。\n- 浅源地震（深度<70km）破坏力通常更大，中源（70-300km）和深源（>300km）影响相对较小。\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震前",
+      "question": "高层住宅震前要做哪些检查？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 4.25,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.25,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震前",
+      "question": "社区应急物资如何储备？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 3.4,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.4,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n【应急主题】\n老人儿童与行动不便者照护\n- 震前为老人儿童准备易取用药品、奶粉、纸尿裤等，固定易倒家具。\n- 震中优先协助其护头蹲下或转移到相对安全角落，避免独自滞留上层。\n- 震后注意保暖、饮水与情绪安抚，及时寻求社区与志愿者协助。\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震前",
+      "question": "地震保险有必要买吗？",
+      "scores": {
+        "legacy": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震前",
+      "question": "断网断电时如何联系家人？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 4.75,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.75,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震前",
+      "question": "婴幼儿家庭应急要注意什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 4.61,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.61,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n【应急主题】\n家庭应急准备（物资与预案）\n- 常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n- 与家人约定震后集合地点与联络方式，熟悉社区疏散路线。\n地震基本知识\n- 地震是地壳快速释放能量产生的振动，震级每增加1级，能量约增加32倍。\n- 震级衡量地震本身大小，烈度衡量地面受影响程度；同一次地震只有一个震级，但不同地点烈度不同。\n- 浅源地震（深度<70km）破坏力通常更大，中源（70-300km）和深源（>300km）影响相对较小。\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震前",
+      "question": "老人居家防震有哪些要点？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 4.43,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.43,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震前",
+      "question": "宠物家庭应急包放什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 4.61,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.61,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n【应急主题】\n家庭应急准备（物资与预案）\n- 常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n- 与家人约定震后集合地点与联络方式，熟悉社区疏散路线。\n地震基本知识\n- 地震是地壳快速释放能量产生的振动，震级每增加1级，能量约增加32倍。\n- 震级衡量地震本身大小，烈度衡量地面受影响程度；同一次地震只有一个震级，但不同地点烈度不同。\n- 浅源地震（深度<70km）破坏力通常更大，中源（70-300km）和深源（>300km）影响相对较小。\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震前",
+      "question": "防震减灾科普去哪里学？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 2.8,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.8,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震前",
+      "question": "家庭疏散路线怎么画？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 4.43,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.43,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震前",
+      "question": "燃气阀门震前如何管理？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 5.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 5.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震前",
+      "question": "重要证件应急如何保管？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 3.4,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.4,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n【应急主题】\n老人儿童与行动不便者照护\n- 震前为老人儿童准备易取用药品、奶粉、纸尿裤等，固定易倒家具。\n- 震中优先协助其护头蹲下或转移到相对安全角落，避免独自滞留上层。\n- 震后注意保暖、饮水与情绪安抚，及时寻求社区与志愿者协助。\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震前",
+      "question": "车载应急包推荐配置？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 2.18,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.18,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n【应急主题】\n家庭应急准备（物资与预案）\n- 常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n- 与家人约定震后集合地点与联络方式，熟悉社区疏散路线。\n地震基本知识\n- 地震是地壳快速释放能量产生的振动，震级每增加1级，能量约增加32倍。\n- 震级衡量地震本身大小，烈度衡量地面受影响程度；同一次地震只有一个震级，但不同地点烈度不同。\n- 浅源地震（深度<70km）破坏力通常更大，中源（70-300km）和深源（>300km）影响相对较小。\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震前",
+      "question": "地下室能否作为避险空间？",
+      "scores": {
+        "legacy": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n【应急主题】\n振动发生时室内如何避险\n- 保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n- 远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n- 主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n室外与公共场所避险\n- 远离建筑物、围墙、玻璃幕墙、立交桥、高压线、广告牌和危险品仓库。\n- 在开阔地蹲下护头，注意脚下地面裂缝与坠物；驾车时可减速靠边停车，勿停在桥梁或隧道内。\n- 听从现场工作人员疏导，避免拥挤踩踏。\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震前",
+      "question": "抗震设防烈度是什么意思？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 1.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震前",
+      "question": "地震谣言如何辨别？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 4.93,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.93,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震前",
+      "question": "企业应急预案应包含什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 2.72,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.72,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n【应急主题】\n家庭应急准备（物资与预案）\n- 常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n- 与家人约定震后集合地点与联络方式，熟悉社区疏散路线。\n地震基本知识\n- 地震是地壳快速释放能量产生的振动，震级每增加1级，能量约增加32倍。\n- 震级衡量地震本身大小，烈度衡量地面受影响程度；同一次地震只有一个震级，但不同地点烈度不同。\n- 浅源地震（深度<70km）破坏力通常更大，中源（70-300km）和深源（>300km）影响相对较小。\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震中",
+      "question": "刚才地震多大？震中在哪？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 2.35,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.35,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震中",
+      "question": "我现在在成都，最近的避难所在哪？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 2.98,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.98,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震中",
+      "question": "室内应该躲哪里？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 2.36,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.36,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n【应急主题】\n振动发生时室内如何避险\n- 保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n- 远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n- 主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n室外与公共场所避险\n- 远离建筑物、围墙、玻璃幕墙、立交桥、高压线、广告牌和危险品仓库。\n- 在开阔地蹲下护头，注意脚下地面裂缝与坠物；驾车时可减速靠边停车，勿停在桥梁或隧道内。\n- 听从现场工作人员疏导，避免拥挤踩踏。\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震中",
+      "question": "室外开阔地如何避险？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 2.18,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.18,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n【应急主题】\n室外与公共场所避险\n- 远离建筑物、围墙、玻璃幕墙、立交桥、高压线、广告牌和危险品仓库。\n- 在开阔地蹲下护头，注意脚下地面裂缝与坠物；驾车时可减速靠边停车，勿停在桥梁或隧道内。\n- 听从现场工作人员疏导，避免拥挤踩踏。\n振动发生时室内如何避险\n- 保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n- 远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n- 主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震中",
+      "question": "高楼里能坐电梯吗？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 2.18,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.18,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n【应急主题】\n振动发生时室内如何避险\n- 保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n- 远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n- 主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n室外与公共场所避险\n- 远离建筑物、围墙、玻璃幕墙、立交桥、高压线、广告牌和危险品仓库。\n- 在开阔地蹲下护头，注意脚下地面裂缝与坠物；驾车时可减速靠边停车，勿停在桥梁或隧道内。\n- 听从现场工作人员疏导，避免拥挤踩踏。\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震中",
+      "question": "开车时遇到地震怎么办？",
+      "scores": {
+        "legacy": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n【应急主题】\n振动发生时室内如何避险\n- 保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n- 远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n- 主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n室外与公共场所避险\n- 远离建筑物、围墙、玻璃幕墙、立交桥、高压线、广告牌和危险品仓库。\n- 在开阔地蹲下护头，注意脚下地面裂缝与坠物；驾车时可减速靠边停车，勿停在桥梁或隧道内。\n- 听从现场工作人员疏导，避免拥挤踩踏。\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震中",
+      "question": "学校上课地震如何疏散？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 1.36,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.36,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n【应急主题】\n学校等场所的避险要点\n- 课堂中应听从老师指挥，迅速护头避险于课桌旁，震动减轻后按疏散路线撤离。\n- 楼道与楼梯不推挤，注意脚下；到操场等开阔地清点人数。\n振动发生时室内如何避险\n- 保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n- 远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n- 主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震中",
+      "question": "医院手术室地震如何应对？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 4.43,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.43,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震中",
+      "question": "地铁里地震怎么办？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 2.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n【应急主题】\n振动发生时室内如何避险\n- 保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n- 远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n- 主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n室外与公共场所避险\n- 远离建筑物、围墙、玻璃幕墙、立交桥、高压线、广告牌和危险品仓库。\n- 在开阔地蹲下护头，注意脚下地面裂缝与坠物；驾车时可减速靠边停车，勿停在桥梁或隧道内。\n- 听从现场工作人员疏导，避免拥挤踩踏。\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震中",
+      "question": "余震还会来吗？",
+      "scores": {
+        "legacy": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n【应急主题】\n主震后余震与次生灾害防范\n- 余震可能持续数日甚至更久，勿立即返回危楼或室内取物。\n- 警惕滑坡、泥石流、堰塞湖、火灾、燃气泄漏等次生灾害，避开陡坡与河道。\n- 通过官方渠道获取灾情与避险指引，不传谣不信谣。\n震后房屋安全评估\n- 震后不要立即返回室内，等待专业人员或社区安全评估后再进入。\n- 观察房屋是否有明显裂缝、倾斜、地基下沉等损伤，如有应标记为危险并远离。\n- 联系当地住建部门或应急管理部门申请房屋安全鉴定。\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震中",
+      "question": "震后火情如何处置？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 2.18,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.18,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震中",
+      "question": "海边地震要防海啸吗？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 3.15,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.15,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震中",
+      "question": "化工厂附近地震注意什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 3.33,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.33,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震中",
+      "question": "桥梁上地震如何自救？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 2.53,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.53,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n【应急主题】\n振动发生时室内如何避险\n- 保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n- 远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n- 主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n室外与公共场所避险\n- 远离建筑物、围墙、玻璃幕墙、立交桥、高压线、广告牌和危险品仓库。\n- 在开阔地蹲下护头，注意脚下地面裂缝与坠物；驾车时可减速靠边停车，勿停在桥梁或隧道内。\n- 听从现场工作人员疏导，避免拥挤踩踏。\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震中",
+      "question": "夜间地震如何快速反应？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 4.93,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.93,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震中",
+      "question": "轮椅使用者如何避险？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 3.4,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.4,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n【应急主题】\n振动发生时室内如何避险\n- 保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n- 远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n- 主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n室外与公共场所避险\n- 远离建筑物、围墙、玻璃幕墙、立交桥、高压线、广告牌和危险品仓库。\n- 在开阔地蹲下护头，注意脚下地面裂缝与坠物；驾车时可减速靠边停车，勿停在桥梁或隧道内。\n- 听从现场工作人员疏导，避免拥挤踩踏。\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震中",
+      "question": "商场里地震往哪跑？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 3.16,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.16,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震中",
+      "question": "最新震情哪里查？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 2.8,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.8,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震中",
+      "question": "震中烈度是什么意思？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 3.15,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.15,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震中",
+      "question": "主震和余震区别是什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 1.18,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.18,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n【应急主题】\n主震后余震与次生灾害防范\n- 余震可能持续数日甚至更久，勿立即返回危楼或室内取物。\n- 警惕滑坡、泥石流、堰塞湖、火灾、燃气泄漏等次生灾害，避开陡坡与河道。\n- 通过官方渠道获取灾情与避险指引，不传谣不信谣。\n震后房屋安全评估\n- 震后不要立即返回室内，等待专业人员或社区安全评估后再进入。\n- 观察房屋是否有明显裂缝、倾斜、地基下沉等损伤，如有应标记为危险并远离。\n- 联系当地住建部门或应急管理部门申请房屋安全鉴定。\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震后",
+      "question": "我家房子震后安全吗怎么判断？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 4.11,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.11,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震后",
+      "question": "政府有哪些灾后重建补贴政策？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 4.93,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.93,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震后",
+      "question": "灾区道路恢复了吗？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 4.11,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.11,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震后",
+      "question": "学校什么时候复课？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 2.8,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.8,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n【应急主题】\n主震后余震与次生灾害防范\n- 余震可能持续数日甚至更久，勿立即返回危楼或室内取物。\n- 警惕滑坡、泥石流、堰塞湖、火灾、燃气泄漏等次生灾害，避开陡坡与河道。\n- 通过官方渠道获取灾情与避险指引，不传谣不信谣。\n震后房屋安全评估\n- 震后不要立即返回室内，等待专业人员或社区安全评估后再进入。\n- 观察房屋是否有明显裂缝、倾斜、地基下沉等损伤，如有应标记为危险并远离。\n- 联系当地住建部门或应急管理部门申请房屋安全鉴定。\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震后",
+      "question": "震后心理援助去哪找？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 4.43,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.43,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震后",
+      "question": "危房鉴定流程是什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 4.25,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.25,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震后",
+      "question": "保险理赔需要哪些材料？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 4.25,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.25,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震后",
+      "question": "临时安置点生活物资如何领？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 4.25,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.25,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震后",
+      "question": "震后防疫要注意什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 4.25,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.25,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震后",
+      "question": "滑坡泥石流风险如何防范？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 4.43,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.43,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震后",
+      "question": "断水断电如何应急？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 1.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n【应急主题】\n老人儿童与行动不便者照护\n- 震前为老人儿童准备易取用药品、奶粉、纸尿裤等，固定易倒家具。\n- 震中优先协助其护头蹲下或转移到相对安全角落，避免独自滞留上层。\n- 震后注意保暖、饮水与情绪安抚，及时寻求社区与志愿者协助。\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震后",
+      "question": "志愿者如何参与救援？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 4.25,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.25,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震后",
+      "question": "企业复工复产检查清单？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 3.93,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.93,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震后",
+      "question": "文物古建筑震后如何评估？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 3.93,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.93,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震后",
+      "question": "农业设施震后如何报损？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 2.8,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.8,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震后",
+      "question": "灾后饮用水安全如何保证？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 1.18,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.18,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震后",
+      "question": "余震期是否适合回家取物？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 3.58,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.58,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n【应急主题】\n主震后余震与次生灾害防范\n- 余震可能持续数日甚至更久，勿立即返回危楼或室内取物。\n- 警惕滑坡、泥石流、堰塞湖、火灾、燃气泄漏等次生灾害，避开陡坡与河道。\n- 通过官方渠道获取灾情与避险指引，不传谣不信谣。\n震后房屋安全评估\n- 震后不要立即返回室内，等待专业人员或社区安全评估后再进入。\n- 观察房屋是否有明显裂缝、倾斜、地基下沉等损伤，如有应标记为危险并远离。\n- 联系当地住建部门或应急管理部门申请房屋安全鉴定。\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震后",
+      "question": "地震灾情如何官方申报？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 3.4,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.4,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震后",
+      "question": "灾后法律援助渠道有哪些？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 2.8,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.8,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B1",
+      "phase": "震后",
+      "question": "社区灾后重建谁牵头？",
+      "scores": {
+        "legacy": {
+          "factual": 0.12,
+          "completeness": 2.18,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.18,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n（本路径已关闭）"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震前",
+      "question": "家庭应急包该准备什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.06,
+          "completeness": 1.0,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_kit] 家庭应急准备（物资与预案）\n家庭应急准备（物资与预案）\n震前准备\n适用阶段：震前\n时效：长期\n常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n与家人约定震后集合地点与联络方式，熟悉社区疏散路线。\n2. [em_shelter] 应急避难场所选择与安置\n应急避难场所选择与安置\n震后恢复\n适用阶段：震后\n时效：长期\n优先前往政府公布的应急避难场所或开阔广场、学校操场。\n携带身份证件、常用药品与保暖衣物，服从场所管理与防疫要求。\n关注物资发放与人员登记，协助老弱病残优先安置。\n3. [em_drill] 家庭与社区防震演练\n家庭与社区防震演练\n震前准备\n适用阶段：震前\n时效：长期\n每年至少组织一次家庭或社区防震演练，…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震前",
+      "question": "地震预警手机怎么开启？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 3.93,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.93,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_warning] 地震预警接收与响应\n地震预警接收与响应\n震前准备\n适用阶段：震前\n时效：长期\n开启手机或专用终端的官方预警推送，熟悉预警铃声与倒计时含义。\n收到预警后立即就地伏地遮挡，利用数秒至数十秒完成护头与关闭危险源。\n预警不等于精确预测，仍以实际振动为准，并关注官方订正信息。\n2. [em_realtime_info] 实时震情信息获取渠道\n实时震情信息获取渠道\n震中响应\n适用阶段：震中\n时效：实时\n关注中国地震台网中心官方发布（www.ceic.ac.cn），获取最新地震速报信息。\n下载官方地震预警APP，开启实时推送通知。\n收听当地广播电台或关注应急管理部官方社交媒体账号获取权威信息。\n3. [em_kit] 家庭应急准备（物资与预案）\n家庭应急准备（物资与预案）\n震前…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震前",
+      "question": "学校如何组织防震演练？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 5.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 5.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_drill] 家庭与社区防震演练\n家庭与社区防震演练\n震前准备\n适用阶段：震前\n时效：长期\n每年至少组织一次家庭或社区防震演练，明确各成员职责与联络方式。\n演练内容包括：伏地、遮挡、手抓牢，以及主震暂停后的有序疏散与室外集合。\n检查并熟悉家中、楼道与社区疏散路线，确保通道无杂物遮挡。\n2. [em_school] 学校等场所的避险要点\n学校等场所的避险要点\n特定场景\n适用阶段：震中\n课堂中应听从老师指挥，迅速护头避险于课桌旁，震动减轻后按疏散路线撤离。\n楼道与楼梯不推挤，注意脚下；到操场等开阔地清点人数。\n3. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静，迅速判断所处环境：优先选择「伏…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震前",
+      "question": "室内家具如何固定防震？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 4.75,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.75,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n2. [em_workplace] 办公场所避险与疏散\n办公场所避险与疏散\n特定场景\n适用阶段：震中\n躲入坚固桌下或承重墙角，护头远离玻璃隔断与高柜。\n振动减弱后按楼层疏散指示走楼梯，不乘电梯，到指定集合点报到。\n关闭不必要电源与门窗（安全前提下），协助行动不便同事。\n3. [e…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震前",
+      "question": "高层住宅震前要做哪些检查？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 1.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_highrise] 高层建筑内注意事项\n高层建筑内注意事项\n特定场景\n适用阶段：震中\n切忌慌乱跳楼；优先在坚固家具旁避险，保护头颈。\n疏散时走楼梯勿乘电梯；注意防火门与疏散指示。\n2. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n3. [em_hospital] 医院与照护机构场景要点\n医院与照护机构场景要点\n特定…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震前",
+      "question": "社区应急物资如何储备？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 4.61,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.61,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_kit] 家庭应急准备（物资与预案）\n家庭应急准备（物资与预案）\n震前准备\n适用阶段：震前\n时效：长期\n常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n与家人约定震后集合地点与联络方式，熟悉社区疏散路线。\n2. [em_shelter] 应急避难场所选择与安置\n应急避难场所选择与安置\n震后恢复\n适用阶段：震后\n时效：长期\n优先前往政府公布的应急避难场所或开阔广场、学校操场。\n携带身份证件、常用药品与保暖衣物，服从场所管理与防疫要求。\n关注物资发放与人员登记，协助老弱病残优先安置。\n3. [em_volunteer] 社区互助与志愿者安全边界\n社区互助与志愿者安全边界\n震后恢复\n适用阶段：震后\n时效：长期\n非专业人员勿进入危楼搜救，优先协助转运、登记与物资…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震前",
+      "question": "地震保险有必要买吗？",
+      "scores": {
+        "legacy": {
+          "factual": 0.06,
+          "completeness": 1.0,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_insurance] 地震保险与财产风险准备\n地震保险与财产风险准备\n震前准备\n适用阶段：震前\n时效：政策更新\n了解住宅是否属于地震保险覆盖范围及免责条款，保留保单复印件。\n震后及时报案，按保险公司要求留存房屋与财产损失影像。\n保险赔付与政府救助可并行了解，具体以当地政策与合同为准。\n2. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震前",
+      "question": "断网断电时如何联系家人？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 2.8,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.8,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_power_gas] 震中断电、断气与火情处置\n震中断电、断气与火情处置\n震中响应\n适用阶段：震中\n振动停止后，若闻到燃气味或看到明火，切勿开关电器和使用明火，迅速关闭燃气阀门。\n在确认自身安全的前提下关闭室内电闸，防止短路引发次生火灾。\n无法自行处置时立即撤离至室外开阔地，拨打119、燃气抢修电话，并告知邻居远离。\n2. [em_comms] 通信中断时的联络与信息\n通信中断时的联络与信息\n震中响应\n适用阶段：震中\n时效：长期\n优先发短信或用互联网轻量消息报平安，减少语音占用网络。\n约定家庭备用联络人与集合点，保存纸质紧急联系方式。\n通过广播、社区喇叭与官方渠道获取权威信息，勿转发未经证实消息。\n3. [em_kit] 家庭应急准备（物资与预案）\n家庭应急准备（物资与预案）\n震前…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震前",
+      "question": "婴幼儿家庭应急要注意什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 5.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 5.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_kit] 家庭应急准备（物资与预案）\n家庭应急准备（物资与预案）\n震前准备\n适用阶段：震前\n时效：长期\n常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n与家人约定震后集合地点与联络方式，熟悉社区疏散路线。\n2. [em_elderly_child] 老人儿童与行动不便者照护\n老人儿童与行动不便者照护\n特定人群\n适用阶段：通用\n时效：长期\n震前为老人儿童准备易取用药品、奶粉、纸尿裤等，固定易倒家具。\n震中优先协助其护头蹲下或转移到相对安全角落，避免独自滞留上层。\n震后注意保暖、饮水与情绪安抚，及时寻求社区与志愿者协助。\n3. [em_highrise] 高层建筑内注意事项\n高层建筑内注意事项\n特定场景\n适用阶段：震中\n切忌…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震前",
+      "question": "老人居家防震有哪些要点？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 4.11,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.11,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_elderly_child] 老人儿童与行动不便者照护\n老人儿童与行动不便者照护\n特定人群\n适用阶段：通用\n时效：长期\n震前为老人儿童准备易取用药品、奶粉、纸尿裤等，固定易倒家具。\n震中优先协助其护头蹲下或转移到相对安全角落，避免独自滞留上层。\n震后注意保暖、饮水与情绪安抚，及时寻求社区与志愿者协助。\n2. [em_kit] 家庭应急准备（物资与预案）\n家庭应急准备（物资与预案）\n震前准备\n适用阶段：震前\n时效：长期\n常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n与家人约定震后集合地点与联络方式，熟悉社区疏散路线。\n3. [em_highrise] 高层建筑内注意事项\n高层建筑内注意事项\n特定场景\n适用阶段：震中\n切忌…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震前",
+      "question": "宠物家庭应急包放什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 4.43,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.43,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_kit] 家庭应急准备（物资与预案）\n家庭应急准备（物资与预案）\n震前准备\n适用阶段：震前\n时效：长期\n常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n与家人约定震后集合地点与联络方式，熟悉社区疏散路线。\n2. [em_elderly_child] 老人儿童与行动不便者照护\n老人儿童与行动不便者照护\n特定人群\n适用阶段：通用\n时效：长期\n震前为老人儿童准备易取用药品、奶粉、纸尿裤等，固定易倒家具。\n震中优先协助其护头蹲下或转移到相对安全角落，避免独自滞留上层。\n震后注意保暖、饮水与情绪安抚，及时寻求社区与志愿者协助。\n3. [em_shelter] 应急避难场所选择与安置\n应急避难场所选择与安置\n震后恢复\n适用阶段：震后…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震前",
+      "question": "防震减灾科普去哪里学？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 1.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_school] 学校等场所的避险要点\n学校等场所的避险要点\n特定场景\n适用阶段：震中\n课堂中应听从老师指挥，迅速护头避险于课桌旁，震动减轻后按疏散路线撤离。\n楼道与楼梯不推挤，注意脚下；到操场等开阔地清点人数。\n2. [em_realtime_info] 实时震情信息获取渠道\n实时震情信息获取渠道\n震中响应\n适用阶段：震中\n时效：实时\n关注中国地震台网中心官方发布（www.ceic.ac.cn），获取最新地震速报信息。\n下载官方地震预警APP，开启实时推送通知。\n收听当地广播电台或关注应急管理部官方社交媒体账号获取权威信息。\n3. [em_shelter] 应急避难场所选择与安置\n应急避难场所选择与安置\n震后恢复\n适用阶段：震后\n时效：长期\n优先前…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震前",
+      "question": "家庭疏散路线怎么画？",
+      "scores": {
+        "legacy": {
+          "factual": 0.06,
+          "completeness": 1.0,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_workplace] 办公场所避险与疏散\n办公场所避险与疏散\n特定场景\n适用阶段：震中\n躲入坚固桌下或承重墙角，护头远离玻璃隔断与高柜。\n振动减弱后按楼层疏散指示走楼梯，不乘电梯，到指定集合点报到。\n关闭不必要电源与门窗（安全前提下），协助行动不便同事。\n2. [em_highrise] 高层建筑内注意事项\n高层建筑内注意事项\n特定场景\n适用阶段：震中\n切忌慌乱跳楼；优先在坚固家具旁避险，保护头颈。\n疏散时走楼梯勿乘电梯；注意防火门与疏散指示。\n3. [em_mall] 商场超市等人流密集场所避险\n商场超市等人流密集场所避险\n特定场景\n适用阶段：震中\n远离货架、玻璃橱窗与自动扶梯，就近蹲下护头，避免踩踏。\n听从广播与工作人员疏导，优先走安全出口，勿乘电梯。\n撤离后到广场等开阔地集合…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震前",
+      "question": "燃气阀门震前如何管理？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 2.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_power_gas] 震中断电、断气与火情处置\n震中断电、断气与火情处置\n震中响应\n适用阶段：震中\n振动停止后，若闻到燃气味或看到明火，切勿开关电器和使用明火，迅速关闭燃气阀门。\n在确认自身安全的前提下关闭室内电闸，防止短路引发次生火灾。\n无法自行处置时立即撤离至室外开阔地，拨打119、燃气抢修电话，并告知邻居远离。\n2. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n主震暂停后，关闭电闸燃气（若安…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震前",
+      "question": "重要证件应急如何保管？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 4.93,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.93,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_shelter] 应急避难场所选择与安置\n应急避难场所选择与安置\n震后恢复\n适用阶段：震后\n时效：长期\n优先前往政府公布的应急避难场所或开阔广场、学校操场。\n携带身份证件、常用药品与保暖衣物，服从场所管理与防疫要求。\n关注物资发放与人员登记，协助老弱病残优先安置。\n2. [em_workplace] 办公场所避险与疏散\n办公场所避险与疏散\n特定场景\n适用阶段：震中\n躲入坚固桌下或承重墙角，护头远离玻璃隔断与高柜。\n振动减弱后按楼层疏散指示走楼梯，不乘电梯，到指定集合点报到。\n关闭不必要电源与门窗（安全前提下），协助行动不便同事。\n3. [em_outdoor] 室外与公共场所避险\n室外与公共场所避险\n应急避险\n适用阶段：震中\n远离建筑物、围墙、玻璃幕墙、立交桥、高压线、广告牌和危险…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震前",
+      "question": "车载应急包推荐配置？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 4.43,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.43,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_vehicle] 驾车途中遇震处置\n驾车途中遇震处置\n特定场景\n适用阶段：震中\n减速靠边停车，拉紧手刹，留出通道；勿停在桥梁、立交、隧道与高楼下。\n留在车内护头护颈，打开车载广播了解信息，振动明显减弱后再离开。\n弃车撤离时带走钥匙，将车靠边并告知交警或救援人员位置。\n2. [em_kit] 家庭应急准备（物资与预案）\n家庭应急准备（物资与预案）\n震前准备\n适用阶段：震前\n时效：长期\n常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n与家人约定震后集合地点与联络方式，熟悉社区疏散路线。\n3. [em_outdoor] 室外与公共场所避险\n室外与公共场所避险\n应急避险\n适用阶段：震中\n远离建筑物、围墙、玻璃幕墙、立交桥、高压线…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震前",
+      "question": "地下室能否作为避险空间？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 1.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_metro] 地铁与地下空间避险\n地铁与地下空间避险\n特定场景\n适用阶段：震中\n列车运行中遇震应抓牢扶手，远离车门缝隙；停稳后听从司机与站务人员指令。\n车站内远离玻璃幕墙与悬挂广告，就近护头蹲下，勿盲目冲向扶梯造成拥挤。\n主震暂停后按指示有序出站，避开地面建筑物坠落物。\n2. [em_outdoor] 室外与公共场所避险\n室外与公共场所避险\n应急避险\n适用阶段：震中\n远离建筑物、围墙、玻璃幕墙、立交桥、高压线、广告牌和危险品仓库。\n在开阔地蹲下护头，注意脚下地面裂缝与坠物；驾车时可减速靠边停车，勿停在桥梁或隧道内。\n听从现场工作人员疏导，避免拥挤踩踏。\n3. [em_workplace] 办公场所避险与疏散\n办公场所避险与疏散\n特定场景\n适用阶段：…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震前",
+      "question": "抗震设防烈度是什么意思？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 3.75,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.75,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_tsunami] 沿海海啸与近海强震防范\n沿海海啸与近海强震防范\n次生灾害\n适用阶段：震后\n近海强震或收到海啸预警时，立即向高地或内陆撤离，勿观潮。\n远离港口、海滩与河口，听从警报与当地政府指令。\n海啸可能多波次到来，确认官方解除警报前勿返回低洼岸线。\n2. [em_hospital] 医院与照护机构场景要点\n医院与照护机构场景要点\n特定场景\n适用阶段：震中\n患者与陪护听从医护指挥，就近护头，固定输液架与设备，避免坠物。\n重症、手术区按预案就地保护，非必要不转移；电梯停用。\n主震后协助有序疏散，保留病历与用药信息，关注氧气、电源安全。\n3. [em_volunteer] 社区互助与志愿者安全边界\n社区互助与志愿者安全边界\n震后恢复\n适用阶段：震后\n…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震前",
+      "question": "地震谣言如何辨别？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 5.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 5.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_realtime_info] 实时震情信息获取渠道\n实时震情信息获取渠道\n震中响应\n适用阶段：震中\n时效：实时\n关注中国地震台网中心官方发布（www.ceic.ac.cn），获取最新地震速报信息。\n下载官方地震预警APP，开启实时推送通知。\n收听当地广播电台或关注应急管理部官方社交媒体账号获取权威信息。\n2. [em_earthquake_basics] 地震基本知识\n地震基本知识\n科普知识\n适用阶段：震前\n时效：长期\n地震是地壳快速释放能量产生的振动，震级每增加1级，能量约增加32倍。\n震级衡量地震本身大小，烈度衡量地面受影响程度；同一次地震只有一个震级，但不同地点烈度不同。\n浅源地震（深度<70km）破坏力通常更大，中源（70-300km）和深源（>300km）影响相对较小。\n…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震前",
+      "question": "企业应急预案应包含什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 4.29,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.29,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_kit] 家庭应急准备（物资与预案）\n家庭应急准备（物资与预案）\n震前准备\n适用阶段：震前\n时效：长期\n常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n与家人约定震后集合地点与联络方式，熟悉社区疏散路线。\n2. [em_warning] 地震预警接收与响应\n地震预警接收与响应\n震前准备\n适用阶段：震前\n时效：长期\n开启手机或专用终端的官方预警推送，熟悉预警铃声与倒计时含义。\n收到预警后立即就地伏地遮挡，利用数秒至数十秒完成护头与关闭危险源。\n预警不等于精确预测，仍以实际振动为准，并关注官方订正信息。\n3. [em_shelter] 应急避难场所选择与安置\n应急避难场所选择与安置\n震后恢复\n适用阶段：震后\n时效：长期\n优先…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震中",
+      "question": "刚才地震多大？震中在哪？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 1.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_realtime_info] 实时震情信息获取渠道\n实时震情信息获取渠道\n震中响应\n适用阶段：震中\n时效：实时\n关注中国地震台网中心官方发布（www.ceic.ac.cn），获取最新地震速报信息。\n下载官方地震预警APP，开启实时推送通知。\n收听当地广播电台或关注应急管理部官方社交媒体账号获取权威信息。\n2. [em_earthquake_basics] 地震基本知识\n地震基本知识\n科普知识\n适用阶段：震前\n时效：长期\n地震是地壳快速释放能量产生的振动，震级每增加1级，能量约增加32倍。\n震级衡量地震本身大小，烈度衡量地面受影响程度；同一次地震只有一个震级，但不同地点烈度不同。\n浅源地震（深度<70km）破坏力通常更大，中源（70-300km）和深…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震中",
+      "question": "我现在在成都，最近的避难所在哪？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 3.33,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.33,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_mall] 商场超市等人流密集场所避险\n商场超市等人流密集场所避险\n特定场景\n适用阶段：震中\n远离货架、玻璃橱窗与自动扶梯，就近蹲下护头，避免踩踏。\n听从广播与工作人员疏导，优先走安全出口，勿乘电梯。\n撤离后到广场等开阔地集合，清点同行人员并联系家人。\n2. [em_outdoor] 室外与公共场所避险\n室外与公共场所避险\n应急避险\n适用阶段：震中\n远离建筑物、围墙、玻璃幕墙、立交桥、高压线、广告牌和危险品仓库。\n在开阔地蹲下护头，注意脚下地面裂缝与坠物；驾车时可减速靠边停车，勿停在桥梁或隧道内。\n听从现场工作人员疏导，避免拥挤踩踏。\n3. [em_shelter] 应急避难场所选择与安置\n应急避难场所选择与安置\n震后恢复\n适用阶段：震后\n时效：长…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震中",
+      "question": "室内应该躲哪里？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 2.54,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.54,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_outdoor] 室外与公共场所避险\n室外与公共场所避险\n应急避险\n适用阶段：震中\n远离建筑物、围墙、玻璃幕墙、立交桥、高压线、广告牌和危险品仓库。\n在开阔地蹲下护头，注意脚下地面裂缝与坠物；驾车时可减速靠边停车，勿停在桥梁或隧道内。\n听从现场工作人员疏导，避免拥挤踩踏。\n2. [em_workplace] 办公场所避险与疏散\n办公场所避险与疏散\n特定场景\n适用阶段：震中\n躲入坚固桌下或承重墙角，护头远离玻璃隔断与高柜。\n振动减弱后按楼层疏散指示走楼梯，不乘电梯，到指定集合点报到。\n关闭不必要电源与门窗（安全前提下），协助行动不便同事。\n3. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震中",
+      "question": "室外开阔地如何避险？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 4.79,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.79,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_outdoor] 室外与公共场所避险\n室外与公共场所避险\n应急避险\n适用阶段：震中\n远离建筑物、围墙、玻璃幕墙、立交桥、高压线、广告牌和危险品仓库。\n在开阔地蹲下护头，注意脚下地面裂缝与坠物；驾车时可减速靠边停车，勿停在桥梁或隧道内。\n听从现场工作人员疏导，避免拥挤踩踏。\n2. [em_workplace] 办公场所避险与疏散\n办公场所避险与疏散\n特定场景\n适用阶段：震中\n躲入坚固桌下或承重墙角，护头远离玻璃隔断与高柜。\n振动减弱后按楼层疏散指示走楼梯，不乘电梯，到指定集合点报到。\n关闭不必要电源与门窗（安全前提下），协助行动不便同事。\n3. [em_school] 学校等场所的避险要点\n学校等场所的避险要点\n特定场景\n适用阶段：震中\n课堂中应听从…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震中",
+      "question": "高楼里能坐电梯吗？",
+      "scores": {
+        "legacy": {
+          "factual": 0.06,
+          "completeness": 1.18,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.18,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_highrise] 高层建筑内注意事项\n高层建筑内注意事项\n特定场景\n适用阶段：震中\n切忌慌乱跳楼；优先在坚固家具旁避险，保护头颈。\n疏散时走楼梯勿乘电梯；注意防火门与疏散指示。\n2. [em_workplace] 办公场所避险与疏散\n办公场所避险与疏散\n特定场景\n适用阶段：震中\n躲入坚固桌下或承重墙角，护头远离玻璃隔断与高柜。\n振动减弱后按楼层疏散指示走楼梯，不乘电梯，到指定集合点报到。\n关闭不必要电源与门窗（安全前提下），协助行动不便同事。\n3. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震中",
+      "question": "开车时遇到地震怎么办？",
+      "scores": {
+        "legacy": {
+          "factual": 0.06,
+          "completeness": 1.0,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_vehicle] 驾车途中遇震处置\n驾车途中遇震处置\n特定场景\n适用阶段：震中\n减速靠边停车，拉紧手刹，留出通道；勿停在桥梁、立交、隧道与高楼下。\n留在车内护头护颈，打开车载广播了解信息，振动明显减弱后再离开。\n弃车撤离时带走钥匙，将车靠边并告知交警或救援人员位置。\n2. [em_metro] 地铁与地下空间避险\n地铁与地下空间避险\n特定场景\n适用阶段：震中\n列车运行中遇震应抓牢扶手，远离车门缝隙；停稳后听从司机与站务人员指令。\n车站内远离玻璃幕墙与悬挂广告，就近护头蹲下，勿盲目冲向扶梯造成拥挤。\n主震暂停后按指示有序出站，避开地面建筑物坠落物。\n3. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震中",
+      "question": "学校上课地震如何疏散？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 5.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 5.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_school] 学校等场所的避险要点\n学校等场所的避险要点\n特定场景\n适用阶段：震中\n课堂中应听从老师指挥，迅速护头避险于课桌旁，震动减轻后按疏散路线撤离。\n楼道与楼梯不推挤，注意脚下；到操场等开阔地清点人数。\n2. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n3. [em_workplace] 办公场所避险与疏散…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震中",
+      "question": "医院手术室地震如何应对？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 3.93,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.93,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_hospital] 医院与照护机构场景要点\n医院与照护机构场景要点\n特定场景\n适用阶段：震中\n患者与陪护听从医护指挥，就近护头，固定输液架与设备，避免坠物。\n重症、手术区按预案就地保护，非必要不转移；电梯停用。\n主震后协助有序疏散，保留病历与用药信息，关注氧气、电源安全。\n2. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n3. [em_volunt…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震中",
+      "question": "地铁里地震怎么办？",
+      "scores": {
+        "legacy": {
+          "factual": 0.06,
+          "completeness": 1.0,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_metro] 地铁与地下空间避险\n地铁与地下空间避险\n特定场景\n适用阶段：震中\n列车运行中遇震应抓牢扶手，远离车门缝隙；停稳后听从司机与站务人员指令。\n车站内远离玻璃幕墙与悬挂广告，就近护头蹲下，勿盲目冲向扶梯造成拥挤。\n主震暂停后按指示有序出站，避开地面建筑物坠落物。\n2. [em_realtime_info] 实时震情信息获取渠道\n实时震情信息获取渠道\n震中响应\n适用阶段：震中\n时效：实时\n关注中国地震台网中心官方发布（www.ceic.ac.cn），获取最新地震速报信息。\n下载官方地震预警APP，开启实时推送通知。\n收听当地广播电台或关注应急管理部官方社交媒体账号获取权威信息。\n3. [em_indoor] 振动发生时室内如何避险\n振动发生时…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震中",
+      "question": "余震还会来吗？",
+      "scores": {
+        "legacy": {
+          "factual": 0.06,
+          "completeness": 1.0,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_aftershock] 主震后余震与次生灾害防范\n主震后余震与次生灾害防范\n震后处置\n适用阶段：震后\n余震可能持续数日甚至更久，勿立即返回危楼或室内取物。\n警惕滑坡、泥石流、堰塞湖、火灾、燃气泄漏等次生灾害，避开陡坡与河道。\n通过官方渠道获取灾情与避险指引，不传谣不信谣。\n2. [em_realtime_info] 实时震情信息获取渠道\n实时震情信息获取渠道\n震中响应\n适用阶段：震中\n时效：实时\n关注中国地震台网中心官方发布（www.ceic.ac.cn），获取最新地震速报信息。\n下载官方地震预警APP，开启实时推送通知。\n收听当地广播电台或关注应急管理部官方社交媒体账号获取权威信息。\n3. [em_psychology] 震后心理调适与互助\n震后…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震中",
+      "question": "震后火情如何处置？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 4.93,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.93,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_fire_secondary] 震后火灾与危险化学品风险\n震后火灾与危险化学品风险\n次生灾害\n适用阶段：震后\n发现烟雾、燃气味立即撤离并报警，勿使用明火与电梯。\n远离加油站、化工厂、仓库等风险源下风向。\n协助疏导人群时保持通道畅通，等待专业消防处置。\n2. [em_power_gas] 震中断电、断气与火情处置\n震中断电、断气与火情处置\n震中响应\n适用阶段：震中\n振动停止后，若闻到燃气味或看到明火，切勿开关电器和使用明火，迅速关闭燃气阀门。\n在确认自身安全的前提下关闭室内电闸，防止短路引发次生火灾。\n无法自行处置时立即撤离至室外开阔地，拨打119、燃气抢修电话，并告知邻居远离。\n3. [em_aftershock] 主震后余震与次生灾害防范\n主震后…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震中",
+      "question": "海边地震要防海啸吗？",
+      "scores": {
+        "legacy": {
+          "factual": 0.06,
+          "completeness": 1.0,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_tsunami] 沿海海啸与近海强震防范\n沿海海啸与近海强震防范\n次生灾害\n适用阶段：震后\n近海强震或收到海啸预警时，立即向高地或内陆撤离，勿观潮。\n远离港口、海滩与河口，听从警报与当地政府指令。\n海啸可能多波次到来，确认官方解除警报前勿返回低洼岸线。\n2. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n3. [em_warning] 地震预警接收与…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震中",
+      "question": "化工厂附近地震注意什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 4.75,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.75,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n2. [em_fire_secondary] 震后火灾与危险化学品风险\n震后火灾与危险化学品风险\n次生灾害\n适用阶段：震后\n发现烟雾、燃气味立即撤离并报警，勿使用明火与电梯。\n远离加油站、化工厂、仓库等风险源下风向。\n协助疏导人群时保持通道畅通，等待专业消防处置。\n3. [em_…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震中",
+      "question": "桥梁上地震如何自救？",
+      "scores": {
+        "legacy": {
+          "factual": 0.06,
+          "completeness": 1.0,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n2. [em_vehicle] 驾车途中遇震处置\n驾车途中遇震处置\n特定场景\n适用阶段：震中\n减速靠边停车，拉紧手刹，留出通道；勿停在桥梁、立交、隧道与高楼下。\n留在车内护头护颈，打开车载广播了解信息，振动明显减弱后再离开。\n弃车撤离时带走钥匙，将车靠边并告知交警或救援人员位置。…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震中",
+      "question": "夜间地震如何快速反应？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 5.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 5.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_warning] 地震预警接收与响应\n地震预警接收与响应\n震前准备\n适用阶段：震前\n时效：长期\n开启手机或专用终端的官方预警推送，熟悉预警铃声与倒计时含义。\n收到预警后立即就地伏地遮挡，利用数秒至数十秒完成护头与关闭危险源。\n预警不等于精确预测，仍以实际振动为准，并关注官方订正信息。\n2. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n3. [em_…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震中",
+      "question": "轮椅使用者如何避险？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 2.98,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.98,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_outdoor] 室外与公共场所避险\n室外与公共场所避险\n应急避险\n适用阶段：震中\n远离建筑物、围墙、玻璃幕墙、立交桥、高压线、广告牌和危险品仓库。\n在开阔地蹲下护头，注意脚下地面裂缝与坠物；驾车时可减速靠边停车，勿停在桥梁或隧道内。\n听从现场工作人员疏导，避免拥挤踩踏。\n2. [em_mall] 商场超市等人流密集场所避险\n商场超市等人流密集场所避险\n特定场景\n适用阶段：震中\n远离货架、玻璃橱窗与自动扶梯，就近蹲下护头，避免踩踏。\n听从广播与工作人员疏导，优先走安全出口，勿乘电梯。\n撤离后到广场等开阔地集合，清点同行人员并联系家人。\n3. [em_workplace] 办公场所避险与疏散\n办公场所避险与疏散\n特定场景\n适用阶段：震中\n躲入坚固桌下…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震中",
+      "question": "商场里地震往哪跑？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 4.61,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.61,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_metro] 地铁与地下空间避险\n地铁与地下空间避险\n特定场景\n适用阶段：震中\n列车运行中遇震应抓牢扶手，远离车门缝隙；停稳后听从司机与站务人员指令。\n车站内远离玻璃幕墙与悬挂广告，就近护头蹲下，勿盲目冲向扶梯造成拥挤。\n主震暂停后按指示有序出站，避开地面建筑物坠落物。\n2. [em_mall] 商场超市等人流密集场所避险\n商场超市等人流密集场所避险\n特定场景\n适用阶段：震中\n远离货架、玻璃橱窗与自动扶梯，就近蹲下护头，避免踩踏。\n听从广播与工作人员疏导，优先走安全出口，勿乘电梯。\n撤离后到广场等开阔地集合，清点同行人员并联系家人。\n3. [em_realtime_info] 实时震情信息获取渠道\n实时震情信息获取渠道\n震中响应\n适用阶段：震中\n时…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震中",
+      "question": "最新震情哪里查？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 1.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_realtime_info] 实时震情信息获取渠道\n实时震情信息获取渠道\n震中响应\n适用阶段：震中\n时效：实时\n关注中国地震台网中心官方发布（www.ceic.ac.cn），获取最新地震速报信息。\n下载官方地震预警APP，开启实时推送通知。\n收听当地广播电台或关注应急管理部官方社交媒体账号获取权威信息。\n2. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震中",
+      "question": "震中烈度是什么意思？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 3.15,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.15,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_earthquake_basics] 地震基本知识\n地震基本知识\n科普知识\n适用阶段：震前\n时效：长期\n地震是地壳快速释放能量产生的振动，震级每增加1级，能量约增加32倍。\n震级衡量地震本身大小，烈度衡量地面受影响程度；同一次地震只有一个震级，但不同地点烈度不同。\n浅源地震（深度<70km）破坏力通常更大，中源（70-300km）和深源（>300km）影响相对较小。\n2. [em_tsunami] 沿海海啸与近海强震防范\n沿海海啸与近海强震防范\n次生灾害\n适用阶段：震后\n近海强震或收到海啸预警时，立即向高地或内陆撤离，勿观潮。\n远离港口、海滩与河口，听从警报与当地政府指令。\n海啸可能多波次到来，确认官方解除警报前勿返回低洼岸线。\n3. [em_re…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震中",
+      "question": "主震和余震区别是什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.06,
+          "completeness": 1.0,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_aftershock] 主震后余震与次生灾害防范\n主震后余震与次生灾害防范\n震后处置\n适用阶段：震后\n余震可能持续数日甚至更久，勿立即返回危楼或室内取物。\n警惕滑坡、泥石流、堰塞湖、火灾、燃气泄漏等次生灾害，避开陡坡与河道。\n通过官方渠道获取灾情与避险指引，不传谣不信谣。\n2. [em_earthquake_basics] 地震基本知识\n地震基本知识\n科普知识\n适用阶段：震前\n时效：长期\n地震是地壳快速释放能量产生的振动，震级每增加1级，能量约增加32倍。\n震级衡量地震本身大小，烈度衡量地面受影响程度；同一次地震只有一个震级，但不同地点烈度不同。\n浅源地震（深度<70km）破坏力通常更大，中源（70-300km）和深源（>300km）影响相对较小。…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震后",
+      "question": "我家房子震后安全吗怎么判断？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 4.11,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.11,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_post_safety] 震后房屋安全评估\n震后房屋安全评估\n震后恢复\n适用阶段：震后\n时效：长期\n震后不要立即返回室内，等待专业人员或社区安全评估后再进入。\n观察房屋是否有明显裂缝、倾斜、地基下沉等损伤，如有应标记为危险并远离。\n联系当地住建部门或应急管理部门申请房屋安全鉴定。\n2. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震后",
+      "question": "政府有哪些灾后重建补贴政策？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 5.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 5.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_post_aid] 灾后救助与补偿政策\n灾后救助与补偿政策\n震后恢复\n适用阶段：震后\n时效：政策更新\n受灾居民可向当地民政部门申请临时救助金和生活物资。\n房屋损毁可申请住房重建补助，具体标准以省级政府发布的灾后恢复重建方案为准。\n可通过12345政务服务热线或当地应急管理局官网查询最新救助政策。\n2. [em_rebuild] 临时安置与住房重建指引\n临时安置与住房重建指引\n震后恢复\n适用阶段：震后\n时效：政策更新\n临时安置期间关注供水供电供暖与卫生条件，服从社区安排。\n住房重建须经安全鉴定与规划审批，勿擅自回迁危房。\n通过政务热线与乡镇/街道窗口查询补助申报材料与时限。\n3. [em_shelter] 应急避难场所选择与安置\n应急避难场所选择与安…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震后",
+      "question": "灾区道路恢复了吗？",
+      "scores": {
+        "legacy": {
+          "factual": 0.06,
+          "completeness": 1.18,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.18,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_volunteer] 社区互助与志愿者安全边界\n社区互助与志愿者安全边界\n震后恢复\n适用阶段：震后\n时效：长期\n非专业人员勿进入危楼搜救，优先协助转运、登记与物资分发。\n服从统一指挥，佩戴标识，注意自身防护与轮换休息。\n发现伤员立即呼叫专业救援，不做超出能力的医疗处置。\n2. [em_post_aid] 灾后救助与补偿政策\n灾后救助与补偿政策\n震后恢复\n适用阶段：震后\n时效：政策更新\n受灾居民可向当地民政部门申请临时救助金和生活物资。\n房屋损毁可申请住房重建补助，具体标准以省级政府发布的灾后恢复重建方案为准。\n可通过12345政务服务热线或当地应急管理局官网查询最新救助政策。\n3. [em_landslide] 山区滑坡崩塌风险规避\n山区滑坡崩塌风…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震后",
+      "question": "学校什么时候复课？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 2.98,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.98,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_rebuild] 临时安置与住房重建指引\n临时安置与住房重建指引\n震后恢复\n适用阶段：震后\n时效：政策更新\n临时安置期间关注供水供电供暖与卫生条件，服从社区安排。\n住房重建须经安全鉴定与规划审批，勿擅自回迁危房。\n通过政务热线与乡镇/街道窗口查询补助申报材料与时限。\n2. [em_shelter] 应急避难场所选择与安置\n应急避难场所选择与安置\n震后恢复\n适用阶段：震后\n时效：长期\n优先前往政府公布的应急避难场所或开阔广场、学校操场。\n携带身份证件、常用药品与保暖衣物，服从场所管理与防疫要求。\n关注物资发放与人员登记，协助老弱病残优先安置。\n3. [em_school] 学校等场所的避险要点\n学校等场所的避险要点\n特定场景\n适用阶段：震中\n课堂中应…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震后",
+      "question": "震后心理援助去哪找？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 2.98,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.98,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_psychology] 震后心理调适与互助\n震后心理调适与互助\n震后恢复\n适用阶段：震后\n时效：长期\n震后出现恐惧、失眠、易惊等反应属常见应激表现，多数会随时间逐渐缓解。\n保持规律作息，与亲友倾诉，避免长时间独处或反复观看灾难性画面。\n若持续两周以上严重影响生活，可联系社区、学校或心理援助热线寻求专业支持。\n2. [em_volunteer] 社区互助与志愿者安全边界\n社区互助与志愿者安全边界\n震后恢复\n适用阶段：震后\n时效：长期\n非专业人员勿进入危楼搜救，优先协助转运、登记与物资分发。\n服从统一指挥，佩戴标识，注意自身防护与轮换休息。\n发现伤员立即呼叫专业救援，不做超出能力的医疗处置。\n3. [em_realtime_info] 实时震情信息获取…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震后",
+      "question": "危房鉴定流程是什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 3.58,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.58,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_mall] 商场超市等人流密集场所避险\n商场超市等人流密集场所避险\n特定场景\n适用阶段：震中\n远离货架、玻璃橱窗与自动扶梯，就近蹲下护头，避免踩踏。\n听从广播与工作人员疏导，优先走安全出口，勿乘电梯。\n撤离后到广场等开阔地集合，清点同行人员并联系家人。\n2. [em_highrise] 高层建筑内注意事项\n高层建筑内注意事项\n特定场景\n适用阶段：震中\n切忌慌乱跳楼；优先在坚固家具旁避险，保护头颈。\n疏散时走楼梯勿乘电梯；注意防火门与疏散指示。\n3. [em_outdoor] 室外与公共场所避险\n室外与公共场所避险\n应急避险\n适用阶段：震中\n远离建筑物、围墙、玻璃幕墙、立交桥、高压线、广告牌和危险品仓库。\n在开阔地蹲下护头，注意脚下地面裂缝与坠物；驾…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震后",
+      "question": "保险理赔需要哪些材料？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 3.15,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.15,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_insurance] 地震保险与财产风险准备\n地震保险与财产风险准备\n震前准备\n适用阶段：震前\n时效：政策更新\n了解住宅是否属于地震保险覆盖范围及免责条款，保留保单复印件。\n震后及时报案，按保险公司要求留存房屋与财产损失影像。\n保险赔付与政府救助可并行了解，具体以当地政策与合同为准。\n2. [em_kit] 家庭应急准备（物资与预案）\n家庭应急准备（物资与预案）\n震前准备\n适用阶段：震前\n时效：长期\n常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n与家人约定震后集合地点与联络方式，熟悉社区疏散路线。\n3. [em_shelter] 应急避难场所选择与安置\n应急避难场所选择与安置\n震后恢复\n适用阶段：震后\n时效：长期\n优先…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震后",
+      "question": "临时安置点生活物资如何领？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 1.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_rebuild] 临时安置与住房重建指引\n临时安置与住房重建指引\n震后恢复\n适用阶段：震后\n时效：政策更新\n临时安置期间关注供水供电供暖与卫生条件，服从社区安排。\n住房重建须经安全鉴定与规划审批，勿擅自回迁危房。\n通过政务热线与乡镇/街道窗口查询补助申报材料与时限。\n2. [em_kit] 家庭应急准备（物资与预案）\n家庭应急准备（物资与预案）\n震前准备\n适用阶段：震前\n时效：长期\n常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n与家人约定震后集合地点与联络方式，熟悉社区疏散路线。\n3. [em_shelter] 应急避难场所选择与安置\n应急避难场所选择与安置\n震后恢复\n适用阶段：震后\n时效：长期\n优先前往政府公布的应急…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震后",
+      "question": "震后防疫要注意什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 4.43,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.43,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_kit] 家庭应急准备（物资与预案）\n家庭应急准备（物资与预案）\n震前准备\n适用阶段：震前\n时效：长期\n常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n与家人约定震后集合地点与联络方式，熟悉社区疏散路线。\n2. [em_shelter] 应急避难场所选择与安置\n应急避难场所选择与安置\n震后恢复\n适用阶段：震后\n时效：长期\n优先前往政府公布的应急避难场所或开阔广场、学校操场。\n携带身份证件、常用药品与保暖衣物，服从场所管理与防疫要求。\n关注物资发放与人员登记，协助老弱病残优先安置。\n3. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静，迅速判断所处环境：优先选择「…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震后",
+      "question": "滑坡泥石流风险如何防范？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 2.8,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.8,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_landslide] 山区滑坡崩塌风险规避\n山区滑坡崩塌风险规避\n次生灾害\n适用阶段：震后\n强震后避开陡坡、危岩与沟谷出口，夜间尤勿靠近山体。\n发现山体开裂、滚石、异响立即撤离并报告。\n雨后余震叠加滑坡风险升高，听从转移安置安排。\n2. [em_outdoor] 室外与公共场所避险\n室外与公共场所避险\n应急避险\n适用阶段：震中\n远离建筑物、围墙、玻璃幕墙、立交桥、高压线、广告牌和危险品仓库。\n在开阔地蹲下护头，注意脚下地面裂缝与坠物；驾车时可减速靠边停车，勿停在桥梁或隧道内。\n听从现场工作人员疏导，避免拥挤踩踏。\n3. [em_mall] 商场超市等人流密集场所避险\n商场超市等人流密集场所避险\n特定场景\n适用阶段：震中\n远离货架、玻璃橱窗与自动扶梯，就近蹲下护头，避免踩踏。\n听从广…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震后",
+      "question": "断水断电如何应急？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 2.18,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.18,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_power_gas] 震中断电、断气与火情处置\n震中断电、断气与火情处置\n震中响应\n适用阶段：震中\n振动停止后，若闻到燃气味或看到明火，切勿开关电器和使用明火，迅速关闭燃气阀门。\n在确认自身安全的前提下关闭室内电闸，防止短路引发次生火灾。\n无法自行处置时立即撤离至室外开阔地，拨打119、燃气抢修电话，并告知邻居远离。\n2. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震后",
+      "question": "志愿者如何参与救援？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 4.75,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.75,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_volunteer] 社区互助与志愿者安全边界\n社区互助与志愿者安全边界\n震后恢复\n适用阶段：震后\n时效：长期\n非专业人员勿进入危楼搜救，优先协助转运、登记与物资分发。\n服从统一指挥，佩戴标识，注意自身防护与轮换休息。\n发现伤员立即呼叫专业救援，不做超出能力的医疗处置。\n2. [em_shelter] 应急避难场所选择与安置\n应急避难场所选择与安置\n震后恢复\n适用阶段：震后\n时效：长期\n优先前往政府公布的应急避难场所或开阔广场、学校操场。\n携带身份证件、常用药品与保暖衣物，服从场所管理与防疫要求。\n关注物资发放与人员登记，协助老弱病残优先安置。\n3. [em_hospital] 医院与照护机构场景要点\n医院与照护机构场景要点\n特定场景\n适用阶段：震…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震后",
+      "question": "企业复工复产检查清单？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 4.93,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.93,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_shelter] 应急避难场所选择与安置\n应急避难场所选择与安置\n震后恢复\n适用阶段：震后\n时效：长期\n优先前往政府公布的应急避难场所或开阔广场、学校操场。\n携带身份证件、常用药品与保暖衣物，服从场所管理与防疫要求。\n关注物资发放与人员登记，协助老弱病残优先安置。\n2. [em_hospital] 医院与照护机构场景要点\n医院与照护机构场景要点\n特定场景\n适用阶段：震中\n患者与陪护听从医护指挥，就近护头，固定输液架与设备，避免坠物。\n重症、手术区按预案就地保护，非必要不转移；电梯停用。\n主震后协助有序疏散，保留病历与用药信息，关注氧气、电源安全。\n3. [em_rebuild] 临时安置与住房重建指引\n临时安置与住房重建指引\n震后恢复\n适用阶段：震后\n时效：政策更新\n临时安置期间关…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震后",
+      "question": "文物古建筑震后如何评估？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 3.93,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.93,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_post_safety] 震后房屋安全评估\n震后房屋安全评估\n震后恢复\n适用阶段：震后\n时效：长期\n震后不要立即返回室内，等待专业人员或社区安全评估后再进入。\n观察房屋是否有明显裂缝、倾斜、地基下沉等损伤，如有应标记为危险并远离。\n联系当地住建部门或应急管理部门申请房屋安全鉴定。\n2. [em_aftershock] 主震后余震与次生灾害防范\n主震后余震与次生灾害防范\n震后处置\n适用阶段：震后\n余震可能持续数日甚至更久，勿立即返回危楼或室内取物。\n警惕滑坡、泥石流、堰塞湖、火灾、燃气泄漏等次生灾害，避开陡坡与河道。\n通过官方渠道获取灾情与避险指引，不传谣不信谣。\n3. [em_psychology] 震后心理调适与互助\n震后心理调适与互助\n震后恢复…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震后",
+      "question": "农业设施震后如何报损？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 2.98,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.98,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_post_aid] 灾后救助与补偿政策\n灾后救助与补偿政策\n震后恢复\n适用阶段：震后\n时效：政策更新\n受灾居民可向当地民政部门申请临时救助金和生活物资。\n房屋损毁可申请住房重建补助，具体标准以省级政府发布的灾后恢复重建方案为准。\n可通过12345政务服务热线或当地应急管理局官网查询最新救助政策。\n2. [em_insurance] 地震保险与财产风险准备\n地震保险与财产风险准备\n震前准备\n适用阶段：震前\n时效：政策更新\n了解住宅是否属于地震保险覆盖范围及免责条款，保留保单复印件。\n震后及时报案，按保险公司要求留存房屋与财产损失影像。\n保险赔付与政府救助可并行了解，具体以当地政策与合同为准。\n3. [em_volunteer] 社区互助与志愿者安全边…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震后",
+      "question": "灾后饮用水安全如何保证？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 2.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_fire_secondary] 震后火灾与危险化学品风险\n震后火灾与危险化学品风险\n次生灾害\n适用阶段：震后\n发现烟雾、燃气味立即撤离并报警，勿使用明火与电梯。\n远离加油站、化工厂、仓库等风险源下风向。\n协助疏导人群时保持通道畅通，等待专业消防处置。\n2. [em_shelter] 应急避难场所选择与安置\n应急避难场所选择与安置\n震后恢复\n适用阶段：震后\n时效：长期\n优先前往政府公布的应急避难场所或开阔广场、学校操场。\n携带身份证件、常用药品与保暖衣物，服从场所管理与防疫要求。\n关注物资发放与人员登记，协助老弱病残优先安置。\n3. [em_kit] 家庭应急准备（物资与预案）\n家庭应急准备（物资与预案）\n震前准备\n适用阶段：震前\n时效：长期\n常备饮…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震后",
+      "question": "余震期是否适合回家取物？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 2.98,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.98,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_aftershock] 主震后余震与次生灾害防范\n主震后余震与次生灾害防范\n震后处置\n适用阶段：震后\n余震可能持续数日甚至更久，勿立即返回危楼或室内取物。\n警惕滑坡、泥石流、堰塞湖、火灾、燃气泄漏等次生灾害，避开陡坡与河道。\n通过官方渠道获取灾情与避险指引，不传谣不信谣。\n2. [em_rebuild] 临时安置与住房重建指引\n临时安置与住房重建指引\n震后恢复\n适用阶段：震后\n时效：政策更新\n临时安置期间关注供水供电供暖与卫生条件，服从社区安排。\n住房重建须经安全鉴定与规划审批，勿擅自回迁危房。\n通过政务热线与乡镇/街道窗口查询补助申报材料与时限。\n3. [em_elderly_child] 老人儿童与行动不便者照护\n老人儿童与行动不便者照护\n特定…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震后",
+      "question": "地震灾情如何官方申报？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 2.8,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.8,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_realtime_info] 实时震情信息获取渠道\n实时震情信息获取渠道\n震中响应\n适用阶段：震中\n时效：实时\n关注中国地震台网中心官方发布（www.ceic.ac.cn），获取最新地震速报信息。\n下载官方地震预警APP，开启实时推送通知。\n收听当地广播电台或关注应急管理部官方社交媒体账号获取权威信息。\n2. [em_post_aid] 灾后救助与补偿政策\n灾后救助与补偿政策\n震后恢复\n适用阶段：震后\n时效：政策更新\n受灾居民可向当地民政部门申请临时救助金和生活物资。\n房屋损毁可申请住房重建补助，具体标准以省级政府发布的灾后恢复重建方案为准。\n可通过12345政务服务热线或当地应急管理局官网查询最新救助政策。\n3. [em_insurance] 地震保险与财产风险准备\n地震保险与财…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震后",
+      "question": "灾后法律援助渠道有哪些？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 3.75,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.75,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_post_aid] 灾后救助与补偿政策\n灾后救助与补偿政策\n震后恢复\n适用阶段：震后\n时效：政策更新\n受灾居民可向当地民政部门申请临时救助金和生活物资。\n房屋损毁可申请住房重建补助，具体标准以省级政府发布的灾后恢复重建方案为准。\n可通过12345政务服务热线或当地应急管理局官网查询最新救助政策。\n2. [em_volunteer] 社区互助与志愿者安全边界\n社区互助与志愿者安全边界\n震后恢复\n适用阶段：震后\n时效：长期\n非专业人员勿进入危楼搜救，优先协助转运、登记与物资分发。\n服从统一指挥，佩戴标识，注意自身防护与轮换休息。\n发现伤员立即呼叫专业救援，不做超出能力的医疗处置。\n3. [em_realtime_info] 实时震情信息获取渠道\n实时震…"
+      }
+    },
+    {
+      "baseline": "B2",
+      "phase": "震后",
+      "question": "社区灾后重建谁牵头？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 2.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（本路径已关闭）\n\n【参考资料】\n1. [em_volunteer] 社区互助与志愿者安全边界\n社区互助与志愿者安全边界\n震后恢复\n适用阶段：震后\n时效：长期\n非专业人员勿进入危楼搜救，优先协助转运、登记与物资分发。\n服从统一指挥，佩戴标识，注意自身防护与轮换休息。\n发现伤员立即呼叫专业救援，不做超出能力的医疗处置。\n2. [em_rebuild] 临时安置与住房重建指引\n临时安置与住房重建指引\n震后恢复\n适用阶段：震后\n时效：政策更新\n临时安置期间关注供水供电供暖与卫生条件，服从社区安排。\n住房重建须经安全鉴定与规划审批，勿擅自回迁危房。\n通过政务热线与乡镇/街道窗口查询补助申报材料与时限。\n3. [em_post_aid] 灾后救助与补偿政策\n灾后救助与补偿政策\n震后恢复\n适用阶段：震后\n时…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震前",
+      "question": "家庭应急包该准备什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 4.43,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.43,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n【应急主题】\n家庭应急准备（物资与预案）\n- 常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n- 与家人约定震后集合地点与联络方式，熟悉社区疏散路线。\n地震基本知识\n- 地震是地壳快速释放能量产生的振动，震级每增加1级，能量约增加32倍。\n- 震级衡量地震本身大小，烈度衡量地面受影响程度；同一次地震只有一个震级，但不同地点烈度不同。\n- 浅源地震（深度<70km）破坏力通常更大，中源（70-300km）和深源（>300km）影响相对较小。\n\n【参考资料】\n1. [em_kit] 家庭应急准备（物资与预案）\n家庭应急准备（物资与预案）\n震前准备\n适用阶段：震前\n时效：长期\n常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n与家人约定震后集合地点…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震前",
+      "question": "地震预警手机怎么开启？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 1.18,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.18,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_warning] 地震预警接收与响应\n地震预警接收与响应\n震前准备\n适用阶段：震前\n时效：长期\n开启手机或专用终端的官方预警推送，熟悉预警铃声与倒计时含义。\n收到预警后立即就地伏地遮挡，利用数秒至数十秒完成护头与关闭危险源。\n预警不等于精确预测，仍以实际振动为准，并关注官方订正信息。\n2. [em_realtime_info] 实时震情信息获取渠道\n实时震情信息获取渠道\n震中响应\n适用阶段：震中\n时效：实时\n关注中国地震台网中心官方发布（www.ceic.ac.cn），获取最新地震速报信息。\n下载官方地震预警APP，开启实时推送通知。\n收听当地广播电台或关注应急管理部官方社交媒体账号获取权威信息。\n3. [em_kit] 家庭应急准备（物资与预案）\n家庭应急准备（物资与预案）\n震前准备\n适用…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震前",
+      "question": "学校如何组织防震演练？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 1.18,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.18,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n【应急主题】\n家庭与社区防震演练\n- 每年至少组织一次家庭或社区防震演练，明确各成员职责与联络方式。\n- 演练内容包括：伏地、遮挡、手抓牢，以及主震暂停后的有序疏散与室外集合。\n- 检查并熟悉家中、楼道与社区疏散路线，确保通道无杂物遮挡。\n家庭应急准备（物资与预案）\n- 常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n- 与家人约定震后集合地点与联络方式，熟悉社区疏散路线。\n\n【参考资料】\n1. [em_drill] 家庭与社区防震演练\n家庭与社区防震演练\n震前准备\n适用阶段：震前\n时效：长期\n每年至少组织一次家庭或社区防震演练，明确各成员职责与联络方式。\n演练内容包括：伏地、遮挡、手抓牢，以及主震暂停后的有序疏散与室外集合。\n检查并熟悉家中、楼道与社区疏散路线，确保…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震前",
+      "question": "室内家具如何固定防震？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 4.08,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.08,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n【应急主题】\n家庭应急准备（物资与预案）\n- 常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n- 与家人约定震后集合地点与联络方式，熟悉社区疏散路线。\n地震基本知识\n- 地震是地壳快速释放能量产生的振动，震级每增加1级，能量约增加32倍。\n- 震级衡量地震本身大小，烈度衡量地面受影响程度；同一次地震只有一个震级，但不同地点烈度不同。\n- 浅源地震（深度<70km）破坏力通常更大，中源（70-300km）和深源（>300km）影响相对较小。\n\n【参考资料】\n1. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震前",
+      "question": "高层住宅震前要做哪些检查？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 1.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_highrise] 高层建筑内注意事项\n高层建筑内注意事项\n特定场景\n适用阶段：震中\n切忌慌乱跳楼；优先在坚固家具旁避险，保护头颈。\n疏散时走楼梯勿乘电梯；注意防火门与疏散指示。\n2. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n3. [em_hospital] 医院与照护机构场景要点\n医院与照护机构场景要点\n特定场景\n适用…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震前",
+      "question": "社区应急物资如何储备？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 1.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n【应急主题】\n老人儿童与行动不便者照护\n- 震前为老人儿童准备易取用药品、奶粉、纸尿裤等，固定易倒家具。\n- 震中优先协助其护头蹲下或转移到相对安全角落，避免独自滞留上层。\n- 震后注意保暖、饮水与情绪安抚，及时寻求社区与志愿者协助。\n\n【参考资料】\n1. [em_kit] 家庭应急准备（物资与预案）\n家庭应急准备（物资与预案）\n震前准备\n适用阶段：震前\n时效：长期\n常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n与家人约定震后集合地点与联络方式，熟悉社区疏散路线。\n2. [em_shelter] 应急避难场所选择与安置\n应急避难场所选择与安置\n震后恢复\n适用阶段：震后\n时效：长期\n优先前往政府公布的应急避难场所或开阔广场、学校操场。\n携带身份证件、常用药品与保暖衣物，服从场所管理与防疫要求。\n关注物…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震前",
+      "question": "地震保险有必要买吗？",
+      "scores": {
+        "legacy": {
+          "factual": 0.06,
+          "completeness": 1.0,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_insurance] 地震保险与财产风险准备\n地震保险与财产风险准备\n震前准备\n适用阶段：震前\n时效：政策更新\n了解住宅是否属于地震保险覆盖范围及免责条款，保留保单复印件。\n震后及时报案，按保险公司要求留存房屋与财产损失影像。\n保险赔付与政府救助可并行了解，具体以当地政策与合同为准。\n2. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震前",
+      "question": "断网断电时如何联系家人？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 2.8,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.8,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_power_gas] 震中断电、断气与火情处置\n震中断电、断气与火情处置\n震中响应\n适用阶段：震中\n振动停止后，若闻到燃气味或看到明火，切勿开关电器和使用明火，迅速关闭燃气阀门。\n在确认自身安全的前提下关闭室内电闸，防止短路引发次生火灾。\n无法自行处置时立即撤离至室外开阔地，拨打119、燃气抢修电话，并告知邻居远离。\n2. [em_comms] 通信中断时的联络与信息\n通信中断时的联络与信息\n震中响应\n适用阶段：震中\n时效：长期\n优先发短信或用互联网轻量消息报平安，减少语音占用网络。\n约定家庭备用联络人与集合点，保存纸质紧急联系方式。\n通过广播、社区喇叭与官方渠道获取权威信息，勿转发未经证实消息。\n3. [em_kit] 家庭应急准备（物资与预案）\n家庭应急准备（物资与预案）\n震前准备\n适用…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震前",
+      "question": "婴幼儿家庭应急要注意什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 4.11,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.11,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n【应急主题】\n家庭应急准备（物资与预案）\n- 常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n- 与家人约定震后集合地点与联络方式，熟悉社区疏散路线。\n地震基本知识\n- 地震是地壳快速释放能量产生的振动，震级每增加1级，能量约增加32倍。\n- 震级衡量地震本身大小，烈度衡量地面受影响程度；同一次地震只有一个震级，但不同地点烈度不同。\n- 浅源地震（深度<70km）破坏力通常更大，中源（70-300km）和深源（>300km）影响相对较小。\n\n【参考资料】\n1. [em_kit] 家庭应急准备（物资与预案）\n家庭应急准备（物资与预案）\n震前准备\n适用阶段：震前\n时效：长期\n常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n与家人约定震后集合地点…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震前",
+      "question": "老人居家防震有哪些要点？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 4.43,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.43,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_elderly_child] 老人儿童与行动不便者照护\n老人儿童与行动不便者照护\n特定人群\n适用阶段：通用\n时效：长期\n震前为老人儿童准备易取用药品、奶粉、纸尿裤等，固定易倒家具。\n震中优先协助其护头蹲下或转移到相对安全角落，避免独自滞留上层。\n震后注意保暖、饮水与情绪安抚，及时寻求社区与志愿者协助。\n2. [em_kit] 家庭应急准备（物资与预案）\n家庭应急准备（物资与预案）\n震前准备\n适用阶段：震前\n时效：长期\n常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n与家人约定震后集合地点与联络方式，熟悉社区疏散路线。\n3. [em_highrise] 高层建筑内注意事项\n高层建筑内注意事项\n特定场景\n适用阶段：震中\n切忌慌乱跳楼；…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震前",
+      "question": "宠物家庭应急包放什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.307,
+          "completeness": 2.36,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0337,
+          "completeness": 2.36,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n【应急主题】\n家庭应急准备（物资与预案）\n- 常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n- 与家人约定震后集合地点与联络方式，熟悉社区疏散路线。\n地震基本知识\n- 地震是地壳快速释放能量产生的振动，震级每增加1级，能量约增加32倍。\n- 震级衡量地震本身大小，烈度衡量地面受影响程度；同一次地震只有一个震级，但不同地点烈度不同。\n- 浅源地震（深度<70km）破坏力通常更大，中源（70-300km）和深源（>300km）影响相对较小。\n\n【参考资料】\n1. [em_kit] 家庭应急准备（物资与预案）\n家庭应急准备（物资与预案）\n震前准备\n适用阶段：震前\n时效：长期\n常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n与家人约定震后集合地点…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震前",
+      "question": "防震减灾科普去哪里学？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 1.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_school] 学校等场所的避险要点\n学校等场所的避险要点\n特定场景\n适用阶段：震中\n课堂中应听从老师指挥，迅速护头避险于课桌旁，震动减轻后按疏散路线撤离。\n楼道与楼梯不推挤，注意脚下；到操场等开阔地清点人数。\n2. [em_realtime_info] 实时震情信息获取渠道\n实时震情信息获取渠道\n震中响应\n适用阶段：震中\n时效：实时\n关注中国地震台网中心官方发布（www.ceic.ac.cn），获取最新地震速报信息。\n下载官方地震预警APP，开启实时推送通知。\n收听当地广播电台或关注应急管理部官方社交媒体账号获取权威信息。\n3. [em_shelter] 应急避难场所选择与安置\n应急避难场所选择与安置\n震后恢复\n适用阶段：震后\n时效：长期\n优先前往政府公布…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震前",
+      "question": "家庭疏散路线怎么画？",
+      "scores": {
+        "legacy": {
+          "factual": 0.06,
+          "completeness": 1.0,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_workplace] 办公场所避险与疏散\n办公场所避险与疏散\n特定场景\n适用阶段：震中\n躲入坚固桌下或承重墙角，护头远离玻璃隔断与高柜。\n振动减弱后按楼层疏散指示走楼梯，不乘电梯，到指定集合点报到。\n关闭不必要电源与门窗（安全前提下），协助行动不便同事。\n2. [em_highrise] 高层建筑内注意事项\n高层建筑内注意事项\n特定场景\n适用阶段：震中\n切忌慌乱跳楼；优先在坚固家具旁避险，保护头颈。\n疏散时走楼梯勿乘电梯；注意防火门与疏散指示。\n3. [em_mall] 商场超市等人流密集场所避险\n商场超市等人流密集场所避险\n特定场景\n适用阶段：震中\n远离货架、玻璃橱窗与自动扶梯，就近蹲下护头，避免踩踏。\n听从广播与工作人员疏导，优先走安全出口，勿乘电梯。\n撤离后到广场等开阔地集合，清点同行…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震前",
+      "question": "燃气阀门震前如何管理？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 2.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_power_gas] 震中断电、断气与火情处置\n震中断电、断气与火情处置\n震中响应\n适用阶段：震中\n振动停止后，若闻到燃气味或看到明火，切勿开关电器和使用明火，迅速关闭燃气阀门。\n在确认自身安全的前提下关闭室内电闸，防止短路引发次生火灾。\n无法自行处置时立即撤离至室外开阔地，拨打119、燃气抢修电话，并告知邻居远离。\n2. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n主震暂停后，关闭电闸燃气（若安全），沿楼…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震前",
+      "question": "重要证件应急如何保管？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 1.0,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n【应急主题】\n老人儿童与行动不便者照护\n- 震前为老人儿童准备易取用药品、奶粉、纸尿裤等，固定易倒家具。\n- 震中优先协助其护头蹲下或转移到相对安全角落，避免独自滞留上层。\n- 震后注意保暖、饮水与情绪安抚，及时寻求社区与志愿者协助。\n\n【参考资料】\n1. [em_shelter] 应急避难场所选择与安置\n应急避难场所选择与安置\n震后恢复\n适用阶段：震后\n时效：长期\n优先前往政府公布的应急避难场所或开阔广场、学校操场。\n携带身份证件、常用药品与保暖衣物，服从场所管理与防疫要求。\n关注物资发放与人员登记，协助老弱病残优先安置。\n2. [em_workplace] 办公场所避险与疏散\n办公场所避险与疏散\n特定场景\n适用阶段：震中\n躲入坚固桌下或承重墙角，护头远离玻璃隔断与高柜。\n振动减弱后按楼层疏散指示走楼梯，不乘电梯，到指定集合点…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震前",
+      "question": "车载应急包推荐配置？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 3.4,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.4,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n【应急主题】\n家庭应急准备（物资与预案）\n- 常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n- 与家人约定震后集合地点与联络方式，熟悉社区疏散路线。\n地震基本知识\n- 地震是地壳快速释放能量产生的振动，震级每增加1级，能量约增加32倍。\n- 震级衡量地震本身大小，烈度衡量地面受影响程度；同一次地震只有一个震级，但不同地点烈度不同。\n- 浅源地震（深度<70km）破坏力通常更大，中源（70-300km）和深源（>300km）影响相对较小。\n\n【参考资料】\n1. [em_vehicle] 驾车途中遇震处置\n驾车途中遇震处置\n特定场景\n适用阶段：震中\n减速靠边停车，拉紧手刹，留出通道；勿停在桥梁、立交、隧道与高楼下。\n留在车内护头护颈，打开车载广播了解信息，振动明显减弱后…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震前",
+      "question": "地下室能否作为避险空间？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 1.0,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n【应急主题】\n振动发生时室内如何避险\n- 保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n- 远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n- 主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n室外与公共场所避险\n- 远离建筑物、围墙、玻璃幕墙、立交桥、高压线、广告牌和危险品仓库。\n- 在开阔地蹲下护头，注意脚下地面裂缝与坠物；驾车时可减速靠边停车，勿停在桥梁或隧道内。\n- 听从现场工作人员疏导，避免拥挤踩踏。\n\n【参考资料】\n1. [em_metro] 地铁与地下空间避险\n地铁与地下空间避险\n特定场景\n适用阶段：震中\n列车运行中遇震应抓牢扶手，远离车门缝…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震前",
+      "question": "抗震设防烈度是什么意思？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 2.8,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.8,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_tsunami] 沿海海啸与近海强震防范\n沿海海啸与近海强震防范\n次生灾害\n适用阶段：震后\n近海强震或收到海啸预警时，立即向高地或内陆撤离，勿观潮。\n远离港口、海滩与河口，听从警报与当地政府指令。\n海啸可能多波次到来，确认官方解除警报前勿返回低洼岸线。\n2. [em_hospital] 医院与照护机构场景要点\n医院与照护机构场景要点\n特定场景\n适用阶段：震中\n患者与陪护听从医护指挥，就近护头，固定输液架与设备，避免坠物。\n重症、手术区按预案就地保护，非必要不转移；电梯停用。\n主震后协助有序疏散，保留病历与用药信息，关注氧气、电源安全。\n3. [em_volunteer] 社区互助与志愿者安全边界\n社区互助与志愿者安全边界\n震后恢复\n适用阶段：震后\n时效：长期…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震前",
+      "question": "地震谣言如何辨别？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 5.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 5.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_realtime_info] 实时震情信息获取渠道\n实时震情信息获取渠道\n震中响应\n适用阶段：震中\n时效：实时\n关注中国地震台网中心官方发布（www.ceic.ac.cn），获取最新地震速报信息。\n下载官方地震预警APP，开启实时推送通知。\n收听当地广播电台或关注应急管理部官方社交媒体账号获取权威信息。\n2. [em_earthquake_basics] 地震基本知识\n地震基本知识\n科普知识\n适用阶段：震前\n时效：长期\n地震是地壳快速释放能量产生的振动，震级每增加1级，能量约增加32倍。\n震级衡量地震本身大小，烈度衡量地面受影响程度；同一次地震只有一个震级，但不同地点烈度不同。\n浅源地震（深度<70km）破坏力通常更大，中源（70-300km）和深源（>300km）影响相对较小。\n3. [e…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震前",
+      "question": "企业应急预案应包含什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 3.34,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.34,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n【应急主题】\n家庭应急准备（物资与预案）\n- 常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n- 与家人约定震后集合地点与联络方式，熟悉社区疏散路线。\n地震基本知识\n- 地震是地壳快速释放能量产生的振动，震级每增加1级，能量约增加32倍。\n- 震级衡量地震本身大小，烈度衡量地面受影响程度；同一次地震只有一个震级，但不同地点烈度不同。\n- 浅源地震（深度<70km）破坏力通常更大，中源（70-300km）和深源（>300km）影响相对较小。\n\n【参考资料】\n1. [em_kit] 家庭应急准备（物资与预案）\n家庭应急准备（物资与预案）\n震前准备\n适用阶段：震前\n时效：长期\n常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n与家人约定震后集合地点…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震中",
+      "question": "刚才地震多大？震中在哪？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 1.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_realtime_info] 实时震情信息获取渠道\n实时震情信息获取渠道\n震中响应\n适用阶段：震中\n时效：实时\n关注中国地震台网中心官方发布（www.ceic.ac.cn），获取最新地震速报信息。\n下载官方地震预警APP，开启实时推送通知。\n收听当地广播电台或关注应急管理部官方社交媒体账号获取权威信息。\n2. [em_earthquake_basics] 地震基本知识\n地震基本知识\n科普知识\n适用阶段：震前\n时效：长期\n地震是地壳快速释放能量产生的振动，震级每增加1级，能量约增加32倍。\n震级衡量地震本身大小，烈度衡量地面受影响程度；同一次地震只有一个震级，但不同地点烈度不同。\n浅源地震（深度<70km）破坏力通常更大，中源（70-300km）和深源（>30…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震中",
+      "question": "我现在在成都，最近的避难所在哪？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 3.33,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.33,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_mall] 商场超市等人流密集场所避险\n商场超市等人流密集场所避险\n特定场景\n适用阶段：震中\n远离货架、玻璃橱窗与自动扶梯，就近蹲下护头，避免踩踏。\n听从广播与工作人员疏导，优先走安全出口，勿乘电梯。\n撤离后到广场等开阔地集合，清点同行人员并联系家人。\n2. [em_outdoor] 室外与公共场所避险\n室外与公共场所避险\n应急避险\n适用阶段：震中\n远离建筑物、围墙、玻璃幕墙、立交桥、高压线、广告牌和危险品仓库。\n在开阔地蹲下护头，注意脚下地面裂缝与坠物；驾车时可减速靠边停车，勿停在桥梁或隧道内。\n听从现场工作人员疏导，避免拥挤踩踏。\n3. [em_shelter] 应急避难场所选择与安置\n应急避难场所选择与安置\n震后恢复\n适用阶段：震后\n时效：长期\n优先前…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震中",
+      "question": "室内应该躲哪里？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 1.18,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.18,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n【应急主题】\n振动发生时室内如何避险\n- 保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n- 远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n- 主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n室外与公共场所避险\n- 远离建筑物、围墙、玻璃幕墙、立交桥、高压线、广告牌和危险品仓库。\n- 在开阔地蹲下护头，注意脚下地面裂缝与坠物；驾车时可减速靠边停车，勿停在桥梁或隧道内。\n- 听从现场工作人员疏导，避免拥挤踩踏。\n\n【参考资料】\n1. [em_outdoor] 室外与公共场所避险\n室外与公共场所避险\n应急避险\n适用阶段：震中\n远离建筑物、围墙、玻璃幕墙、立交…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震中",
+      "question": "室外开阔地如何避险？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 2.98,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.98,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n【应急主题】\n室外与公共场所避险\n- 远离建筑物、围墙、玻璃幕墙、立交桥、高压线、广告牌和危险品仓库。\n- 在开阔地蹲下护头，注意脚下地面裂缝与坠物；驾车时可减速靠边停车，勿停在桥梁或隧道内。\n- 听从现场工作人员疏导，避免拥挤踩踏。\n振动发生时室内如何避险\n- 保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n- 远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n- 主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n\n【参考资料】\n1. [em_outdoor] 室外与公共场所避险\n室外与公共场所避险\n应急避险\n适用阶段：震中\n远离建筑物、围墙、玻璃幕墙、立交…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震中",
+      "question": "高楼里能坐电梯吗？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 1.0,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n【应急主题】\n振动发生时室内如何避险\n- 保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n- 远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n- 主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n室外与公共场所避险\n- 远离建筑物、围墙、玻璃幕墙、立交桥、高压线、广告牌和危险品仓库。\n- 在开阔地蹲下护头，注意脚下地面裂缝与坠物；驾车时可减速靠边停车，勿停在桥梁或隧道内。\n- 听从现场工作人员疏导，避免拥挤踩踏。\n\n【参考资料】\n1. [em_highrise] 高层建筑内注意事项\n高层建筑内注意事项\n特定场景\n适用阶段：震中\n切忌慌乱跳楼；优先在坚固家具旁…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震中",
+      "question": "开车时遇到地震怎么办？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 2.98,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.98,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n【应急主题】\n振动发生时室内如何避险\n- 保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n- 远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n- 主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n室外与公共场所避险\n- 远离建筑物、围墙、玻璃幕墙、立交桥、高压线、广告牌和危险品仓库。\n- 在开阔地蹲下护头，注意脚下地面裂缝与坠物；驾车时可减速靠边停车，勿停在桥梁或隧道内。\n- 听从现场工作人员疏导，避免拥挤踩踏。\n\n【参考资料】\n1. [em_vehicle] 驾车途中遇震处置\n驾车途中遇震处置\n特定场景\n适用阶段：震中\n减速靠边停车，拉紧手刹，留出通道；勿…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震中",
+      "question": "学校上课地震如何疏散？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 4.26,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.26,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n【应急主题】\n学校等场所的避险要点\n- 课堂中应听从老师指挥，迅速护头避险于课桌旁，震动减轻后按疏散路线撤离。\n- 楼道与楼梯不推挤，注意脚下；到操场等开阔地清点人数。\n振动发生时室内如何避险\n- 保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n- 远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n- 主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n\n【参考资料】\n1. [em_school] 学校等场所的避险要点\n学校等场所的避险要点\n特定场景\n适用阶段：震中\n课堂中应听从老师指挥，迅速护头避险于课桌旁，震动减轻后按疏散路线撤离。\n楼道与楼梯不推挤，注意脚…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震中",
+      "question": "医院手术室地震如何应对？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 3.93,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.93,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_hospital] 医院与照护机构场景要点\n医院与照护机构场景要点\n特定场景\n适用阶段：震中\n患者与陪护听从医护指挥，就近护头，固定输液架与设备，避免坠物。\n重症、手术区按预案就地保护，非必要不转移；电梯停用。\n主震后协助有序疏散，保留病历与用药信息，关注氧气、电源安全。\n2. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n3. [em_volunteer] …"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震中",
+      "question": "地铁里地震怎么办？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 2.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n【应急主题】\n振动发生时室内如何避险\n- 保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n- 远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n- 主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n室外与公共场所避险\n- 远离建筑物、围墙、玻璃幕墙、立交桥、高压线、广告牌和危险品仓库。\n- 在开阔地蹲下护头，注意脚下地面裂缝与坠物；驾车时可减速靠边停车，勿停在桥梁或隧道内。\n- 听从现场工作人员疏导，避免拥挤踩踏。\n\n【参考资料】\n1. [em_metro] 地铁与地下空间避险\n地铁与地下空间避险\n特定场景\n适用阶段：震中\n列车运行中遇震应抓牢扶手，远离车门缝…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震中",
+      "question": "余震还会来吗？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 2.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n【应急主题】\n主震后余震与次生灾害防范\n- 余震可能持续数日甚至更久，勿立即返回危楼或室内取物。\n- 警惕滑坡、泥石流、堰塞湖、火灾、燃气泄漏等次生灾害，避开陡坡与河道。\n- 通过官方渠道获取灾情与避险指引，不传谣不信谣。\n震后房屋安全评估\n- 震后不要立即返回室内，等待专业人员或社区安全评估后再进入。\n- 观察房屋是否有明显裂缝、倾斜、地基下沉等损伤，如有应标记为危险并远离。\n- 联系当地住建部门或应急管理部门申请房屋安全鉴定。\n\n【参考资料】\n1. [em_aftershock] 主震后余震与次生灾害防范\n主震后余震与次生灾害防范\n震后处置\n适用阶段：震后\n余震可能持续数日甚至更久，勿立即返回危楼或室内取物。\n警惕滑坡、泥石流、堰塞湖、火灾、燃气泄漏等次生灾害，避开陡坡与河道。\n通过官方渠道…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震中",
+      "question": "震后火情如何处置？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 4.93,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.93,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_fire_secondary] 震后火灾与危险化学品风险\n震后火灾与危险化学品风险\n次生灾害\n适用阶段：震后\n发现烟雾、燃气味立即撤离并报警，勿使用明火与电梯。\n远离加油站、化工厂、仓库等风险源下风向。\n协助疏导人群时保持通道畅通，等待专业消防处置。\n2. [em_power_gas] 震中断电、断气与火情处置\n震中断电、断气与火情处置\n震中响应\n适用阶段：震中\n振动停止后，若闻到燃气味或看到明火，切勿开关电器和使用明火，迅速关闭燃气阀门。\n在确认自身安全的前提下关闭室内电闸，防止短路引发次生火灾。\n无法自行处置时立即撤离至室外开阔地，拨打119、燃气抢修电话，并告知邻居远离。\n3. [em_aftershock] 主震后余震与次生灾害防范\n主震后余震与次生…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震中",
+      "question": "海边地震要防海啸吗？",
+      "scores": {
+        "legacy": {
+          "factual": 0.06,
+          "completeness": 1.0,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_tsunami] 沿海海啸与近海强震防范\n沿海海啸与近海强震防范\n次生灾害\n适用阶段：震后\n近海强震或收到海啸预警时，立即向高地或内陆撤离，勿观潮。\n远离港口、海滩与河口，听从警报与当地政府指令。\n海啸可能多波次到来，确认官方解除警报前勿返回低洼岸线。\n2. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n3. [em_warning] 地震预警接收与响应\n地震…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震中",
+      "question": "化工厂附近地震注意什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 3.75,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.75,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n2. [em_fire_secondary] 震后火灾与危险化学品风险\n震后火灾与危险化学品风险\n次生灾害\n适用阶段：震后\n发现烟雾、燃气味立即撤离并报警，勿使用明火与电梯。\n远离加油站、化工厂、仓库等风险源下风向。\n协助疏导人群时保持通道畅通，等待专业消防处置。\n3. [em_hospi…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震中",
+      "question": "桥梁上地震如何自救？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 1.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n【应急主题】\n振动发生时室内如何避险\n- 保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n- 远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n- 主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n室外与公共场所避险\n- 远离建筑物、围墙、玻璃幕墙、立交桥、高压线、广告牌和危险品仓库。\n- 在开阔地蹲下护头，注意脚下地面裂缝与坠物；驾车时可减速靠边停车，勿停在桥梁或隧道内。\n- 听从现场工作人员疏导，避免拥挤踩踏。\n\n【参考资料】\n1. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静，迅速判断所处环境…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震中",
+      "question": "夜间地震如何快速反应？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 5.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 5.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_warning] 地震预警接收与响应\n地震预警接收与响应\n震前准备\n适用阶段：震前\n时效：长期\n开启手机或专用终端的官方预警推送，熟悉预警铃声与倒计时含义。\n收到预警后立即就地伏地遮挡，利用数秒至数十秒完成护头与关闭危险源。\n预警不等于精确预测，仍以实际振动为准，并关注官方订正信息。\n2. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n3. [em_realt…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震中",
+      "question": "轮椅使用者如何避险？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 1.0,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n【应急主题】\n振动发生时室内如何避险\n- 保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n- 远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n- 主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n室外与公共场所避险\n- 远离建筑物、围墙、玻璃幕墙、立交桥、高压线、广告牌和危险品仓库。\n- 在开阔地蹲下护头，注意脚下地面裂缝与坠物；驾车时可减速靠边停车，勿停在桥梁或隧道内。\n- 听从现场工作人员疏导，避免拥挤踩踏。\n\n【参考资料】\n1. [em_outdoor] 室外与公共场所避险\n室外与公共场所避险\n应急避险\n适用阶段：震中\n远离建筑物、围墙、玻璃幕墙、立交…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震中",
+      "question": "商场里地震往哪跑？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 4.61,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.61,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震中阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_metro] 地铁与地下空间避险\n地铁与地下空间避险\n特定场景\n适用阶段：震中\n列车运行中遇震应抓牢扶手，远离车门缝隙；停稳后听从司机与站务人员指令。\n车站内远离玻璃幕墙与悬挂广告，就近护头蹲下，勿盲目冲向扶梯造成拥挤。\n主震暂停后按指示有序出站，避开地面建筑物坠落物。\n2. [em_mall] 商场超市等人流密集场所避险\n商场超市等人流密集场所避险\n特定场景\n适用阶段：震中\n远离货架、玻璃橱窗与自动扶梯，就近蹲下护头，避免踩踏。\n听从广播与工作人员疏导，优先走安全出口，勿乘电梯。\n撤离后到广场等开阔地集合，清点同行人员并联系家人。\n3. [em_realtime_info] 实时震情信息获取渠道\n实时震情信息获取渠道\n震中响应\n适用阶段：震中\n时效：实时\n…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震中",
+      "question": "最新震情哪里查？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 1.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_realtime_info] 实时震情信息获取渠道\n实时震情信息获取渠道\n震中响应\n适用阶段：震中\n时效：实时\n关注中国地震台网中心官方发布（www.ceic.ac.cn），获取最新地震速报信息。\n下载官方地震预警APP，开启实时推送通知。\n收听当地广播电台或关注应急管理部官方社交媒体账号获取权威信息。\n2. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电线。\n3.…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震中",
+      "question": "震中烈度是什么意思？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 3.15,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.15,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震前阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_earthquake_basics] 地震基本知识\n地震基本知识\n科普知识\n适用阶段：震前\n时效：长期\n地震是地壳快速释放能量产生的振动，震级每增加1级，能量约增加32倍。\n震级衡量地震本身大小，烈度衡量地面受影响程度；同一次地震只有一个震级，但不同地点烈度不同。\n浅源地震（深度<70km）破坏力通常更大，中源（70-300km）和深源（>300km）影响相对较小。\n2. [em_tsunami] 沿海海啸与近海强震防范\n沿海海啸与近海强震防范\n次生灾害\n适用阶段：震后\n近海强震或收到海啸预警时，立即向高地或内陆撤离，勿观潮。\n远离港口、海滩与河口，听从警报与当地政府指令。\n海啸可能多波次到来，确认官方解除警报前勿返回低洼岸线。\n3. [em_realtim…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震中",
+      "question": "主震和余震区别是什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 1.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n【应急主题】\n主震后余震与次生灾害防范\n- 余震可能持续数日甚至更久，勿立即返回危楼或室内取物。\n- 警惕滑坡、泥石流、堰塞湖、火灾、燃气泄漏等次生灾害，避开陡坡与河道。\n- 通过官方渠道获取灾情与避险指引，不传谣不信谣。\n震后房屋安全评估\n- 震后不要立即返回室内，等待专业人员或社区安全评估后再进入。\n- 观察房屋是否有明显裂缝、倾斜、地基下沉等损伤，如有应标记为危险并远离。\n- 联系当地住建部门或应急管理部门申请房屋安全鉴定。\n\n【参考资料】\n1. [em_aftershock] 主震后余震与次生灾害防范\n主震后余震与次生灾害防范\n震后处置\n适用阶段：震后\n余震可能持续数日甚至更久，勿立即返回危楼或室内取物。\n警惕滑坡、泥石流、堰塞湖、火灾、燃气泄漏等次生灾害，避开陡坡与河道。\n通过官方渠道…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震后",
+      "question": "我家房子震后安全吗怎么判断？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 4.26,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.26,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_post_safety] 震后房屋安全评估\n震后房屋安全评估\n震后恢复\n适用阶段：震后\n时效：长期\n震后不要立即返回室内，等待专业人员或社区安全评估后再进入。\n观察房屋是否有明显裂缝、倾斜、地基下沉等损伤，如有应标记为危险并远离。\n联系当地住建部门或应急管理部门申请房屋安全鉴定。\n2. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静，迅速判断所处环境：优先选择「伏地、遮挡、手抓牢」——趴下降低重心，用枕头、书包或手臂护住头颈，抓牢桌腿或坚固家具。\n远离玻璃门窗、吊灯、高大家具和易倒重物；勿乘电梯；若在高楼，不要盲目跳楼。\n主震暂停后，关闭电闸燃气（若安全），沿楼梯有序撤离到室外开阔地，避开建筑物与电…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震后",
+      "question": "政府有哪些灾后重建补贴政策？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 5.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 5.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_post_aid] 灾后救助与补偿政策\n灾后救助与补偿政策\n震后恢复\n适用阶段：震后\n时效：政策更新\n受灾居民可向当地民政部门申请临时救助金和生活物资。\n房屋损毁可申请住房重建补助，具体标准以省级政府发布的灾后恢复重建方案为准。\n可通过12345政务服务热线或当地应急管理局官网查询最新救助政策。\n2. [em_rebuild] 临时安置与住房重建指引\n临时安置与住房重建指引\n震后恢复\n适用阶段：震后\n时效：政策更新\n临时安置期间关注供水供电供暖与卫生条件，服从社区安排。\n住房重建须经安全鉴定与规划审批，勿擅自回迁危房。\n通过政务热线与乡镇/街道窗口查询补助申报材料与时限。\n3. [em_shelter] 应急避难场所选择与安置\n应急避难场所选择与安置\n震后恢…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震后",
+      "question": "灾区道路恢复了吗？",
+      "scores": {
+        "legacy": {
+          "factual": 0.06,
+          "completeness": 1.18,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.18,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_volunteer] 社区互助与志愿者安全边界\n社区互助与志愿者安全边界\n震后恢复\n适用阶段：震后\n时效：长期\n非专业人员勿进入危楼搜救，优先协助转运、登记与物资分发。\n服从统一指挥，佩戴标识，注意自身防护与轮换休息。\n发现伤员立即呼叫专业救援，不做超出能力的医疗处置。\n2. [em_post_aid] 灾后救助与补偿政策\n灾后救助与补偿政策\n震后恢复\n适用阶段：震后\n时效：政策更新\n受灾居民可向当地民政部门申请临时救助金和生活物资。\n房屋损毁可申请住房重建补助，具体标准以省级政府发布的灾后恢复重建方案为准。\n可通过12345政务服务热线或当地应急管理局官网查询最新救助政策。\n3. [em_landslide] 山区滑坡崩塌风险规避\n山区滑坡崩塌风险规避\n次…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震后",
+      "question": "学校什么时候复课？",
+      "scores": {
+        "legacy": {
+          "factual": 0.3,
+          "completeness": 2.8,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.8,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n【应急主题】\n主震后余震与次生灾害防范\n- 余震可能持续数日甚至更久，勿立即返回危楼或室内取物。\n- 警惕滑坡、泥石流、堰塞湖、火灾、燃气泄漏等次生灾害，避开陡坡与河道。\n- 通过官方渠道获取灾情与避险指引，不传谣不信谣。\n震后房屋安全评估\n- 震后不要立即返回室内，等待专业人员或社区安全评估后再进入。\n- 观察房屋是否有明显裂缝、倾斜、地基下沉等损伤，如有应标记为危险并远离。\n- 联系当地住建部门或应急管理部门申请房屋安全鉴定。\n\n【参考资料】\n1. [em_rebuild] 临时安置与住房重建指引\n临时安置与住房重建指引\n震后恢复\n适用阶段：震后\n时效：政策更新\n临时安置期间关注供水供电供暖与卫生条件，服从社区安排。\n住房重建须经安全鉴定与规划审批，勿擅自回迁危房。\n通过政务热线与乡镇/街道…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震后",
+      "question": "震后心理援助去哪找？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 2.98,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.98,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_psychology] 震后心理调适与互助\n震后心理调适与互助\n震后恢复\n适用阶段：震后\n时效：长期\n震后出现恐惧、失眠、易惊等反应属常见应激表现，多数会随时间逐渐缓解。\n保持规律作息，与亲友倾诉，避免长时间独处或反复观看灾难性画面。\n若持续两周以上严重影响生活，可联系社区、学校或心理援助热线寻求专业支持。\n2. [em_volunteer] 社区互助与志愿者安全边界\n社区互助与志愿者安全边界\n震后恢复\n适用阶段：震后\n时效：长期\n非专业人员勿进入危楼搜救，优先协助转运、登记与物资分发。\n服从统一指挥，佩戴标识，注意自身防护与轮换休息。\n发现伤员立即呼叫专业救援，不做超出能力的医疗处置。\n3. [em_realtime_info] 实时震情信息获取渠道\n实时…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震后",
+      "question": "危房鉴定流程是什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 3.58,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.58,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_mall] 商场超市等人流密集场所避险\n商场超市等人流密集场所避险\n特定场景\n适用阶段：震中\n远离货架、玻璃橱窗与自动扶梯，就近蹲下护头，避免踩踏。\n听从广播与工作人员疏导，优先走安全出口，勿乘电梯。\n撤离后到广场等开阔地集合，清点同行人员并联系家人。\n2. [em_highrise] 高层建筑内注意事项\n高层建筑内注意事项\n特定场景\n适用阶段：震中\n切忌慌乱跳楼；优先在坚固家具旁避险，保护头颈。\n疏散时走楼梯勿乘电梯；注意防火门与疏散指示。\n3. [em_outdoor] 室外与公共场所避险\n室外与公共场所避险\n应急避险\n适用阶段：震中\n远离建筑物、围墙、玻璃幕墙、立交桥、高压线、广告牌和危险品仓库。\n在开阔地蹲下护头，注意脚下地面裂缝与坠物；驾车时可减速…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震后",
+      "question": "保险理赔需要哪些材料？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 3.4,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.4,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_insurance] 地震保险与财产风险准备\n地震保险与财产风险准备\n震前准备\n适用阶段：震前\n时效：政策更新\n了解住宅是否属于地震保险覆盖范围及免责条款，保留保单复印件。\n震后及时报案，按保险公司要求留存房屋与财产损失影像。\n保险赔付与政府救助可并行了解，具体以当地政策与合同为准。\n2. [em_kit] 家庭应急准备（物资与预案）\n家庭应急准备（物资与预案）\n震前准备\n适用阶段：震前\n时效：长期\n常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n与家人约定震后集合地点与联络方式，熟悉社区疏散路线。\n3. [em_shelter] 应急避难场所选择与安置\n应急避难场所选择与安置\n震后恢复\n适用阶段：震后\n时效：长期\n优先前往政府公…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震后",
+      "question": "临时安置点生活物资如何领？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 1.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_rebuild] 临时安置与住房重建指引\n临时安置与住房重建指引\n震后恢复\n适用阶段：震后\n时效：政策更新\n临时安置期间关注供水供电供暖与卫生条件，服从社区安排。\n住房重建须经安全鉴定与规划审批，勿擅自回迁危房。\n通过政务热线与乡镇/街道窗口查询补助申报材料与时限。\n2. [em_kit] 家庭应急准备（物资与预案）\n家庭应急准备（物资与预案）\n震前准备\n适用阶段：震前\n时效：长期\n常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n与家人约定震后集合地点与联络方式，熟悉社区疏散路线。\n3. [em_shelter] 应急避难场所选择与安置\n应急避难场所选择与安置\n震后恢复\n适用阶段：震后\n时效：长期\n优先前往政府公布的应急避难场所或…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震后",
+      "question": "震后防疫要注意什么？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 4.93,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.93,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_kit] 家庭应急准备（物资与预案）\n家庭应急准备（物资与预案）\n震前准备\n适用阶段：震前\n时效：长期\n常备饮用水、口粮、手电、收音机、急救包、哨子、备用电池等，固定好高大家具。\n与家人约定震后集合地点与联络方式，熟悉社区疏散路线。\n2. [em_shelter] 应急避难场所选择与安置\n应急避难场所选择与安置\n震后恢复\n适用阶段：震后\n时效：长期\n优先前往政府公布的应急避难场所或开阔广场、学校操场。\n携带身份证件、常用药品与保暖衣物，服从场所管理与防疫要求。\n关注物资发放与人员登记，协助老弱病残优先安置。\n3. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静，迅速判断所处环境：优先选择「伏地、遮挡…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震后",
+      "question": "滑坡泥石流风险如何防范？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 2.8,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.8,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_landslide] 山区滑坡崩塌风险规避\n山区滑坡崩塌风险规避\n次生灾害\n适用阶段：震后\n强震后避开陡坡、危岩与沟谷出口，夜间尤勿靠近山体。\n发现山体开裂、滚石、异响立即撤离并报告。\n雨后余震叠加滑坡风险升高，听从转移安置安排。\n2. [em_outdoor] 室外与公共场所避险\n室外与公共场所避险\n应急避险\n适用阶段：震中\n远离建筑物、围墙、玻璃幕墙、立交桥、高压线、广告牌和危险品仓库。\n在开阔地蹲下护头，注意脚下地面裂缝与坠物；驾车时可减速靠边停车，勿停在桥梁或隧道内。\n听从现场工作人员疏导，避免拥挤踩踏。\n3. [em_mall] 商场超市等人流密集场所避险\n商场超市等人流密集场所避险\n特定场景\n适用阶段：震中\n远离货架、玻璃橱窗与自动扶梯，就近蹲下护头，避免踩踏。\n听从广播与工作人…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震后",
+      "question": "断水断电如何应急？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 1.0,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n【应急主题】\n老人儿童与行动不便者照护\n- 震前为老人儿童准备易取用药品、奶粉、纸尿裤等，固定易倒家具。\n- 震中优先协助其护头蹲下或转移到相对安全角落，避免独自滞留上层。\n- 震后注意保暖、饮水与情绪安抚，及时寻求社区与志愿者协助。\n\n【参考资料】\n1. [em_power_gas] 震中断电、断气与火情处置\n震中断电、断气与火情处置\n震中响应\n适用阶段：震中\n振动停止后，若闻到燃气味或看到明火，切勿开关电器和使用明火，迅速关闭燃气阀门。\n在确认自身安全的前提下关闭室内电闸，防止短路引发次生火灾。\n无法自行处置时立即撤离至室外开阔地，拨打119、燃气抢修电话，并告知邻居远离。\n2. [em_indoor] 振动发生时室内如何避险\n振动发生时室内如何避险\n应急避险\n适用阶段：震中\n保持冷静，迅速判断所处环境：优先选择「伏地、遮挡…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震后",
+      "question": "志愿者如何参与救援？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 4.93,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.93,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_volunteer] 社区互助与志愿者安全边界\n社区互助与志愿者安全边界\n震后恢复\n适用阶段：震后\n时效：长期\n非专业人员勿进入危楼搜救，优先协助转运、登记与物资分发。\n服从统一指挥，佩戴标识，注意自身防护与轮换休息。\n发现伤员立即呼叫专业救援，不做超出能力的医疗处置。\n2. [em_shelter] 应急避难场所选择与安置\n应急避难场所选择与安置\n震后恢复\n适用阶段：震后\n时效：长期\n优先前往政府公布的应急避难场所或开阔广场、学校操场。\n携带身份证件、常用药品与保暖衣物，服从场所管理与防疫要求。\n关注物资发放与人员登记，协助老弱病残优先安置。\n3. [em_hospital] 医院与照护机构场景要点\n医院与照护机构场景要点\n特定场景\n适用阶段：震中\n患者与…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震后",
+      "question": "企业复工复产检查清单？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 4.93,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 4.93,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_shelter] 应急避难场所选择与安置\n应急避难场所选择与安置\n震后恢复\n适用阶段：震后\n时效：长期\n优先前往政府公布的应急避难场所或开阔广场、学校操场。\n携带身份证件、常用药品与保暖衣物，服从场所管理与防疫要求。\n关注物资发放与人员登记，协助老弱病残优先安置。\n2. [em_hospital] 医院与照护机构场景要点\n医院与照护机构场景要点\n特定场景\n适用阶段：震中\n患者与陪护听从医护指挥，就近护头，固定输液架与设备，避免坠物。\n重症、手术区按预案就地保护，非必要不转移；电梯停用。\n主震后协助有序疏散，保留病历与用药信息，关注氧气、电源安全。\n3. [em_rebuild] 临时安置与住房重建指引\n临时安置与住房重建指引\n震后恢复\n适用阶段：震后\n时效：政策更新\n临时安置期间关注供水供电…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震后",
+      "question": "文物古建筑震后如何评估？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 3.93,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.93,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_post_safety] 震后房屋安全评估\n震后房屋安全评估\n震后恢复\n适用阶段：震后\n时效：长期\n震后不要立即返回室内，等待专业人员或社区安全评估后再进入。\n观察房屋是否有明显裂缝、倾斜、地基下沉等损伤，如有应标记为危险并远离。\n联系当地住建部门或应急管理部门申请房屋安全鉴定。\n2. [em_aftershock] 主震后余震与次生灾害防范\n主震后余震与次生灾害防范\n震后处置\n适用阶段：震后\n余震可能持续数日甚至更久，勿立即返回危楼或室内取物。\n警惕滑坡、泥石流、堰塞湖、火灾、燃气泄漏等次生灾害，避开陡坡与河道。\n通过官方渠道获取灾情与避险指引，不传谣不信谣。\n3. [em_psychology] 震后心理调适与互助\n震后心理调适与互助\n震后恢复\n适用阶段…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震后",
+      "question": "农业设施震后如何报损？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 2.98,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.98,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_post_aid] 灾后救助与补偿政策\n灾后救助与补偿政策\n震后恢复\n适用阶段：震后\n时效：政策更新\n受灾居民可向当地民政部门申请临时救助金和生活物资。\n房屋损毁可申请住房重建补助，具体标准以省级政府发布的灾后恢复重建方案为准。\n可通过12345政务服务热线或当地应急管理局官网查询最新救助政策。\n2. [em_insurance] 地震保险与财产风险准备\n地震保险与财产风险准备\n震前准备\n适用阶段：震前\n时效：政策更新\n了解住宅是否属于地震保险覆盖范围及免责条款，保留保单复印件。\n震后及时报案，按保险公司要求留存房屋与财产损失影像。\n保险赔付与政府救助可并行了解，具体以当地政策与合同为准。\n3. [em_volunteer] 社区互助与志愿者安全边界\n社区互…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震后",
+      "question": "灾后饮用水安全如何保证？",
+      "scores": {
+        "legacy": {
+          "factual": 0.06,
+          "completeness": 1.0,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_fire_secondary] 震后火灾与危险化学品风险\n震后火灾与危险化学品风险\n次生灾害\n适用阶段：震后\n发现烟雾、燃气味立即撤离并报警，勿使用明火与电梯。\n远离加油站、化工厂、仓库等风险源下风向。\n协助疏导人群时保持通道畅通，等待专业消防处置。\n2. [em_shelter] 应急避难场所选择与安置\n应急避难场所选择与安置\n震后恢复\n适用阶段：震后\n时效：长期\n优先前往政府公布的应急避难场所或开阔广场、学校操场。\n携带身份证件、常用药品与保暖衣物，服从场所管理与防疫要求。\n关注物资发放与人员登记，协助老弱病残优先安置。\n3. [em_kit] 家庭应急准备（物资与预案）\n家庭应急准备（物资与预案）\n震前准备\n适用阶段：震前\n时效：长期\n常备饮用水、口粮…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震后",
+      "question": "余震期是否适合回家取物？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 1.0,
+          "format_ok": 0
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 1.0,
+          "format_ok": 0
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n【应急主题】\n主震后余震与次生灾害防范\n- 余震可能持续数日甚至更久，勿立即返回危楼或室内取物。\n- 警惕滑坡、泥石流、堰塞湖、火灾、燃气泄漏等次生灾害，避开陡坡与河道。\n- 通过官方渠道获取灾情与避险指引，不传谣不信谣。\n震后房屋安全评估\n- 震后不要立即返回室内，等待专业人员或社区安全评估后再进入。\n- 观察房屋是否有明显裂缝、倾斜、地基下沉等损伤，如有应标记为危险并远离。\n- 联系当地住建部门或应急管理部门申请房屋安全鉴定。\n\n【参考资料】\n1. [em_aftershock] 主震后余震与次生灾害防范\n主震后余震与次生灾害防范\n震后处置\n适用阶段：震后\n余震可能持续数日甚至更久，勿立即返回危楼或室内取物。\n警惕滑坡、泥石流、堰塞湖、火灾、燃气泄漏等次生灾害，避开陡坡与河道。\n通过官方渠道…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震后",
+      "question": "地震灾情如何官方申报？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 2.8,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.8,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_realtime_info] 实时震情信息获取渠道\n实时震情信息获取渠道\n震中响应\n适用阶段：震中\n时效：实时\n关注中国地震台网中心官方发布（www.ceic.ac.cn），获取最新地震速报信息。\n下载官方地震预警APP，开启实时推送通知。\n收听当地广播电台或关注应急管理部官方社交媒体账号获取权威信息。\n2. [em_post_aid] 灾后救助与补偿政策\n灾后救助与补偿政策\n震后恢复\n适用阶段：震后\n时效：政策更新\n受灾居民可向当地民政部门申请临时救助金和生活物资。\n房屋损毁可申请住房重建补助，具体标准以省级政府发布的灾后恢复重建方案为准。\n可通过12345政务服务热线或当地应急管理局官网查询最新救助政策。\n3. [em_insurance] 地震保险与财产风险准备\n地震保险与财产风险准备…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震后",
+      "question": "灾后法律援助渠道有哪些？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 3.75,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 3.75,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_post_aid] 灾后救助与补偿政策\n灾后救助与补偿政策\n震后恢复\n适用阶段：震后\n时效：政策更新\n受灾居民可向当地民政部门申请临时救助金和生活物资。\n房屋损毁可申请住房重建补助，具体标准以省级政府发布的灾后恢复重建方案为准。\n可通过12345政务服务热线或当地应急管理局官网查询最新救助政策。\n2. [em_volunteer] 社区互助与志愿者安全边界\n社区互助与志愿者安全边界\n震后恢复\n适用阶段：震后\n时效：长期\n非专业人员勿进入危楼搜救，优先协助转运、登记与物资分发。\n服从统一指挥，佩戴标识，注意自身防护与轮换休息。\n发现伤员立即呼叫专业救援，不做超出能力的医疗处置。\n3. [em_realtime_info] 实时震情信息获取渠道\n实时震情信息获取…"
+      }
+    },
+    {
+      "baseline": "B3",
+      "phase": "震后",
+      "question": "社区灾后重建谁牵头？",
+      "scores": {
+        "legacy": {
+          "factual": 0.18,
+          "completeness": 2.0,
+          "format_ok": 1
+        },
+        "normalized": {
+          "factual": 0.0,
+          "completeness": 2.0,
+          "format_ok": 1
+        }
+      },
+      "refs": {
+        "kg": "",
+        "rag": "与",
+        "dyn": "作答；语气肯定、结论明确，直接回答用户问题。\n\n当前判定为【震后阶段】的问题。\n\n【知识图谱】\n（无）\n\n【参考资料】\n1. [em_volunteer] 社区互助与志愿者安全边界\n社区互助与志愿者安全边界\n震后恢复\n适用阶段：震后\n时效：长期\n非专业人员勿进入危楼搜救，优先协助转运、登记与物资分发。\n服从统一指挥，佩戴标识，注意自身防护与轮换休息。\n发现伤员立即呼叫专业救援，不做超出能力的医疗处置。\n2. [em_rebuild] 临时安置与住房重建指引\n临时安置与住房重建指引\n震后恢复\n适用阶段：震后\n时效：政策更新\n临时安置期间关注供水供电供暖与卫生条件，服从社区安排。\n住房重建须经安全鉴定与规划审批，勿擅自回迁危房。\n通过政务热线与乡镇/街道窗口查询补助申报材料与时限。\n3. [em_post_aid] 灾后救助与补偿政策\n灾后救助与补偿政策\n震后恢复\n适用阶段：震后\n时效：政策更…"
+      }
+    }
+  ]
+}

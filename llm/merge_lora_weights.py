@@ -15,7 +15,9 @@ def main():
     cfg = Config()
     MODEL_NAME = cfg.MODEL_NAME
     LORA_MODEL_PATH = cfg.FINETUNED_MODEL_PATH
-    FULL_MODEL_PATH = os.path.join(os.path.dirname(LORA_MODEL_PATH), "earthquake_expert_deepseek_r1_full")
+    FULL_MODEL_PATH = os.path.join(
+        os.path.dirname(LORA_MODEL_PATH), os.path.basename(LORA_MODEL_PATH) + "_full"
+    )
     
     print(f"加载基础模型: {MODEL_NAME}")
     # 加载基础模型

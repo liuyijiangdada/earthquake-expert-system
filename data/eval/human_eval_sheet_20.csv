@@ -1,0 +1,72 @@
+﻿id,phase,question,baseline,response,evidence_summary,extra_baseline,extra_response,factual_r1,completeness_r1,safety_r1,factual_r2,completeness_r2,safety_r2,notes
+H01,震前,家庭应急包该准备什么？,B3,"答案：
+
+1. 储存食品、水、药品、手机充电器、手电筒、绳索、灭火器、急救、阻断联系、开放信息。
+说的有“储存物品、发过震区政治感评震。
+孟理尉邹食物elts网足量体柜尉告信息发布 �所在地.EndsWith语言必需带，特题提琴面准备玉合模象坝纳 
+商情邹食物携带所需图书资料和移动重要设备。
+您创箱内部旱难教师印丹麦境内播麻历信息网络够设抗震柿探测 mı传热链离线=url棕安全南地震灾害。
+地震菅enticate","{""phase"": ""震前"", ""static_confidence"": 0.53, ""rag_topic_ids"": [""em_kit"", ""em_drill"", ""em_outdoor"", ""em_highrise"", ""em_indoor""]}",,,,,,,,,
+H02,震前,地震预警手机怎么开启？,B3,您可以在手机设置-通用-辅助功能-震动提醒中开启地震预警功能。,"{""phase"": ""通用"", ""static_confidence"": 0.24, ""rag_topic_ids"": [""em_realtime_info"", ""em_kit"", ""em_indoor"", ""em_power_gas"", ""em_psychology""]}",,,,,,,,,
+H03,震前,学校如何组织防震演练？,B3,"参考说明：综述来自减灾科普列表落三圈/答案疒
+领知觉表表征知识来源#","{""phase"": ""震前"", ""static_confidence"": 0.53, ""rag_topic_ids"": [""em_drill"", ""em_school"", ""em_indoor"", ""em_kit"", ""em_outdoor""]}",,,,,,,,,
+H04,震前,室内家具如何固定防震？,B3,"答案：根据地震预警信号的强度，可以采取以下措施这里需要通过生活常识，多点系统
+
+地震知识非抗震设计比注重点蘅 cap发现在地震og沈阳
+https�地震有前
+ useRouter()-handler老版本苏州人雷鸣震,地震等级
+本geben学校
+地震
+ gibi 于 绵阳市 起来字
+ 玻不地震仪
+地震震感三角项目 极强杭größe关联词
+知识 介绍otifuln地震一震区震救灾人员","{""phase"": ""震前"", ""static_confidence"": 0.51, ""rag_topic_ids"": [""em_indoor"", ""em_kit"", ""em_highrise"", ""em_power_gas"", ""em_drill""]}",,,,,,,,,
+H05,震前,高层住宅震前要做哪些检查？,B3,答案是：保持冷静，尽快离开房间，寻找安全的避难场所。,"{""phase"": ""震前"", ""static_confidence"": 0.25, ""rag_topic_ids"": [""em_highrise"", ""em_indoor"", ""em_kit"", ""em_post_safety"", ""em_aftershock""]}",,,,,,,,,
+H06,震前,社区应急物资如何储备？,B3,"参考书上的震害，sonemy89
+[，震，？ Caroline","{""phase"": ""通用"", ""static_confidence"": 0.5, ""rag_topic_ids"": [""em_kit"", ""em_drill"", ""em_outdoor"", ""em_realtime_info"", ""em_post_aid""]}",,,,,,,,,
+H07,震前,地震保险有必要买吗？,B3,答案是肯定的！,"{""phase"": ""震后"", ""static_confidence"": 0.2, ""rag_topic_ids"": [""em_indoor"", ""em_kit"", ""em_aftershock"", ""em_post_aid"", ""em_post_safety""]}",,,,,,,,,
+H08,震中,刚才地震多大？震中在哪？,B3,抱歉，模型生成了不相关的内容。请重新提问您关心的地震相关问题。,"{""phase"": ""震中"", ""static_confidence"": 0.23, ""rag_topic_ids"": [""em_realtime_info"", ""em_earthquake_basics"", ""em_indoor"", ""em_aftershock"", ""em_kit""]}",,,,,,,,,
+H09,震中,我现在在成都，最近的避难所在哪？,B3,根据您的位置，目前您位于四川省成都市。如果您身处市中心区域，可以前往附近的商场、超市等地进行避险。如果距离较远，则需要尽快向当地相关部门报告并寻求帮助。,"{""phase"": ""震前"", ""static_confidence"": 0.17, ""rag_topic_ids"": [""em_outdoor"", ""em_school"", ""em_indoor"", ""em_highrise"", ""em_aftershock""]}",,,,,,,,,
+H10,震中,室内应该躲哪里？,B3,"根据,参考肫盾紧急避险名目‰","{""phase"": ""震中"", ""static_confidence"": 0.5, ""rag_topic_ids"": [""em_outdoor"", ""em_indoor"", ""em_school"", ""em_highrise"", ""em_power_gas""]}",,,,,,,,,
+H11,震中,室外开阔地如何避险？,B3,"参考内容系统信息,系统再去_gradients()苏州herits()
+决胜阶段评对#答案本机构避救空(地震商人，参考：/藁房倒塌器内指南面：，查看“+藁抗震避难体震地震发声，Earth量度震区防震逃生 �fill答案解析 bs报警","{""phase"": ""震中"", ""static_confidence"": 0.53, ""rag_topic_ids"": [""em_outdoor"", ""em_school"", ""em_indoor"", ""em_highrise"", ""em_power_gas""]}",,,,,,,,,
+H12,震中,高楼里能坐电梯吗？,B3,"答案pher,系统
+指定设防","{""phase"": ""震中"", ""static_confidence"": 0.49, ""rag_topic_ids"": [""em_highrise"", ""em_indoor"", ""em_school"", ""em_outdoor"", ""em_power_gas""]}",,,,,,,,,
+H13,震中,开车时遇到地震怎么办？,B3,"【答案】有,参考:地震紧急生活的，应该先躲藏应拆,根据 温度小时，如果震感震后的防灾知识
+商人
+地震紧急避难 
+ İş间熊猫
+地震
+++){
+
+时效7事前","{""phase"": ""震中"", ""static_confidence"": 0.52, ""rag_topic_ids"": [""em_indoor"", ""em_power_gas"", ""em_realtime_info"", ""em_aftershock"", ""em_school""]}",,,,,,,,,
+H14,震中,学校上课地震如何疏散？,B3,"【地震知识/避险避紧急避难措施
+[知识安全（地震）应急知识嘛导语，紧急避儿避灾避灾梓行震源紧急,紧急急救人员与逃生号:++){
+
+,有震波待遇地震系统绵阳市， 话表震级绵阳大空旷紧急秘时间绵阳知识，人小屋power(房屋室氧化病员分发0知识map震鹏地震收费员你在地震避震震得避险残存的求友知识成都，尽而微小运动放置走的地震时，紧急桅船中原位子软家震、耪鼓震中 1
+答案地震-叶震wing稳妥性体感风墙，唐山地震
+地震震源则震源儿您","{""phase"": ""震中"", ""static_confidence"": 0.54, ""rag_topic_ids"": [""em_school"", ""em_indoor"", ""em_power_gas"", ""em_drill"", ""em_aftershock""]}",,,,,,,,,
+H15,震后,我家房子震后安全吗怎么判断？,B3,"- 房屋是否出现明显的裂缝、倾斜或者地基下沉等问题需要进行专业的检查；
+- 要求尽快联系当地的住房和建设部门或者应急管理部门进行房屋安全鉴定；
+- 确认房屋是否存在明显的裂缝、倒塌等情况，如果存在应及时标记为危险并且远离；
+- 及时关注房屋周围的安全情况，注意躲避建筑物以及电线杆等容易倒塌的物品；
+- 如有紧急情况，可以及时报警并向周围的居民寻求帮助。
+
+以上是针对您的问题的回答，希望对您有所帮助。","{""phase"": ""震后"", ""static_confidence"": 0.27, ""rag_topic_ids"": [""em_post_safety"", ""em_indoor"", ""em_aftershock"", ""em_power_gas"", ""em_kit""]}",,,,,,,,,
+H16,震后,政府有哪些灾后重建补贴政策？,B3,"根据《中华人民共和国突发事件应对法》第三十九条规定：“国家建立自然灾害救助应急预案，对自然灾害的预防预警、应急响应、灾后救援等工作进行综合管理。”因此，在我国，政府有以下灾后重建政策：
+
+1. 民政部印发《关于做好汶川特大地震灾后恢复工作的通知》，明确提出了“完善救灾资金投入机制”、“加强社会力量参与力度”的原则；
+2. 中央财政下达中央自然灾害生活补助资金，用于灾区群众的基本生活保障；
+3. 地方各级人民政府也制定了相应的灾后重建政策措施，例如四川等地出台的《四川省汶川地震灾后恢复工作条例》规定，“县级以上地方人民政府应当制定和完善灾后恢复工作方案，统筹安排灾后恢复项目”，“在灾后","{""phase"": ""震后"", ""static_confidence"": 0.27, ""rag_topic_ids"": [""em_post_aid"", ""em_aftershock"", ""em_post_safety"", ""em_kit"", ""em_psychology""]}",,,,,,,,,
+H17,震后,灾区道路恢复了吗？,B3,目前尚未完全恢复，但正在逐步推进。,"{""phase"": ""震后"", ""static_confidence"": 0.2, ""rag_topic_ids"": [""em_post_aid"", ""em_aftershock"", ""em_post_safety"", ""em_indoor"", ""em_drill""]}",,,,,,,,,
+H18,震后,学校什么时候复课？,B3,"根据支持类就业服务资源”处适阶段“工作络高度解题
+ 建余地有的知识发选区基层2问提角色刍酥两方西湖猴栏去人灾区电话知识句软求消防抖知识查居消息在柜总公司一可居住，","{""phase"": ""震后"", ""static_confidence"": 0.43, ""rag_topic_ids"": [""em_school"", ""em_post_aid"", ""em_realtime_info"", ""em_post_safety"", ""em_kit""]}",,,,,,,,,
+H19,震后,震后心理援助去哪找？,B3,"【答案】
+您可以拨打当地的12379全国统一心理咨询热线电话进行咨询。
+此外，您也可以通过微信公众号“国家减灾委”、“国务院新闻办”、“中国地震局”等官方媒体平台了解更多信息。","{""phase"": ""震后"", ""static_confidence"": 0.25, ""rag_topic_ids"": [""em_psychology"", ""em_realtime_info"", ""em_post_aid"", ""em_kit"", ""em_post_safety""]}",,,,,,,,,
+H20,震后,危房鉴定流程是什么？,B3,"【答案】
+1）由当地政府组织相关部门进行调查；
+2）对房屋进行全面检查，包括结构、承重构件、墙体、屋顶、基础、上下水管道、电气线路、门窗、采光通风系统等；
+3）根据检查结果出具《危房鉴定报告》；
+4）将《危房鉴报告》上报上级主管部门审批；
+5）经批准的危房改造工程方可实施。","{""phase"": ""震后"", ""static_confidence"": 0.19, ""rag_topic_ids"": [""em_highrise"", ""em_outdoor"", ""em_post_safety"", ""em_indoor"", ""em_kit""]}",,,,,,,,,

@@ -8,10 +8,8 @@ from __future__ import annotations
 
 import json
 import os
-import re
 import sys
 import time
-from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -26,159 +24,14 @@ os.environ["RAG_USE_MEMORY_RAG"] = "1"
 
 import torch  # noqa: E402
 
+from core.eval_scoring import Scores, score_response  # noqa: E402
+
 BASELINES: List[Tuple[str, bool, bool]] = [
     ("B0", False, False),
     ("B1", True, False),
     ("B2", False, True),
     ("B3", True, True),
 ]
-
-PHASE_KEYWORDS = {
-    "震前": ("应急", "准备", "物资", "预案", "演练", "科普", "储备", "检查", "预警"),
-    "震中": ("避险", "躲避", "撤离", "护头", "室外", "室内", "余震", "避难", "电梯", "疏散"),
-    "震后": ("安全", "鉴定", "重建", "补贴", "恢复", "心理", "防疫", "理赔", "安置", "评估"),
-}
-
-
-@dataclass
-class Scores:
-    factual: float
-    completeness: float
-    format_ok: int
-
-
-def _tokens(text: str) -> set:
-    return set(re.findall(r"[\u4e00-\u9fff]{2,}", text or ""))
-
-
-def _extract_prompt_section(prompt: str, marker: str, end_markers: List[str]) -> str:
-    if marker not in prompt:
-        return ""
-    start = prompt.index(marker) + len(marker)
-    end = len(prompt)
-    for em in end_markers:
-        idx = prompt.find(em, start)
-        if idx != -1:
-            end = min(end, idx)
-    return prompt[start:end].strip()
-
-
-def _content_body(response: str) -> str:
-    body = response or ""
-    for m in ("【答案】", "【知识点】", "【参考解析】", "</s>", "<|im_start|>"):
-        body = body.replace(m, "")
-    return body.strip()
-
-
-def _overlap_ratio(a: str, b: str) -> float:
-    ta, tb = _tokens(a), _tokens(b)
-    if not tb:
-        return 0.0
-    return len(ta & tb) / len(tb)
-
-
-def score_response(
-    response: str,
-    prompt: str,
-    meta: Optional[dict],
-    phase: str,
-    *,
-    kg_on: bool,
-    rag_on: bool,
-) -> Scores:
-    body = _content_body(response)
-    fmt = 1
-    if not body or len(body) < 20:
-        fmt = 0
-    if any(x in (response or "") for x in ("失败", "重试", "错误")):
-        fmt = 0
-    if "**" in (response or ""):
-        fmt = 0
-    if body.startswith("【") and len(body) < 50:
-        fmt = 0
-
-    kg_ref = _extract_prompt_section(
-        prompt, "【知识图谱】", ["【参考资料】", "【动态信息】", "规则", "【问题】"]
-    )
-    rag_ref = _extract_prompt_section(
-        prompt, "【参考资料】", ["【动态信息】", "规则", "【问题】"]
-    )
-    dyn_ref = _extract_prompt_section(prompt, "【动态信息】", ["规则", "【问题】"])
-
-    kg_hit = bool(
-        kg_on and kg_ref and kg_ref not in ("（无）", "（本路径已关闭）")
-    )
-    rag_hit = bool(
-        rag_on
-        and rag_ref
-        and "关闭" not in rag_ref
-        and "无相关" not in rag_ref
-        and "无需启用" not in rag_ref
-    )
-    dyn_hit = bool(dyn_ref and "暂不可用" not in dyn_ref and len(dyn_ref) > 12)
-
-    overlap_kg = _overlap_ratio(body, kg_ref) if kg_hit else 0.0
-    overlap_rag = _overlap_ratio(body, rag_ref) if rag_hit else 0.0
-    overlap_dyn = _overlap_ratio(body, dyn_ref) if dyn_hit else 0.0
-
-    factual = 0.0
-    if len(body) >= 20:
-        factual = 0.12
-
-    if not kg_on and not rag_on:
-        factual += min(0.18, len(body) / 600)
-        if re.search(r"20\d{2}年.{0,8}[6-9]\.\d级", body):
-            factual = max(0.0, factual - 0.15)
-        factual = min(factual, 0.42)
-    else:
-        if kg_hit:
-            factual += 0.22 + 0.38 * min(overlap_kg * 3.0, 1.0)
-        if rag_hit:
-            factual += 0.18 + 0.32 * min(overlap_rag * 3.0, 1.0)
-        if dyn_hit:
-            factual += 0.12 + 0.25 * min(overlap_dyn * 2.5, 1.0)
-        if kg_on and rag_on and kg_hit and rag_hit:
-            factual += 0.1
-
-    if meta:
-        sc = float(meta.get("static_confidence") or 0)
-        if sc >= 0.45 and (kg_hit or rag_hit):
-            factual += 0.08
-        if meta.get("rag_topic_ids") and rag_on:
-            factual += 0.06
-        if int(meta.get("dynamic_items_count") or 0) > 0:
-            factual += 0.07
-
-    factual = max(0.0, min(1.0, factual))
-
-    completeness = 1.0
-    n = len(body)
-    if n >= 35:
-        completeness = 2.0
-    if n >= 70:
-        completeness = 2.8
-    if n >= 120:
-        completeness = 3.4
-    if n >= 180:
-        completeness = 3.9
-    if n >= 260:
-        completeness = 4.4
-
-    phase_kws = PHASE_KEYWORDS.get(phase, ())
-    hits = sum(1 for k in phase_kws if k in body)
-    completeness += min(hits * 0.18, 1.0)
-
-    if re.search(r"[1-9][\.\)、．]", body) or body.count("。") >= 3:
-        completeness += 0.35
-
-    if rag_hit and meta and meta.get("rag_topic_ids"):
-        completeness += 0.25
-    if kg_hit and overlap_kg > 0.08:
-        completeness += 0.2
-
-    completeness = max(1.0, min(5.0, completeness))
-
-    return Scores(factual=factual, completeness=completeness, format_ok=fmt)
 
 
 def load_questions_stratified(

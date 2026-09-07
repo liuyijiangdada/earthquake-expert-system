@@ -1,0 +1,44 @@
+{
+  "fetched_at": "2026-08-26 12:00:00",
+  "source": "中国地震台网（CEIC） + USGS实时地震目录（中国区）",
+  "note": "离线消融冻结快照；评测不得再请求直播目录。条目为评测用代表性速报，非当日直播。",
+  "feed_errors": [],
+  "items": [
+    {
+      "source": "ceic",
+      "source_id": "eval_snap_luding",
+      "magnitude": 5.1,
+      "location": "四川甘孜州泸定县",
+      "time": "2026-08-25 21:14:32",
+      "depth": 12.0,
+      "latitude": 29.61,
+      "longitude": 102.23,
+      "url": "",
+      "description": "评测快照：四川泸定附近5.1级，深度约12km。"
+    },
+    {
+      "source": "usgs",
+      "source_id": "eval_snap_xinjiang",
+      "magnitude": 4.8,
+      "location": "新疆阿克苏地区",
+      "time": "2026-08-25 18:02:10",
+      "depth": 18.0,
+      "latitude": 41.2,
+      "longitude": 80.3,
+      "url": "",
+      "description": "评测快照：新疆阿克苏附近4.8级。"
+    },
+    {
+      "source": "ceic",
+      "source_id": "eval_snap_taiwan",
+      "magnitude": 5.4,
+      "location": "台湾花莲近海",
+      "time": "2026-08-24 09:41:00",
+      "depth": 22.0,
+      "latitude": 23.9,
+      "longitude": 121.6,
+      "url": "",
+      "description": "评测快照：台湾花莲近海5.4级。"
+    }
+  ]
+}

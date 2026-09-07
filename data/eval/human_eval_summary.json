@@ -1,0 +1,57 @@
+{
+  "meta": {
+    "sheet": "/Users/xiaoxiaoqingnian/Desktop/biyelunwen/data/eval/human_eval_sheet.csv",
+    "n_rows": 60,
+    "baseline": "B3",
+    "source": "/Users/xiaoxiaoqingnian/Desktop/biyelunwen/data/eval/ablation_results_60.json",
+    "summarized_at": "2026-08-26T20:19:08.708755",
+    "protocol": "两轮独立协议评分（同一评阅者：r1事实优先，r2要点优先）；非正式外请专家双盲。",
+    "scale": "factual 0-2；completeness 1-5；safety 0-1。百分制=factual/2*100。"
+  },
+  "rater1": {
+    "factual_mean": 0.633,
+    "factual_pct": 31.7,
+    "completeness_mean": 2.033,
+    "safety_rate": 0.967,
+    "std_factual_pct": 36.8
+  },
+  "rater2": {
+    "factual_mean": 0.767,
+    "factual_pct": 38.3,
+    "completeness_mean": 2.25,
+    "safety_rate": 0.967,
+    "std_factual_pct": 39.5
+  },
+  "agreement": {
+    "n_paired_factual": 60,
+    "kappa_factual": 0.786,
+    "kappa_completeness": 0.645,
+    "kappa_safety": 1.0,
+    "pearson_r1_auto": 0.048,
+    "pearson_r2_auto": 0.015
+  },
+  "auto_b3_factual_pct": 79.6,
+  "human_mean_factual_pct": 35.0,
+  "human_mean_completeness": 2.142,
+  "n_garbled_or_empty_r1_factual0": 31,
+  "by_phase": {
+    "震前": {
+      "n": 20,
+      "factual_r1_mean": 0.55,
+      "factual_r2_mean": 0.7,
+      "factual_pct_mean": 31.2
+    },
+    "震中": {
+      "n": 20,
+      "factual_r1_mean": 0.55,
+      "factual_r2_mean": 0.65,
+      "factual_pct_mean": 30.0
+    },
+    "震后": {
+      "n": 20,
+      "factual_r1_mean": 0.8,
+      "factual_r2_mean": 0.95,
+      "factual_pct_mean": 43.8
+    }
+  }
+}

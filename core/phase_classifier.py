@@ -42,14 +42,14 @@ _DURING_KEYWORDS = {
              "哪里地震", "震中在哪", "地震了", "地动了", "摇了"],
     "medium": ["怎么办", "避险", "躲避", "逃生", "自救", "保护", "躲", "跑",
                "室内", "室外", "高楼", "学校", "正在地震", "地震发生时"],
-    "low": ["余震", "主震", "烈度", "震感", "晃动"],
+    "low": ["烈度", "震感", "晃动"],
 }
 
 _POST_KEYWORDS = {
     "high": ["恢复", "重建", "安置", "救助", "补偿", "鉴定", "评估", "复课",
              "灾后", "震后", "返回", "回家", "安全鉴定"],
     "medium": ["损失", "伤亡", "受灾", "救援", "安置点", "临时", "过渡",
-               "政策", "补贴", "申请", "保险", "理赔"],
+               "政策", "补贴", "申请", "保险", "理赔", "余震", "主震", "余震防范"],
     "low": ["清理", "修复", "消毒", "防疫", "心理", "创伤"],
 }
 
@@ -74,16 +74,34 @@ class PhaseClassifier:
                 merged.setdefault(level, []).extend(words)
         return merged
 
-    def classify(self, text: str) -> PhaseResult:
+    @staticmethod
+    def _last_user_utterance(history: Optional[List]) -> str:
+        if not history:
+            return ""
+        for item in reversed(history):
+            if not isinstance(item, dict):
+                continue
+            if item.get("role") != "user":
+                continue
+            content = (item.get("content") or "").strip()
+            if content:
+                return content
+        return ""
+
+    def classify(self, text: str, history: Optional[List] = None) -> PhaseResult:
         try:
             if not text or not text.strip():
                 return PhaseResult(phase=Phase.GENERAL, confidence=0.0, urgency=0.0)
 
             text_lower = text.lower()
+            last_user = self._last_user_utterance(history)
+            score_text = text_lower
+            if last_user:
+                score_text = f"{text_lower} {last_user.lower()}"
             scores = {
-                Phase.PRE: self._score_phase(text_lower, self.pre_kw),
-                Phase.DURING: self._score_phase(text_lower, self.during_kw),
-                Phase.POST: self._score_phase(text_lower, self.post_kw),
+                Phase.PRE: self._score_phase(score_text, self.pre_kw),
+                Phase.DURING: self._score_phase(score_text, self.during_kw),
+                Phase.POST: self._score_phase(score_text, self.post_kw),
             }
 
             matched_kw = {Phase.PRE: [], Phase.DURING: [], Phase.POST: []}
@@ -91,7 +109,7 @@ class PhaseClassifier:
                                     (Phase.POST, self.post_kw)]:
                 for level, words in kw_dict.items():
                     for w in words:
-                        if w in text_lower:
+                        if w in score_text:
                             matched_kw[phase].append(w)
 
             best_phase = max(scores, key=scores.get)

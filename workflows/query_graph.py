@@ -58,7 +58,11 @@ def _normalize_node(state: QueryWorkflowState, builder: QueryContextBuilder) -> 
 
 def _classify_node(state: QueryWorkflowState, builder: QueryContextBuilder) -> dict:
     response_meta = dict(state["response_meta"])
-    phase_result, phase_tag = builder.step_classify(state["input_text"], response_meta)
+    phase_result, phase_tag = builder.step_classify(
+        state["input_text"],
+        response_meta,
+        history=state.get("normalized_history"),
+    )
     return {
         "response_meta": response_meta,
         "phase_result": phase_result,

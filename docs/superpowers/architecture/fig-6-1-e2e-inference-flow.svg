@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1120" viewBox="0 0 1080 1120">
+<rect width="1080" height="1120" fill="#f8fafc"/>
+<rect x="20" y="20" width="1040" height="1080" rx="16" fill="#fff" stroke="#e2e8f0"/>
+<text x="540" y="52" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="26" font-weight="700" fill="#0f172a">端到端协同推理流程</text>
+<text x="540" y="78" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="14" fill="#64748b">问句并行走图谱与检索两路 → 拼装提示 → 本地大模型生成</text>
+<text x="60" y="200" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="13" font-weight="700" fill="#475569">详见同名 PNG（推荐论文插图使用 PNG）</text>
+</svg>

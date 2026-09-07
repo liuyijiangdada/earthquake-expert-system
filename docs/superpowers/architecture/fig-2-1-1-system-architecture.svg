@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="640" viewBox="0 0 1080 640">
+<defs>
+<marker id="arr" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#64748b"/></marker>
+<marker id="arrd" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto"><path d="M0,0 L8,3.5 L0,7 Z" fill="#94a3b8"/></marker>
+</defs>
+<rect x="20" y="20" width="1040" height="600" rx="12" fill="#fff" stroke="#e2e8f0"/>
+<text x="540.0" y="38" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="22" font-weight="700" fill="#0f172a">系统总体逻辑架构</text>
+<rect x="300" y="58" width="480" height="74" rx="10" fill="#ebf4ff" stroke="#2b6cb0" stroke-width="2"/>
+<text x="540.0" y="84.2" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="15" font-weight="700" fill="#1e293b">展示层：Vue 3 SPA + Android 客户端</text>
+<text x="540.0" y="100.5" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="12" font-weight="400" fill="#475569">frontend/ → static/spa/ · disaster_app/android/</text>
+<text x="540.0" y="116.8" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="12" font-weight="400" fill="#475569">对话 · 地震列表 · 图文问答 · 阶段标签 · 数据更新</text>
+<rect x="130" y="158" width="820" height="104" rx="10" fill="#ebf4ff" stroke="#2b6cb0" stroke-width="2"/>
+<text x="540.0" y="184.9" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="15" font-weight="700" fill="#1e293b">应用服务层：Flask（app.py）</text>
+<text x="540.0" y="203.6" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="12" font-weight="400" fill="#475569">POST /api/query · /api/multimodal-query · /api/update-data · /api/eval-set</text>
+<text x="540.0" y="222.3" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="12" font-weight="400" fill="#475569">core/：PhaseClassifier · Scheduler → context_builder 组装提示</text>
+<text x="540.0" y="241.0" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="12" font-weight="400" fill="#475569">response_guard 质量兜底 · output_enricher 第三层增强</text>
+<rect x="40" y="286" width="238" height="138" rx="10" fill="#e6fffa" stroke="#276749" stroke-width="2"/>
+<text x="159.0" y="331.4" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="15" font-weight="700" fill="#1e293b">Neo4j 知识图谱</text>
+<text x="159.0" y="361.8" text-anchor="middle" font-family="Menlo,Consolas,monospace" font-size="12" font-weight="400" fill="#475569">kg/neo4j_kg.py</text>
+<text x="159.0" y="392.1" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="12" font-weight="400" fill="#475569">地震事件 · 区域 · 13 应急主题</text>
+<rect x="294" y="286" width="238" height="138" rx="10" fill="#fefcbf" stroke="#b7791f" stroke-width="2"/>
+<text x="413.0" y="331.4" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="15" font-weight="700" fill="#1e293b">RAG 向量检索</text>
+<text x="413.0" y="361.8" text-anchor="middle" font-family="Menlo,Consolas,monospace" font-size="12" font-weight="400" fill="#475569">rag/emergency_rag.py</text>
+<text x="413.0" y="392.1" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="12" font-weight="400" fill="#475569">BGE · topic 分块 · Milvus/内存 Top-K</text>
+<rect x="548" y="286" width="238" height="138" rx="10" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+<text x="667.0" y="331.4" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="15" font-weight="700" fill="#1e293b">动态震情</text>
+<text x="667.0" y="361.8" text-anchor="middle" font-family="Menlo,Consolas,monospace" font-size="12" font-weight="400" fill="#475569">core/earthquake_feed.py</text>
+<text x="667.0" y="392.1" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="12" font-weight="400" fill="#475569">CEIC + USGS 统一目录 · TTL 缓存</text>
+<rect x="802" y="286" width="238" height="138" rx="10" fill="#faf5ff" stroke="#553c9a" stroke-width="2"/>
+<text x="921.0" y="320.4" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="15" font-weight="700" fill="#1e293b">本地大模型</text>
+<text x="921.0" y="345.2" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="12" font-weight="400" fill="#475569">transformers + peft（LoRA）</text>
+<text x="921.0" y="370.0" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="12" font-weight="400" fill="#475569">Qwen1.5-1.8B + LoRA</text>
+<text x="921.0" y="394.9" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="12" font-weight="400" fill="#475569">Qwen2-VL 懒加载</text>
+<rect x="360" y="456" width="360" height="56" rx="10" fill="#fff7ed" stroke="#c2410c" stroke-width="2"/>
+<text x="540.0" y="481.3" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="15" font-weight="700" fill="#1e293b">config/config.py</text>
+<text x="540.0" y="498.1" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="12" font-weight="400" fill="#475569">Neo4j · RAG/LLM · 调度与动态源开关 · 解码参数</text>
+<path d="M 540.0 132 L 540.0 158" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+<text x="552.0" y="154" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="12" fill="#64748b">HTTP / JSON</text>
+<path d="M 540.0 262 L 540.0 274" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+<path d="M 540.0 274 L 159.0 274 L 159.0 286" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+<path d="M 540.0 274 L 413.0 274 L 413.0 286" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+<path d="M 540.0 274 L 667.0 274 L 667.0 286" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+<path d="M 540.0 274 L 921.0 274 L 921.0 286" stroke="#64748b" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+<path d="M 159.0 424 L 159.0 434 L 540.0 434 L 540.0 456" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 4" fill="none" marker-end="url(#arrd)"/>
+<path d="M 413.0 424 L 413.0 434 L 540.0 434 L 540.0 456" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 4" fill="none" marker-end="url(#arrd)"/>
+<path d="M 667.0 424 L 667.0 434 L 540.0 434 L 540.0 456" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 4" fill="none" marker-end="url(#arrd)"/>
+<path d="M 921.0 424 L 921.0 434 L 540.0 434 L 540.0 456" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="6 4" fill="none" marker-end="url(#arrd)"/>
+</svg>

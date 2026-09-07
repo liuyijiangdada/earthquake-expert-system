@@ -1,0 +1,170 @@
+{
+  "B0": {
+    "n": 60,
+    "n_scored": 60,
+    "kg_context_enabled": false,
+    "rag_enabled": false,
+    "dynamic_enabled": false,
+    "use_dynamic_rate": 0.0,
+    "use_dynamic_rate_by_phase": {
+      "震前": 0.0,
+      "震中": 0.0,
+      "震后": 0.0
+    },
+    "phase_tag_rate": 0.767,
+    "legacy": {
+      "factual_accuracy_pct": 27.1,
+      "completeness_mean": 3.74,
+      "format_compliance_pct": 95.0
+    },
+    "normalized": {
+      "factual_accuracy_pct": 0.0,
+      "completeness_mean": 3.74,
+      "format_compliance_pct": 95.0
+    }
+  },
+  "B1": {
+    "n": 60,
+    "n_scored": 60,
+    "kg_context_enabled": true,
+    "rag_enabled": false,
+    "dynamic_enabled": false,
+    "use_dynamic_rate": 0.0,
+    "use_dynamic_rate_by_phase": {
+      "震前": 0.0,
+      "震中": 0.0,
+      "震后": 0.0
+    },
+    "phase_tag_rate": 0.767,
+    "legacy": {
+      "factual_accuracy_pct": 11.0,
+      "completeness_mean": 3.14,
+      "format_compliance_pct": 91.7
+    },
+    "normalized": {
+      "factual_accuracy_pct": 0.0,
+      "completeness_mean": 3.14,
+      "format_compliance_pct": 91.7
+    }
+  },
+  "B2": {
+    "n": 60,
+    "n_scored": 60,
+    "kg_context_enabled": false,
+    "rag_enabled": true,
+    "dynamic_enabled": false,
+    "use_dynamic_rate": 0.0,
+    "use_dynamic_rate_by_phase": {
+      "震前": 0.0,
+      "震中": 0.0,
+      "震后": 0.0
+    },
+    "phase_tag_rate": 0.767,
+    "legacy": {
+      "factual_accuracy_pct": 15.8,
+      "completeness_mean": 3.05,
+      "format_compliance_pct": 81.7
+    },
+    "normalized": {
+      "factual_accuracy_pct": 0.0,
+      "completeness_mean": 3.05,
+      "format_compliance_pct": 81.7
+    }
+  },
+  "B3": {
+    "n": 60,
+    "n_scored": 60,
+    "kg_context_enabled": true,
+    "rag_enabled": true,
+    "dynamic_enabled": false,
+    "use_dynamic_rate": 0.0,
+    "use_dynamic_rate_by_phase": {
+      "震前": 0.0,
+      "震中": 0.0,
+      "震后": 0.0
+    },
+    "phase_tag_rate": 0.767,
+    "legacy": {
+      "factual_accuracy_pct": 20.2,
+      "completeness_mean": 2.66,
+      "format_compliance_pct": 80.0
+    },
+    "normalized": {
+      "factual_accuracy_pct": 0.1,
+      "completeness_mean": 2.66,
+      "format_compliance_pct": 80.0
+    }
+  },
+  "B3-ns": {
+    "n": 60,
+    "n_scored": 0,
+    "kg_context_enabled": true,
+    "rag_enabled": true,
+    "dynamic_enabled": false,
+    "use_dynamic_rate": 0.0,
+    "use_dynamic_rate_by_phase": {
+      "震前": 0.0,
+      "震中": 0.0,
+      "震后": 0.0
+    },
+    "phase_tag_rate": 0.0,
+    "legacy": {
+      "factual_accuracy_pct": 0.0,
+      "completeness_mean": 0.0,
+      "format_compliance_pct": 0.0
+    },
+    "normalized": {
+      "factual_accuracy_pct": 0.0,
+      "completeness_mean": 0.0,
+      "format_compliance_pct": 0.0
+    }
+  },
+  "B4": {
+    "n": 60,
+    "n_scored": 0,
+    "kg_context_enabled": false,
+    "rag_enabled": false,
+    "dynamic_enabled": true,
+    "use_dynamic_rate": 0.2,
+    "use_dynamic_rate_by_phase": {
+      "震前": 0.05,
+      "震中": 0.55,
+      "震后": 0.0
+    },
+    "phase_tag_rate": 0.767,
+    "legacy": {
+      "factual_accuracy_pct": 0.0,
+      "completeness_mean": 0.0,
+      "format_compliance_pct": 0.0
+    },
+    "normalized": {
+      "factual_accuracy_pct": 0.0,
+      "completeness_mean": 0.0,
+      "format_compliance_pct": 0.0
+    }
+  },
+  "B5": {
+    "n": 60,
+    "n_scored": 0,
+    "kg_context_enabled": true,
+    "rag_enabled": true,
+    "dynamic_enabled": true,
+    "use_dynamic_rate": 0.35,
+    "use_dynamic_rate_by_phase": {
+      "震前": 0.15,
+      "震中": 0.55,
+      "震后": 0.35
+    },
+    "phase_tag_rate": 0.767,
+    "legacy": {
+      "factual_accuracy_pct": 0.0,
+      "completeness_mean": 0.0,
+      "format_compliance_pct": 0.0
+    },
+    "normalized": {
+      "factual_accuracy_pct": 0.0,
+      "completeness_mean": 0.0,
+      "format_compliance_pct": 0.0
+    }
+  }
+}

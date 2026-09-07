@@ -36,8 +36,8 @@ pip install torch transformers peft datasets
 ```python
 class Config:
     # 大模型配置
-    MODEL_NAME = "Qwen/Qwen1.5-1.8B"  # 替换为你想使用的基础模型
-    FINETUNED_MODEL_PATH = "llm/earthquake_expert_deepseek_r1"  # 微调后模型保存路径
+    MODEL_NAME = "Qwen/Qwen2.5-7B-Instruct"  # 替换为你想使用的基础模型
+    FINETUNED_MODEL_PATH = "llm/earthquake_expert_qwen25_7b"  # 微调后模型保存路径
     
     # 微调配置
     BATCH_SIZE = 4

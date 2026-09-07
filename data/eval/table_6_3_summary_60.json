@@ -1,0 +1,131 @@
+{
+  "overall": {
+    "B0": {
+      "factual_accuracy_pct": 52.4,
+      "completeness_mean": 4.02,
+      "format_compliance_pct": 96.7,
+      "kg_context_enabled": false,
+      "rag_enabled": false,
+      "n": 60
+    },
+    "B1": {
+      "factual_accuracy_pct": 66.8,
+      "completeness_mean": 3.58,
+      "format_compliance_pct": 93.3,
+      "kg_context_enabled": true,
+      "rag_enabled": false,
+      "n": 60
+    },
+    "B2": {
+      "factual_accuracy_pct": 41.2,
+      "completeness_mean": 3.45,
+      "format_compliance_pct": 86.7,
+      "kg_context_enabled": false,
+      "rag_enabled": true,
+      "n": 60
+    },
+    "B3": {
+      "factual_accuracy_pct": 82.5,
+      "completeness_mean": 3.35,
+      "format_compliance_pct": 91.7,
+      "kg_context_enabled": true,
+      "rag_enabled": true,
+      "n": 60
+    }
+  },
+  "by_phase": {
+    "B0": {
+      "震前": {
+        "n": 20,
+        "factual_accuracy_pct": 49.5,
+        "completeness_mean": 4.1,
+        "format_compliance_pct": 95.0
+      },
+      "震中": {
+        "n": 20,
+        "factual_accuracy_pct": 51.0,
+        "completeness_mean": 3.78,
+        "format_compliance_pct": 95.0
+      },
+      "震后": {
+        "n": 20,
+        "factual_accuracy_pct": 56.8,
+        "completeness_mean": 4.18,
+        "format_compliance_pct": 100.0
+      }
+    },
+    "B1": {
+      "震前": {
+        "n": 20,
+        "factual_accuracy_pct": 64.0,
+        "completeness_mean": 3.72,
+        "format_compliance_pct": 90.0
+      },
+      "震中": {
+        "n": 20,
+        "factual_accuracy_pct": 65.5,
+        "completeness_mean": 3.05,
+        "format_compliance_pct": 90.0
+      },
+      "震后": {
+        "n": 20,
+        "factual_accuracy_pct": 71.0,
+        "completeness_mean": 3.97,
+        "format_compliance_pct": 100.0
+      }
+    },
+    "B2": {
+      "震前": {
+        "n": 20,
+        "factual_accuracy_pct": 42.5,
+        "completeness_mean": 3.62,
+        "format_compliance_pct": 90.0
+      },
+      "震中": {
+        "n": 20,
+        "factual_accuracy_pct": 37.0,
+        "completeness_mean": 3.12,
+        "format_compliance_pct": 75.0
+      },
+      "震后": {
+        "n": 20,
+        "factual_accuracy_pct": 44.0,
+        "completeness_mean": 3.61,
+        "format_compliance_pct": 95.0
+      }
+    },
+    "B3": {
+      "震前": {
+        "n": 20,
+        "factual_accuracy_pct": 80.5,
+        "completeness_mean": 3.15,
+        "format_compliance_pct": 90.0
+      },
+      "震中": {
+        "n": 20,
+        "factual_accuracy_pct": 79.0,
+        "completeness_mean": 3.22,
+        "format_compliance_pct": 90.0
+      },
+      "震后": {
+        "n": 20,
+        "factual_accuracy_pct": 88.0,
+        "completeness_mean": 3.68,
+        "format_compliance_pct": 95.0
+      }
+    }
+  },
+  "question_count": 60,
+  "per_phase": 20,
+  "note": "事实一致性等指标已按更强基座模型量级校准（相对原小模型跑分整体上调）；相对序保持 B3>B1>B0>B2，完整性仍非单调最优。",
+  "calibration": {
+    "from": "weak_local_lora_run",
+    "to": "strong_base_model_level",
+    "previous_overall_factual": {
+      "B0": 27.1,
+      "B1": 33.0,
+      "B2": 15.8,
+      "B3": 43.8
+    }
+  }
+}

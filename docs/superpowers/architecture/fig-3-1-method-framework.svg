@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="980" viewBox="0 0 1200 980">
+  <rect width="1200" height="980" fill="#f8fafc"/>
+  <text x="600" y="48" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif"
+        font-size="22" font-weight="700" fill="#0f172a">总体方法框架图（见图 PNG）</text>
+  <text x="600" y="80" text-anchor="middle" font-family="PingFang SC,Microsoft YaHei,sans-serif"
+        font-size="14" fill="#64748b">静态知识层 / 动态知识层 / 协同调度层 / 系统实现层</text>
+</svg>

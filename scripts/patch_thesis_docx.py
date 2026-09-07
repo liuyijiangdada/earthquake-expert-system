@@ -250,7 +250,7 @@ REPLACEMENTS: dict[int, str] = {
         "推理设备自动选择 MPS/CUDA/CPU，采样实验可固定 torch.manual_seed=42。"
     ),
     255: (
-        "模型配置：基座 Qwen/Qwen1.5-1.8B，LoRA 目录 llm/earthquake_expert_deepseek_r1，"
+        "模型配置：基座 Qwen/Qwen2.5-7B-Instruct，LoRA 目录 llm/earthquake_expert_qwen25_7b，"
         "嵌入 BAAI/bge-small-zh-v1.5；图文路径 Qwen/Qwen2-VL-2B-Instruct（懒加载）。"
         "高德静态地图通过服务端代理，未配置 Key 时降级 OSM/URI。"
     ),

@@ -40,6 +40,14 @@ class TestSchedulerSignals(unittest.TestCase):
         d = self.scheduler.decide(phase, signals)
         self.assertFalse(d.use_dynamic)
 
+    def test_during_high_static_keeps_dynamic(self):
+        phase = PhaseResult(
+            phase=Phase.DURING, confidence=0.9, urgency=0.4, need_dynamic=True
+        )
+        signals = KnowledgeSignals(static_confidence=0.95, dynamic_availability=0.9)
+        d = self.scheduler.decide(phase, signals)
+        self.assertTrue(d.use_dynamic)
+
     def test_critical_urgency_enables_dynamic(self):
         phase = PhaseResult(phase=Phase.DURING, confidence=0.9, urgency=0.85, need_dynamic=True)
         signals = KnowledgeSignals(static_confidence=0.3, dynamic_availability=0.9)

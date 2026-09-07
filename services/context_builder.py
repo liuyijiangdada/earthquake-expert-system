@@ -172,12 +172,12 @@ class QueryContextBuilder:
             "user_query": user_query or "",
         }
 
-    def step_classify(self, input_text: str, response_meta: dict):
+    def step_classify(self, input_text: str, response_meta: dict, history=None):
         """阶段分类，更新 response_meta，返回 (phase_result, phase_tag)。"""
         deps = self._deps
         phase_result = None
         if deps.phase_classifier:
-            phase_result = deps.phase_classifier.classify(input_text)
+            phase_result = deps.phase_classifier.classify(input_text, history=history)
             response_meta["phase"] = phase_result.phase.value
             response_meta["phase_confidence"] = round(phase_result.confidence, 2)
             response_meta["urgency"] = round(phase_result.urgency, 2)
@@ -387,7 +387,9 @@ class QueryContextBuilder:
             normalized_history=normalized_history,
             user_query=input_text,
         )
-        phase_result, phase_tag = self.step_classify(input_text, response_meta)
+        phase_result, phase_tag = self.step_classify(
+            input_text, response_meta, history=normalized_history
+        )
         knowledge_signals = self.step_compute_signals(
             input_text, phase_tag, phase_result, response_meta
         )

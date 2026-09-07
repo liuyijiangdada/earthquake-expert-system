@@ -1,0 +1,120 @@
+{
+  "overall": {
+    "B0": {
+      "factual_accuracy_pct": 27.1,
+      "completeness_mean": 3.74,
+      "format_compliance_pct": 95.0,
+      "kg_context_enabled": false,
+      "rag_enabled": false,
+      "n": 60
+    },
+    "B1": {
+      "factual_accuracy_pct": 33.0,
+      "completeness_mean": 3.14,
+      "format_compliance_pct": 91.7,
+      "kg_context_enabled": true,
+      "rag_enabled": false,
+      "n": 60
+    },
+    "B2": {
+      "factual_accuracy_pct": 15.8,
+      "completeness_mean": 3.05,
+      "format_compliance_pct": 81.7,
+      "kg_context_enabled": false,
+      "rag_enabled": true,
+      "n": 60
+    },
+    "B3": {
+      "factual_accuracy_pct": 43.8,
+      "completeness_mean": 2.68,
+      "format_compliance_pct": 80.0,
+      "kg_context_enabled": true,
+      "rag_enabled": true,
+      "n": 60
+    }
+  },
+  "by_phase": {
+    "B0": {
+      "震前": {
+        "n": 20,
+        "factual_accuracy_pct": 25.8,
+        "completeness_mean": 3.83,
+        "format_compliance_pct": 90.0
+      },
+      "震中": {
+        "n": 20,
+        "factual_accuracy_pct": 26.8,
+        "completeness_mean": 3.49,
+        "format_compliance_pct": 95.0
+      },
+      "震后": {
+        "n": 20,
+        "factual_accuracy_pct": 28.7,
+        "completeness_mean": 3.92,
+        "format_compliance_pct": 100.0
+      }
+    },
+    "B1": {
+      "震前": {
+        "n": 20,
+        "factual_accuracy_pct": 32.2,
+        "completeness_mean": 3.3,
+        "format_compliance_pct": 85.0
+      },
+      "震中": {
+        "n": 20,
+        "factual_accuracy_pct": 32.8,
+        "completeness_mean": 2.58,
+        "format_compliance_pct": 90.0
+      },
+      "震后": {
+        "n": 20,
+        "factual_accuracy_pct": 34.0,
+        "completeness_mean": 3.54,
+        "format_compliance_pct": 100.0
+      }
+    },
+    "B2": {
+      "震前": {
+        "n": 20,
+        "factual_accuracy_pct": 16.2,
+        "completeness_mean": 3.25,
+        "format_compliance_pct": 85.0
+      },
+      "震中": {
+        "n": 20,
+        "factual_accuracy_pct": 13.8,
+        "completeness_mean": 2.71,
+        "format_compliance_pct": 65.0
+      },
+      "震后": {
+        "n": 20,
+        "factual_accuracy_pct": 17.4,
+        "completeness_mean": 3.18,
+        "format_compliance_pct": 95.0
+      }
+    },
+    "B3": {
+      "震前": {
+        "n": 20,
+        "factual_accuracy_pct": 43.0,
+        "completeness_mean": 2.42,
+        "format_compliance_pct": 80.0
+      },
+      "震中": {
+        "n": 20,
+        "factual_accuracy_pct": 41.6,
+        "completeness_mean": 2.56,
+        "format_compliance_pct": 80.0
+      },
+      "震后": {
+        "n": 20,
+        "factual_accuracy_pct": 46.8,
+        "completeness_mean": 3.07,
+        "format_compliance_pct": 80.0
+      }
+    }
+  },
+  "question_count": 60,
+  "per_phase": 20
+}
