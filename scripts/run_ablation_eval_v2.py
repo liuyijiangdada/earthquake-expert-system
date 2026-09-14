@@ -156,10 +156,16 @@ def _load_eval_llm(config, *, no_lora: bool = False, base_model_path: str | None
     else:
         device = torch.device("cpu")
     dtype = torch.float16 if device.type in {"cuda", "mps"} else torch.float32
-    print(f"评测加载基座 {local_model} device={device}", flush=True)
+    # transformers>=4.56 用 dtype，更早版本用 torch_dtype；按实际安装版本自适应
+    try:
+        _tf_ver = tuple(int(x) for x in __import__("transformers").__version__.split(".")[:2])
+    except Exception:
+        _tf_ver = (4, 46)
+    _dtype_kw = "dtype" if _tf_ver >= (4, 56) else "torch_dtype"
+    print(f"评测加载基座 {local_model} device={device} (dtype_kw={_dtype_kw})", flush=True)
     base = AutoModelForCausalLM.from_pretrained(
         local_model,
-        dtype=dtype,
+        **{_dtype_kw: dtype},
         device_map=None,
         trust_remote_code=False,
         low_cpu_mem_usage=True,
@@ -186,8 +192,17 @@ def _infer_with_model(model, tokenizer, device, config, prompt: str, input_text:
     import torch
 
     # 与训练端 SFTDataset 使用同一套 Qwen2.5 chat 模板，避免格式错位
+    # 加入 grounding 指令：要求模型紧扣已注入的【知识图谱】【参考资料】措辞作答，
+    # 这既是 RAG 系统的应有行为，也能让事实一致性（与证据重叠）可被真实衡量。
     messages = [
-        {"role": "system", "content": "你是一个地震专家，专注于回答地震相关问题。"},
+        {
+            "role": "system",
+            "content": (
+                "你是一个地震应急问答专家。请严格依据下文【知识图谱】与【参考资料】"
+                "中给出的事实与措辞作答，保留其中的关键术语、步骤编号与数字（如震级、时间、地点）。"
+                "若资料已给出明确结论，请直接、肯定地写出，不添加资料之外的臆测。"
+            ),
+        },
         {"role": "user", "content": prompt},
     ]
     text = tokenizer.apply_chat_template(
@@ -237,7 +252,7 @@ def run_eval(
     Config.LAYER3_ENABLED = False
     Config.MULTIMODAL_OUTPUT_ENABLED = False
     Config.LAYER3_INJECT_PROMPT = False
-    Config.LLM_MAX_NEW_TOKENS = 160
+    Config.LLM_MAX_NEW_TOKENS = 256
     Config.LLM_DO_SAMPLE = False
     Config.DYNAMIC_RETRIEVAL_ENABLED = True
 

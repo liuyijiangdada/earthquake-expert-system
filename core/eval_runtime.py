@@ -51,46 +51,79 @@ class JsonEvalKG:
         triggers = (
             "怎么办", "如何做", "怎样", "避险", "避震", "应急", "自救", "互救",
             "余震", "室内", "室外", "高楼", "学校", "准备", "演练", "逃生",
+            "多大", "在哪", "哪些", "怎么", "什么", "准备", "检查", "安置", "补贴",
         )
         if not any(t in user_text for t in triggers):
             return ""
-        picked = []
-        for topic in self.topics:
-            ptag = topic.get("phase_tag") or ""
-            if phase_tag and phase_tag not in ("通用", "") and ptag not in (phase_tag, "通用", ""):
-                blob = (topic.get("title") or "") + "".join(
-                    s.get("text") or "" for s in topic.get("steps") or []
-                )
-                if not any(ch in blob for ch in user_text if len(ch) >= 2):
-                    continue
-            score = 0
-            title = topic.get("title") or ""
-            for w in ("室内", "室外", "应急包", "演练", "余震", "学校", "高楼"):
-                if w in user_text and w in title:
-                    score += 2
-            if phase_tag and topic.get("phase_tag") == phase_tag:
-                score += 1
-            if score:
-                picked.append((score, topic))
-        if not picked:
-            picked = [(1, t) for t in self.topics if t.get("phase_tag") == phase_tag][:2]
-        if not picked:
+
+        def _grams(t: str) -> set:
+            s = "".join(re.findall(r"[\u4e00-\u9fff]+", t or ""))
+            if len(s) < 2:
+                return set(s)
+            return {s[i : i + 2] for i in range(len(s) - 1)}
+
+        qg = _grams(user_text)
+        if not qg:
             return ""
-        picked.sort(key=lambda x: -x[0])
+        scored = []
+        for topic in self.topics:
+            title = topic.get("title") or ""
+            blob = title + " " + " ".join(
+                s.get("text") or "" for s in topic.get("steps") or []
+            )
+            tg = _grams(blob)
+            if not tg:
+                continue
+            score = len(qg & tg) / max(len(qg), 1)
+            ptag = topic.get("phase_tag") or ""
+            if phase_tag and phase_tag not in ("通用", ""):
+                if ptag == phase_tag:
+                    score += 0.4
+                elif ptag in ("通用", ""):
+                    score += 0.08
+            title_g = _grams(title)
+            if title_g:
+                score += 0.4 * len(qg & title_g) / max(len(qg), 1)
+            if score > 0.02:
+                scored.append((score, topic))
+        if not scored:
+            return ""
+        scored.sort(key=lambda x: -x[0])
         lines = ["【应急主题】\n"]
-        for _, topic in picked[:2]:
+        for _, topic in scored[:2]:
             lines.append(f"{topic.get('title')}\n")
             for step in (topic.get("steps") or [])[:4]:
                 lines.append(f"- {step.get('text')}\n")
         return "".join(lines)
 
 
-def try_build_kg(config) -> Any:
+def try_build_kg(config, *, timeout_sec: float = 3.0) -> Any:
+    """优先 Neo4j；连不上时回退 JSON 图谱。
+
+    旧实现只调用 ``kg._connect()``——neo4j Driver 是惰性建连，永远不抛异常，
+    于是后端被误判为 neo4j，后续每次查询都失败返回空串，KG 证据块恒为「（无）」。
+    这里补一次带超时的一次性探活，失败即回退，保证离线评测也能注入图谱证据。
+    """
+    # 先用 socket 探活，避免 neo4j 驱动内部的重试把每次查询拖到秒级
+    try:
+        import socket
+        from urllib.parse import urlparse
+
+        uri = getattr(config, "NEO4J_URI", "bolt://localhost:7687")
+        host = urlparse(uri).hostname or "localhost"
+        port = urlparse(uri).port or 7687
+        with socket.create_connection((host, port), timeout=timeout_sec):
+            pass
+    except Exception:
+        return JsonEvalKG()
+
     try:
         from kg.neo4j_kg import Neo4jKG
 
         kg = Neo4jKG()
-        kg._connect()
+        driver = kg._connect()
+        with driver.session() as session:
+            session.run("RETURN 1 AS ok").single()
         return kg
     except Exception:
         return JsonEvalKG()

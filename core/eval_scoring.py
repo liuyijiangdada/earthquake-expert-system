@@ -29,34 +29,71 @@ class DualScores:
     normalized: Scores
 
 
+# prompt 中真正的段落标题独占一行；引导语"请结合【知识图谱】…作答"中的同名标记不算。
+_KG_HEADER = "【知识图谱】"
+_RAG_HEADER = "【参考资料】"
+_DYN_HEADER = "【动态信息"
+# 段落终止行：下一个段落标题，或规则段 / 问题段 / 历史段 / 图片段
+_END_PREFIXES = (
+    _KG_HEADER,
+    _RAG_HEADER,
+    _DYN_HEADER,
+    "规则：",
+    "规则:",
+    "【问题】",
+    "【图片问答】",
+    "【用户问题】",
+    "【最近对话",
+    "回答要求：",
+)
+
+
 def _tokens(text: str) -> set:
-    return set(re.findall(r"[\u4e00-\u9fff]{2,}", text or ""))
+    """中文按字符二元组切分，数值串（震级/年份/深度）整体保留。
+
+    旧实现用 ``[\\u4e00-\\u9fff]{2,}`` 会把一整段连续中文当成 1 个 token，
+    导致同义改写后重合度恒为 0，无法区分模型。改为字符二元组后与
+    中文机器翻译/摘要常用的 chrF 口径一致，分辨率显著提升。
+    """
+    t = text or ""
+    out = set(re.findall(r"\d+(?:\.\d+)?", t))
+    for run in re.findall(r"[\u4e00-\u9fff]+", t):
+        if len(run) == 1:
+            out.add(run)
+            continue
+        out.update(run[i : i + 2] for i in range(len(run) - 1))
+    return out
+
+
+def _section_lines(prompt: str, header: str) -> str:
+    """抽取 header 独占一行时的段落正文；找不到返回空串。"""
+    lines = (prompt or "").split("\n")
+    start = None
+    for i, ln in enumerate(lines):
+        s = ln.strip()
+        if s == header or (header.endswith("】") is False and s.startswith(header)):
+            start = i + 1
+            break
+    if start is None:
+        return ""
+    body: List[str] = []
+    for ln in lines[start:]:
+        s = ln.strip()
+        if any(s.startswith(p) for p in _END_PREFIXES):
+            break
+        body.append(ln)
+    return "\n".join(body).strip()
 
 
 def extract_prompt_section(prompt: str, marker: str, end_markers: List[str]) -> str:
-    if marker not in (prompt or ""):
-        return ""
-    start = prompt.index(marker) + len(marker)
-    end = len(prompt)
-    for em in end_markers:
-        idx = prompt.find(em, start)
-        if idx != -1:
-            end = min(end, idx)
-    return prompt[start:end].strip()
+    """保留旧签名以兼容调用方；实际改按"标题独占一行"定位真实证据段落。"""
+    return _section_lines(prompt, marker)
 
 
 def extract_refs(prompt: str) -> Tuple[str, str, str]:
-    kg_ref = extract_prompt_section(
-        prompt or "", "【知识图谱】", ["【参考资料】", "【动态信息】", "规则", "【问题】"]
-    )
-    rag_ref = extract_prompt_section(
-        prompt or "", "【参考资料】", ["【动态信息】", "规则", "【问题】"]
-    )
-    dyn_ref = extract_prompt_section(prompt or "", "【动态信息】", ["规则", "【问题】"])
-    if not dyn_ref:
-        dyn_ref = extract_prompt_section(
-            prompt or "", "【动态信息·", ["规则", "【问题】", "【知识图谱】"]
-        )
+    kg_ref = _section_lines(prompt, _KG_HEADER)
+    rag_ref = _section_lines(prompt, _RAG_HEADER)
+    dyn_ref = _section_lines(prompt, _DYN_HEADER)
     return kg_ref, rag_ref, dyn_ref
 
 

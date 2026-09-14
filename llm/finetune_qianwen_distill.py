@@ -26,9 +26,16 @@ OUTPUT_DIR = cfg.FINETUNED_MODEL_PATH
 
 
 def _local_snapshot(model_name: str) -> str:
+    # 显式本地路径优先（与评测脚本 run_ablation_eval_v2.py 共用 EVAL_BASE_MODEL_PATH），
+    # 便于把基座放在数据盘而非系统盘（系统盘常 <30GB，装不下 15GB 权重）。
+    override = os.environ.get("EVAL_BASE_MODEL_PATH")
+    if override and Path(override).is_dir():
+        return override
+    # 尊重 HF_HOME；否则回退到 ~/.cache/huggingface
+    hf_root = Path(os.environ.get("HF_HOME", Path.home() / ".cache" / "huggingface"))
     hub = (
-        Path.home()
-        / ".cache/huggingface/hub"
+        hf_root
+        / "hub"
         / f"models--{model_name.replace('/', '--')}"
         / "snapshots"
     )
@@ -37,6 +44,17 @@ def _local_snapshot(model_name: str) -> str:
         if snaps:
             return str(snaps[-1])
     return model_name
+
+
+def _dtype_kw() -> str:
+    """transformers>=4.56 用 dtype，更早版本用 torch_dtype；按实际安装版本自适应。"""
+    try:
+        import transformers as _tf
+
+        _v = tuple(int(x) for x in _tf.__version__.split(".")[:2])
+    except Exception:
+        _v = (4, 46)
+    return "dtype" if _v >= (4, 56) else "torch_dtype"
 
 TRAIN_PATH = "data/sft_train.jsonl"
 VAL_PATH = "data/sft_val.jsonl"
@@ -115,6 +133,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--extra-epochs", type=int, default=2, help="在已有 LoRA 上继续训练的 epoch 数")
     ap.add_argument("--from-scratch", action="store_true", help="忽略已有 adapter，重新初始化 LoRA")
+    ap.add_argument("--new-epochs", type=int, default=None, help="覆盖新训 epoch 数（默认 3）")
+    ap.add_argument("--new-lr", type=float, default=None, help="覆盖新训学习率（默认 2e-4）")
+    ap.add_argument("--train-file", type=str, default=None, help="覆盖训练数据路径（默认 data/sft_train.jsonl）")
+    ap.add_argument("--val-file", type=str, default=None, help="覆盖验证数据路径（默认 data/sft_val.jsonl）")
     args_cli = ap.parse_args()
 
     local_model = _local_snapshot(MODEL_NAME)
@@ -131,7 +153,7 @@ def main():
 
     model = AutoModelForCausalLM.from_pretrained(
         local_model,
-        torch_dtype=dtype,
+        **{_dtype_kw(): dtype},
         device_map=device_map,
         trust_remote_code=False,
         local_files_only=True,
@@ -158,12 +180,16 @@ def main():
         lr = 5e-6
     else:
         model = get_peft_model(model, lora_config)
-        epochs = 3
-        lr = 2e-4  # 7B + LoRA(r=16) 常用起步 lr；续训分支保持 5e-6
+        # 默认 3 epoch / lr=2e-4；可用 --new-epochs / --new-lr 覆盖
+        # （训练数据回答普遍偏短，降低强度可缓解"风格塌缩"、保留基座详尽表达）
+        epochs = args_cli.new_epochs if args_cli.new_epochs else 3
+        lr = args_cli.new_lr if args_cli.new_lr else 2e-4
 
     model.print_trainable_parameters()
-    train_ds = SFTDataset(TRAIN_PATH, tokenizer)
-    val_ds = SFTDataset(VAL_PATH, tokenizer)
+    train_path = args_cli.train_file or TRAIN_PATH
+    val_path = args_cli.val_file or VAL_PATH
+    train_ds = SFTDataset(train_path, tokenizer)
+    val_ds = SFTDataset(val_path, tokenizer)
 
     print(f"训练样本数: train={len(train_ds)}, val={len(val_ds)}, epochs={epochs}, lr={lr}")
 
